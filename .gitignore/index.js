@@ -90,7 +90,7 @@ bot.on('message', message=> {
     if (command ===`${prefix}help roll`){
         message.channel.send(`Lance un dé avec la valeur indiquée\n ${prefix}roll [valeur]`)
     }
-    if (command ===`${prefix}help coco`){
+    if (command ===`${prefix}help nazi`){
         message.channel.send('Envoie un Gif aléatoire de nazi')
     }
 
