@@ -9,7 +9,6 @@ bot.on("ready",function() {
 });
 
 
-
 // date
 bot.on('message', message=>{
     if (message.author.bot) return;
@@ -73,7 +72,7 @@ bot.on('message', message=> {
 
     const command = message.content.toLowerCase();
     if (command ===`${prefix}help`){
-        message.channel.send(`${prefix}help [commande]\n **commande disponible:** ~~(!date)~~ !ping !blah !coco !nazi !roll`)
+        message.channel.send(`${prefix}help [commande]\n **commande disponible:** ~~(${prefix}date)~~ ${prefix}ping ${prefix}blah ${prefix}coco ${prefix}nazi !roll`)
     }
     if (command ===`${prefix}help date`){
         message.channel.send(`**Commande Désactivée**\nVoici le format de la commande:\n ${prefix}date [dd] [mm] [yyyy] \n Pour l\'arrêter il suffit de taper ${prefix}datestop `);
@@ -114,6 +113,7 @@ bot.on('message', message=> {
             }
         }
         else {
+            args[0] = Math.round(args[0])
             let aleatoire = nombreAleatoire(args[0]);
             message.reply('dé de ' + args[0] + " lancé ... \n Résultat: " + aleatoire + " .")
         }
@@ -125,6 +125,42 @@ bot.on('message', message=> {
         var valeur =  nombreAleatoire(5);
         var gif=['https://tenor.com/view/power-rangers-pose-squad-goals-salute-nazi-salute-gif-3535967','https://tenor.com/view/hitler-nazi-gif-7618295','https://tenor.com/view/hitler-dance-gif-4821571','https://media.giphy.com/media/wSpM9vIYEvGV2/giphy.gif','https://i.pinimg.com/originals/35/98/fb/3598fb2eb8a799cbcd970788b69f87f6.gif'];
         message.channel.send(gif[valeur-1])
+    }
+});
+
+bot.on('message', message=> {
+    if (message.author.bot) return;
+    // This is where we'll put our code.
+
+    const args = message.content.slice().trim().split(/ +/g);
+    const command = args.shift().toLowerCase();
+
+    let arretBoucle=false
+    if (command === `${prefix}bouclep`) {
+        let jour = args[0]; // jour
+        let mois = args[1]; //date
+        let annee = args[2]; // mois
+
+        var intervalle = function () {
+            if (!arretBoucle) {
+                date.setDate(date.getDate() + 1);// ajout de 1 jours
+                message.channel.send("On passe au jour : " + date);
+            }
+            else {
+                clearInterval(intervalle);
+                interval = undefined;
+            }
+        };
+
+        if ((jour === undefined || mois === undefined || annee === undefined) && message.content !== '!bouclep stop') {
+            message.reply('Vous avez oublié d\'encoder l\'année de départ :wink: \n !bouclep [dd] [mm] [yyyy)');
+        }
+        else {
+            var date = new Date(annee, mois - 1, jour);
+            message.channel.send(`${message.author.username}, lancement de la boucle à la date du ${jour} / ${mois} /${annee} `);
+            setInterval(intervalle, 4* 3600 * 1000); // 1heure = 3600 secondes
+
+        }
     }
 });
 
