@@ -128,7 +128,7 @@ bot.on('message', message=> {
     }
 });
 
-bot.login(token);
+bot.login(process.env.TOKEN);
 
 function nombreAleatoire(nombre) {
     let nb = Math.floor(Math.random() * nombre+1);
