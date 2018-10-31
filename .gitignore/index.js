@@ -30,33 +30,6 @@ bot.on('message', message=>{
         let annee = args[2]; // mois
 
         message.reply('La commande a été désactivée pour le moment \n https://www.tenor.co/t20G.gif ');
-        /*var intervalle = function () {
-            if (dateStop === false) {
-                date.setDate(date.getDate() + 2);// ajout de 2jours
-                message.channel.send("On passe au jour : " + date);
-                setTimeout(intervalle, 3 * 1000);
-            }
-            else{
-                clearTimeout(intervalle);
-                interval = undefined;
-            }
-        };
-
-
-        if ((jour === undefined || mois === undefined || annee === undefined )&& message.content !=='!date stop') {
-            message.reply('Vous avez oublié d\'encoder l\'année de départ :wink: \n !date [dd] [mm] [yyyy)');
-        }
-        /*else if(message.content ==='!date stop'){
-            message.channel.send('La boucle a été arrêtée :wink:');
-            //clearInterval(intervalle);
-            dateStop = true;
-        }
-        else {
-                var date = new Date(annee, mois - 1, jour);
-                message.channel.send(`${message.author.username}, lancement de la boucle à la date du ${jour} / ${mois} /${annee} `);
-                setTimeout(intervalle, 3 * 1000); // 1heure = 3600 secondes
-
-        }*/
 
     }
     if (command ==='!datestop'){
@@ -72,15 +45,15 @@ bot.on('message', message=> {
 
     const command = message.content.toLowerCase();
     if (command ===`${prefix}help`){
-        message.channel.send(`${prefix}help [commande]\n **commande disponible:** ~~(${prefix}date)~~ ${prefix}ping ${prefix}blah ${prefix}coco ${prefix}nazi !roll`)
+        message.channel.send(`${prefix}help [commande]\n **commande disponible:** ~~(${prefix}date)~~ , ${prefix}ping , ${prefix}blah ,${prefix}coco , ${prefix}nazi , ${prefix}Trump , ${prefix}roll`)
     }
     if (command ===`${prefix}help date`){
         message.channel.send(`**Commande Désactivée**\nVoici le format de la commande:\n ${prefix}date [dd] [mm] [yyyy] \n Pour l\'arrêter il suffit de taper ${prefix}datestop `);
     }
     if (command ===`${prefix}coco`){
-        var valeur =  nombreAleatoire(6);
-        var gif=['https://i.imgur.com/0TWyD8S.gif','https://giphy.com/gifs/lenin-communism-vladimir-yidUzl7xT4zV1VJ1C0 ','https://giphy.com/gifs/party-threadless-communist-l378z1NPLzCEAVCVy ','https://www.tenor.co/vLye.gif ',
-            'https://www.tenor.co/J5Qb.gif ','https://www.tenor.co/RhZE.gif '];
+        let valeur =  nombreAleatoire(7);
+        let gif=['https://i.imgur.com/0TWyD8S.gif','https://giphy.com/gifs/lenin-communism-vladimir-yidUzl7xT4zV1VJ1C0 ','https://www.tenor.co/vLxU.gif ','https://www.tenor.co/vLye.gif ',
+            'https://www.tenor.co/J5Qb.gif ','https://www.tenor.co/RhZE.gif ','https://giphy.com/gifs/animated-dancing-shittyreactiongifs-9vc3xK2OyMwzC '];
         message.channel.send(gif[valeur-1])
     }
     if (command ===`${prefix}help coco`){
@@ -91,6 +64,9 @@ bot.on('message', message=> {
     }
     if (command ===`${prefix}help nazi`){
         message.channel.send('Envoie un Gif aléatoire de nazi')
+    }
+    if (command ===`${prefix}help trump`){
+        message.channel.send('Envoie un Gif aléatoire de Trump')
     }
 
 });
@@ -122,8 +98,14 @@ bot.on('message', message=> {
         message.channel.send(`__**Nom du serveur:**__ ${message.guild.name}\n__**Nombre de membres:**__ ${message.guild.memberCount}`);
     }
     if (command ===`${prefix}nazi`){
-        var valeur =  nombreAleatoire(5);
-        var gif=['https://tenor.com/view/power-rangers-pose-squad-goals-salute-nazi-salute-gif-3535967','https://tenor.com/view/hitler-nazi-gif-7618295','https://tenor.com/view/hitler-dance-gif-4821571','https://media.giphy.com/media/wSpM9vIYEvGV2/giphy.gif','https://i.pinimg.com/originals/35/98/fb/3598fb2eb8a799cbcd970788b69f87f6.gif'];
+        let valeur =  nombreAleatoire(6);
+        let gif=['https://tenor.com/view/power-rangers-pose-squad-goals-salute-nazi-salute-gif-3535967','https://tenor.com/view/hitler-nazi-gif-7618295','https://tenor.com/view/hitler-dance-gif-4821571','https://media.giphy.com/media/wSpM9vIYEvGV2/giphy.gif','https://i.pinimg.com/originals/35/98/fb/3598fb2eb8a799cbcd970788b69f87f6.gif',
+        'https://i.imgur.com/qLBFR.gif'];
+        message.channel.send(gif[valeur-1])
+    }
+    if (command ===`${prefix}trump`){
+        let valeur =  nombreAleatoire(5);
+        let gif=["https://www.tenor.co/PgFD.gif","https://www.tenor.co/yiQN.gif","https://www.tenor.co/HdtG.gif","https://giphy.com/gifs/someone-run-shooter-iBcLqvp8FMwy3AiPGY ","https://www.tenor.co/GnfE.gif "];
         message.channel.send(gif[valeur-1])
     }
 });
