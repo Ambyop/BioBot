@@ -128,6 +128,7 @@ bot.on('message', message=> {
         'https://giphy.com/gifs/reactiongifs-tyqcJoNjNv0Fq','https://giphy.com/gifs/chill-chihuahua-4XSc0NkhKJQhW','https://tenor.com/view/nom-eat-eating-snack-popcorn-gif-5369618'];
         message.channel.send(gif[valeur-1]);
     }
+});
 
 bot.on('message', message=> {
     if (message.author.bot) return;
