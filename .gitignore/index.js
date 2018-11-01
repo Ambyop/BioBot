@@ -122,7 +122,7 @@ bot.on('message', message=> {
         'https://giphy.com/gifs/funny-cute-lol-26gsspfbt1HfVQ9va','https://giphy.com/gifs/monkey-12uB4fsiMsC8V2','https://www.tenor.co/xkQv.gif','https://www.tenor.co/JM5S.gif','https://www.tenor.co/x19S.gif'];
         message.channel.send(gif[valeur-1]);
     }
-    if (command ===`${prefix}popcorn` || command === `${prefix}pop`|| command === `${prefix}corn`|| command){
+    if (command ===`${prefix}popcorn` || command === `${prefix}pop`|| command === `${prefix}corn`){
         let valeur = nombreAleatoire(9);
         let gif=['https://thumbs.gfycat.com/ChillyWellgroomedHeifer-size_restricted.gif','https://media.giphy.com/media/tFK8urY6XHj2w/giphy.gif','https://media.giphy.com/media/128UMaujdjX7Pi/giphy.gif','https://media.giphy.com/media/12aW6JtfvUdcdO/giphy.gif','https://media.giphy.com/media/TrDxCdtmdluP6/giphy.gif','https://media.giphy.com/media/1pw5Hn77ylYxW/giphy.gif',
         'https://giphy.com/gifs/reactiongifs-tyqcJoNjNv0Fq','https://giphy.com/gifs/chill-chihuahua-4XSc0NkhKJQhW','https://tenor.com/view/nom-eat-eating-snack-popcorn-gif-5369618'];
