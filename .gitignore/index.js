@@ -1,4 +1,4 @@
-//  créé par @Ambyop
+//  créé par William Wats
 const Discord = require("discord.js");
 const bot = new Discord.Client();
 const { prefix, token } = require('./config.json');
@@ -46,8 +46,8 @@ bot.on('message', message=> {
 
     const command = message.content.toLowerCase();
     if (command ===`${prefix}help`){
-        message.channel.send(`${prefix}help [commande]\n **commande disponible:** ~~(${prefix}date)~~ , ${prefix}ping , ${prefix}blah ,${prefix}coco , ${prefix}nazi , ${prefix}Trump , ${prefix}roll , ${prefix}singe`+
-        ` , ${prefix}popcorn `)
+        message.channel.send(`${prefix}help [commande]\n **commande disponible:** ~~(${prefix}date)~~ , ${prefix}ping , ${prefix}blah ,${prefix}coco , ${prefix}nazi , ${prefix}Trump , ${prefix}singe`+
+        ` , ${prefix}popcorn , ${prefix}vent , ${prefix}roll , ${prefix}pileface , ${prefix}quote`)
     }
     if (command ===`${prefix}help date`){
         message.channel.send(`**Commande Désactivée**\nVoici le format de la commande:\n ${prefix}date [dd] [mm] [yyyy] \n Pour l\'arrêter il suffit de taper ${prefix}datestop `);
@@ -73,8 +73,17 @@ bot.on('message', message=> {
     if (command === `${prefix}help singe` || command === `${prefix}help darklos`){
         message.channel.send('Envoie un Gif de singe, de manière aléatoire.')
     }
+    if (command === `${prefix}help vent`){
+        message.channel.send('A faire quand quelqu\'un te fait un vent :grinning: ');
+    }
     if (command === `${prefix}help popcorn` || command === `${prefix}help darklos`){
         message.channel.send(`Envoie un Gif de popcorn, de manière aléatoire.\n aussi disponible : ${prefix}pop , ${prefix}corn , ${prefix}popcorn .`)
+    }
+    if (command === `${prefix}help pileface` || command === `${prefix}help pf` || command ===`${prefix}help pile-face`){
+        message.channel.send('Pile ou face ? la pièce sera lancée...')
+    }
+    if (command === `${prefix}help quote`){
+        message.channel.send(`Remet les arguments en quote entre \\\`\\\`\\\` [arguments]\\\`\\\`\\\` \n ${prefix}quote [arguments]`)
     }
 
 });
@@ -99,7 +108,17 @@ bot.on('message', message=> {
         else {
             args[0] = Math.round(args[0]);
             let aleatoire = nombreAleatoire(args[0]);
+            setTimeout(function(){ message.delete(); }, 2000);
             message.reply('dé de ' + args[0] + " lancé ... \n Résultat: " + aleatoire + " .")
+        }
+    }
+    if (command === `${prefix}pf` || command === `${prefix}pile-face` || command === `${prefix}pileface`) {
+        var modulo = nombreAleatoire(100)%2;
+        if (modulo === 0){
+            message.reply('Pile !')
+        }
+        else{
+            message.reply('Face !')
         }
     }
     if (command === `${prefix}serveur`) {
@@ -127,6 +146,26 @@ bot.on('message', message=> {
         let gif=['https://i.pinimg.com/originals/6d/2f/19/6d2f1933311596e0ad7d349b7e7c2b6f.gif','https://media.giphy.com/media/tFK8urY6XHj2w/giphy.gif','https://media.giphy.com/media/128UMaujdjX7Pi/giphy.gif','https://media.giphy.com/media/12aW6JtfvUdcdO/giphy.gif','https://media.giphy.com/media/TrDxCdtmdluP6/giphy.gif','https://media.giphy.com/media/1pw5Hn77ylYxW/giphy.gif',
         'https://giphy.com/gifs/reactiongifs-tyqcJoNjNv0Fq','https://giphy.com/gifs/chill-chihuahua-4XSc0NkhKJQhW','https://tenor.com/view/nom-eat-eating-snack-popcorn-gif-5369618'];
         message.channel.send(gif[valeur-1]);
+    }
+    if (command ===`${prefix}vent`){
+        let valeur = nombreAleatoire(6);
+        let gif=["https://media.giphy.com/media/UUkxgx7vd7rna/giphy.gif","https://www.tenor.co/v2d4.gif","https://www.tenor.co/uf0w.gif","https://giphy.com/gifs/wind-weather-miami-HmTLatwLWpTQk","https://giphy.com/gifs/silly-storm-edition-G5n8sqIOxBqow","https://giphy.com/gifs/weatherunderground-storm-weather-d1E1pZ1cdgWmY0hy"];
+        message.channel.send(gif[valeur-1]);
+    }
+    if (command === `${prefix}quote`){
+        if (args.length === 0){
+            message.reply(`Vous n\'avez pas mit d\'arguments ... ${prefix}quote [arguments]`)
+        }
+        else {
+            var chaine = "";
+            for (let a = 0; a < args.length; a++) {
+                chaine += args[a] + " ";
+            }
+            setTimeout(function(){ message.delete(); }, 2000);
+            //message.delete();
+            message.reply("```" + chaine + "```");
+        }
+
     }
 });
 
