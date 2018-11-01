@@ -1,4 +1,4 @@
-//  créé par William Wats
+//  créé par @Ambyop
 const Discord = require("discord.js");
 const bot = new Discord.Client();
 const { prefix, token } = require('./config.json');
@@ -6,7 +6,9 @@ const { prefix, token } = require('./config.json');
 bot.on("ready",function() {
     bot.user.setGame(`${prefix}help [commande]`);
     console.log("Bot connecté");
+    bot.user.setStatus('idle') // online, idle, dnd, invisible
 });
+
 
 
 // date
@@ -30,7 +32,6 @@ bot.on('message', message=>{
         let annee = args[2]; // mois
 
         message.reply('La commande a été désactivée pour le moment \n https://www.tenor.co/t20G.gif ');
-
     }
     if (command ==='!datestop'){
         message.channel.send('La boucle a été arrêtée :wink:');
@@ -45,7 +46,7 @@ bot.on('message', message=> {
 
     const command = message.content.toLowerCase();
     if (command ===`${prefix}help`){
-        message.channel.send(`${prefix}help [commande]\n **commande disponible:** ~~(${prefix}date)~~ , ${prefix}ping , ${prefix}blah ,${prefix}coco , ${prefix}nazi , ${prefix}Trump , ${prefix}roll`)
+        message.channel.send(`${prefix}help [commande]\n **commande disponible:** ~~(${prefix}date)~~ , ${prefix}ping , ${prefix}blah ,${prefix}coco , ${prefix}nazi , ${prefix}Trump , ${prefix}roll , ${prefix}singe`)
     }
     if (command ===`${prefix}help date`){
         message.channel.send(`**Commande Désactivée**\nVoici le format de la commande:\n ${prefix}date [dd] [mm] [yyyy] \n Pour l\'arrêter il suffit de taper ${prefix}datestop `);
@@ -68,6 +69,9 @@ bot.on('message', message=> {
     if (command ===`${prefix}help trump`){
         message.channel.send('Envoie un Gif aléatoire de Trump')
     }
+    if (command === `${prefix}help singe` || command === `${prefix}help darklos`){
+        message.channel.send('Envoie un Gif de singe, de manière aléatoire.')
+    }
 
 });
 
@@ -89,7 +93,7 @@ bot.on('message', message=> {
             }
         }
         else {
-            args[0] = Math.round(args[0])
+            args[0] = Math.round(args[0]);
             let aleatoire = nombreAleatoire(args[0]);
             message.reply('dé de ' + args[0] + " lancé ... \n Résultat: " + aleatoire + " .")
         }
@@ -107,6 +111,12 @@ bot.on('message', message=> {
         let valeur =  nombreAleatoire(5);
         let gif=["https://www.tenor.co/PgFD.gif","https://www.tenor.co/yiQN.gif","https://www.tenor.co/HdtG.gif","https://giphy.com/gifs/someone-run-shooter-iBcLqvp8FMwy3AiPGY ","https://www.tenor.co/GnfE.gif "];
         message.channel.send(gif[valeur-1])
+    }
+    if (command ===`${prefix}singe` || command ===`${prefix}darklos`){
+        let valeur = nombreAleatoire(9);
+        let gif=['https://giphy.com/gifs/next-pFwRzOLfuGHok','https://www.tenor.co/PXLU.gif','https://www.tenor.co/V2dm.gif','https://www.tenor.co/HLUY.gif',
+        'https://giphy.com/gifs/funny-cute-lol-26gsspfbt1HfVQ9va','https://giphy.com/gifs/monkey-12uB4fsiMsC8V2','https://www.tenor.co/xkQv.gif','https://www.tenor.co/JM5S.gif','https://www.tenor.co/x19S.gif'];
+        message.channel.send(gif[valeur-1]);
     }
 });
 
