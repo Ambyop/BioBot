@@ -1,4 +1,4 @@
-//  créé par William Wats
+//  créé par @ambyop
 const Discord = require("discord.js");
 const bot = new Discord.Client();
 const { prefix, token } = require('./config.json');
@@ -6,7 +6,7 @@ const { prefix, token } = require('./config.json');
 bot.on("ready",function() {
     bot.user.setGame(`${prefix}help [commande]`);
     console.log("Bot connecté");
-    bot.user.setStatus('idle') // online, idle, dnd, invisible
+    bot.user.setStatus('dnd') // online, idle, dnd, invisible
 });
 
 
@@ -46,20 +46,20 @@ bot.on('message', message=> {
 
     const command = message.content.toLowerCase();
     if (command ===`${prefix}help`){
-        message.channel.send(`${prefix}help [commande]\n **commande disponible:** ~~(${prefix}date)~~ , ${prefix}ping , ${prefix}blah ,${prefix}coco , ${prefix}nazi , ${prefix}Trump , ${prefix}singe`+
+        message.channel.send(`${prefix}help [commande]\n **commande disponible:** ~~(${prefix}date)~~ , ${prefix}ping , ${prefix}blah ,${prefix}communiste , ${prefix}nazi , ${prefix}Trump ; ${prefix}putin , ${prefix}singe`+
         ` , ${prefix}popcorn , ${prefix}vent , ${prefix}roll , ${prefix}pileface , ${prefix}quote`)
     }
     if (command ===`${prefix}help date`){
         message.channel.send(`**Commande Désactivée**\nVoici le format de la commande:\n ${prefix}date [dd] [mm] [yyyy] \n Pour l\'arrêter il suffit de taper ${prefix}datestop `);
     }
-    if (command ===`${prefix}coco`){
-        let valeur =  nombreAleatoire(7);
+    if (command ===`${prefix}coco` || command === `${prefix}communiste`){
+        let valeur =  nombreAleatoire(8);
         let gif=['https://i.imgur.com/0TWyD8S.gif','https://giphy.com/gifs/lenin-communism-vladimir-yidUzl7xT4zV1VJ1C0 ','https://www.tenor.co/vLxU.gif ','https://www.tenor.co/vLye.gif ',
-            'https://www.tenor.co/J5Qb.gif ','https://www.tenor.co/RhZE.gif ','https://giphy.com/gifs/animated-dancing-shittyreactiongifs-9vc3xK2OyMwzC '];
+            'https://www.tenor.co/J5Qb.gif ','https://www.tenor.co/RhZE.gif ','https://giphy.com/gifs/animated-dancing-shittyreactiongifs-9vc3xK2OyMwzC ','https://media.giphy.com/media/axMy0g9z9khZC/giphy.gif'];
         message.channel.send(gif[valeur-1])
     }
-    if (command ===`${prefix}help coco`){
-        message.channel.send('Envoie un Gif aléatoire de communiste')
+    if (command ===`${prefix}help coco` || command === `${prefix}help communiste`){
+        message.channel.send(`Envoie un Gif aléatoire de communiste\n aussi disponible : ${prefix}communiste , ${prefix}coco`)
     }
     if (command ===`${prefix}help roll`){
         message.channel.send(`Lance un dé avec la valeur indiquée\n ${prefix}roll [valeur]`)
@@ -69,6 +69,9 @@ bot.on('message', message=> {
     }
     if (command ===`${prefix}help trump`){
         message.channel.send('Envoie un Gif aléatoire de Trump')
+    }
+    if (command ===`${prefix}help poutine` || command === `${prefix}help putin`){
+        message.channel.send(`Envoie un Gif sur poutine de manière aléatoire :)\n aussi disponible : ${prefix}putin , ${prefix}poutine`)
     }
     if (command === `${prefix}help singe` || command === `${prefix}help darklos`){
         message.channel.send('Envoie un Gif de singe, de manière aléatoire.')
@@ -131,8 +134,16 @@ bot.on('message', message=> {
         message.channel.send(gif[valeur-1])
     }
     if (command ===`${prefix}trump`){
-        let valeur =  nombreAleatoire(5);
-        let gif=["https://www.tenor.co/PgFD.gif","https://www.tenor.co/yiQN.gif","https://www.tenor.co/HdtG.gif","https://giphy.com/gifs/someone-run-shooter-iBcLqvp8FMwy3AiPGY ","https://www.tenor.co/GnfE.gif "];
+        let valeur =  nombreAleatoire(9);
+        let gif=["https://www.tenor.co/PgFD.gif","https://www.tenor.co/yiQN.gif","https://www.tenor.co/HdtG.gif","https://giphy.com/gifs/someone-run-shooter-iBcLqvp8FMwy3AiPGY ","https://www.tenor.co/GnfE.gif ",
+        "https://orig00.deviantart.net/715a/f/2015/318/9/7/_gif__donald_trump_blasts_off_by_jaders75-d9gqh7w.gif","https://media.giphy.com/media/3o7TKwiaIuMib5WVXO/giphy.gif","https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLtSA1rCkgEVgNNazRh60NB9SIjweByni-f1K2bp8t1ROm5kxg",
+        "http://wanna-joke.com/wp-content/uploads/2016/06/trump-gif-belgium-city.gif"];
+        message.channel.send(gif[valeur-1])
+    }
+    if (command ===`${prefix}poutine` || command === `${prefix}putin`){
+        let valeur =  nombreAleatoire(7);
+        let gif=['https://media1.tenor.com/images/fcfbacf6b056ccadf1dd3727ec93bd7e/tenor.gif?itemid=4716826','https://www.tenor.co/ZlwS.gif','https://thumbs.gfycat.com/LeanUnawareCirriped-size_restricted.gif','https://www.tenor.co/MLix.gif',
+        'https://www.tenor.co/Eoft.gif','https://giphy.com/gifs/isP4TLqhjm3zq','https://giphy.com/gifs/putin-handshake-demonstrate-pCytDP27ewPde'];
         message.channel.send(gif[valeur-1])
     }
     if (command ===`${prefix}singe` || command ===`${prefix}darklos`){
@@ -163,7 +174,7 @@ bot.on('message', message=> {
             }
             setTimeout(function(){ message.delete(); }, 2000);
             //message.delete();
-            message.reply("```" + chaine + "```");
+            message.channel.send(`${message.author.username} a dit : \`\`\` ` + chaine + ` \`\`\``);
         }
 
     }
