@@ -336,7 +336,7 @@ bot.on('message', message=> {
         const command = message.content.toLocaleLowerCase();
         const auteur = message.author;
 
-        if (command === `bonjour` || command === `salut` || command === `yop` || command === `bonsoir` || command === 'yo' || command ==='wesh') {
+        if (command === `bonjour` || command === `salut` || command === `yop` || command === `bonsoir` || command === 'yo' || command ==='wesh' || command ==='coucou') {
             let valeur =nombreAleatoire(100);
             if(valeur >= 10 && valeur <= 45){
                 if (valeur >= 10 && valeur < 15){
