@@ -7,6 +7,8 @@ bot.on("ready",function() {
     console.log("Bot connecté");
     bot.user.setStatus('idle') // online, idle, dnd, invisible
 });
+bot.login(process.env.TOKEN);
+bot.on('error', console.error);
 
 /*//  créé par @ambyop
 const Discord = require("discord.js");
