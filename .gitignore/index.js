@@ -3,7 +3,7 @@ const bot = new Discord.Client();
 const { prefix, token } = require('./config.json');
 
 bot.on("ready",function() {
-    bot.user.setGame(`Maintenance`);
+    bot.user.setGame(`Maintenance...`);
     console.log("Bot connecté");
     bot.user.setStatus('idle') // online, idle, dnd, invisible
 });
