@@ -1,4 +1,14 @@
-//  créé par @ambyop
+const Discord = require("discord.js");
+const bot = new Discord.Client();
+const { prefix, token } = require('./config.json');
+
+bot.on("ready",function() {
+    bot.user.setGame(`Maintenance`);
+    console.log("Bot connecté");
+    bot.user.setStatus('idle') // online, idle, dnd, invisible
+});
+
+/*//  créé par @ambyop
 const Discord = require("discord.js");
 const bot = new Discord.Client();
 const { prefix, token } = require('./config.json');
@@ -223,3 +233,4 @@ function nombreAleatoire(nombre) {
     let nb = Math.floor(Math.random() * nombre+1);
     return nb;
 }
+*/
