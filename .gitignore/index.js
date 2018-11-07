@@ -404,7 +404,7 @@ bot.on('message', message=> {
                     console.log('exiting');
                     clearInterval(interval);
                 }
-            }, 3 * 1000);
+            }, 4* 3600 * 1000);
         }
     }
 
@@ -412,7 +412,7 @@ bot.on('message', message=> {
     });
 
 
-bot.login("process.env.TOKEN");
+bot.login(process.env.TOKEN);
 bot.on('error', console.error);
 
 function nombreAleatoire(nombre) {
