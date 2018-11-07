@@ -412,7 +412,7 @@ bot.on('message', message=> {
     });
 
 
-bot.login("NTA2ODA1NzIwNjU5MDAxMzU2.Drn_Ng.EMz5foeHFtyW6VIbQbV-rOJjuHM");
+bot.login("process.env.TOKEN");
 bot.on('error', console.error);
 
 function nombreAleatoire(nombre) {
