@@ -6,7 +6,7 @@ const { prefix, token } = require('./config.json');
 bot.on("ready",function() {
     bot.user.setGame(`${prefix}help [commande]`);
     console.log("Bot connecté");
-    bot.user.setStatus('dnd') // online, idle, dnd, invisible
+    bot.user.setStatus('online') // online, idle, dnd, invisible
 });
 
 
@@ -21,9 +21,12 @@ bot.on('message', message=>{
 
     if(command === `${prefix}ping`) {
         message.reply('Pong!');
-    } else
-    if (command === `${prefix}blah`) {
-        message.channel.send('Meh.');
+    }
+    if (command === `${prefix}blah` || command === `${prefix}bla` || command === `${prefix}blàh` || command === `${prefix}blà`) {
+        let texte = ["Meh.","Blèh","Blè !","Bleh !","Oui !","Bla !"];
+        let numero = nombreAleatoire(texte.length);
+        message.channel.send(texte[numero-1])
+        //message.channel.send('Meh.');
     }
 
     
@@ -34,23 +37,23 @@ bot.on('message', message=> {
 
     const command = message.content.toLowerCase();
     if (command ===`${prefix}help`){
-        message.channel.send(`${prefix}help [commande]\n **commande disponible:** ${prefix}ping , ${prefix}blah ,${prefix}communiste , ${prefix}nazi , ${prefix}Trump ; ${prefix}putin , ${prefix}singe`+
+        message.channel.send(`${prefix}help [commande]\n **commande disponible:** ${prefix}ping , ${prefix}blah ,${prefix}communiste , ${prefix}nazi , ${prefix}trump ; ${prefix}putin , ${prefix}singe`+
         ` , ${prefix}popcorn , ${prefix}vent , ${prefix}kim , ${prefix}shame , ${prefix}roll , ${prefix}pileface , ${prefix}quote`)
     }
     if (command ===`${prefix}help date`){
         message.channel.send(`**Commande Désactivée**\nVoici le format de la commande:\n ${prefix}date [dd] [mm] [yyyy] \n Pour l\'arrêter il suffit de taper ${prefix}datestop `);
     }
     if (command ===`${prefix}help coco` || command === `${prefix}help communiste`){
-        message.channel.send(`Envoie un Gif aléatoire de communiste\n aussi disponible : ${prefix}communiste , ${prefix}coco`)
+        message.channel.send(`Envoie un Gif aléatoire de communiste\n aussi disponible : ${prefix}communiste , ${prefix}coco .`)
     }
     if (command ===`${prefix}help roll`){
-        message.channel.send(`Lance un dé avec la valeur indiquée\n ${prefix}roll [valeur]`)
+        message.channel.send(`Lance un dé avec la valeur indiquée\n ${prefix}roll [valeur] .`)
     }
     if (command ===`${prefix}help nazi`){
-        message.channel.send('Envoie un Gif aléatoire de nazi')
+        message.channel.send('Envoie un Gif aléatoire de nazi .')
     }
     if (command ===`${prefix}help trump`){
-        message.channel.send('Envoie un Gif aléatoire de Trump')
+        message.channel.send('Envoie un Gif aléatoire de Trump .')
     }
     if (command ===`${prefix}help poutine` || command === `${prefix}help putin`){
         message.channel.send(`Envoie un Gif sur poutine de manière aléatoire :)\n aussi disponible : ${prefix}putin , ${prefix}poutine`)
@@ -126,14 +129,13 @@ bot.on('message', message=> {
         else {
             message.channel.send(`**${message.author.username}** a sélectionné le gif communiste n° `+ args[0]+ ".");
             if (gif[args[0]-1] === undefined){
-                setTimeout(function(){ message.channel.send('__Il n\'y a pas de gif avec ce numéro .__\n Il n\'y a actuellement que '+ gif.length +' gifs disponibles .'); }, 1200);
+                setTimeout(function(){ message.channel.send('__Il n\'y a pas de gif avec ce numéro .__\n Il n\'y a actuellement que '+ gif.length +' gifs disponibles .'); }, 1000);
             }
             else
             {
                 setTimeout(function () {
                     message.channel.send(gif[args[0] - 1]);
-                }, 1200);
-                //message.channel.send(gif[args[0] - 1])
+                }, 1000);
             }
         }
     }
@@ -147,14 +149,13 @@ bot.on('message', message=> {
         else {
             message.channel.send(`**${message.author.username}** a sélectionné le gif nazi n° `+ args[0]+ ".");
             if (gif[args[0]-1] === undefined){
-                setTimeout(function(){ message.channel.send('__Il n\'y a pas de gif avec ce numéro .__\n Il n\'y a actuellement que '+ gif.length +' gifs disponibles .'); }, 1200);
+                setTimeout(function(){ message.channel.send('__Il n\'y a pas de gif avec ce numéro .__\n Il n\'y a actuellement que '+ gif.length +' gifs disponibles .'); }, 1000);
             }
             else
             {
                 setTimeout(function () {
                     message.channel.send(gif[args[0] - 1]);
-                }, 1200);
-                //message.channel.send(gif[args[0] - 1])
+                }, 1000);
             }
         }
     }
@@ -169,14 +170,13 @@ bot.on('message', message=> {
         else {
             message.channel.send(`**${message.author.username}** a sélectionné le gif sur Trump n° `+ args[0]+ ".");
             if (gif[args[0]-1] === undefined){
-                setTimeout(function(){ message.channel.send('__Il n\'y a pas de gif avec ce numéro .__\n Il n\'y a actuellement que '+ gif.length +' gifs disponibles .'); }, 1200);
+                setTimeout(function(){ message.channel.send('__Il n\'y a pas de gif avec ce numéro .__\n Il n\'y a actuellement que '+ gif.length +' gifs disponibles .'); }, 1000);
             }
             else
             {
                 setTimeout(function () {
                     message.channel.send(gif[args[0] - 1]);
-                }, 1200);
-                //message.channel.send(gif[args[0] - 1])
+                }, 1000);
             }
         }
     }
@@ -190,14 +190,13 @@ bot.on('message', message=> {
         else {
             message.channel.send(`**${message.author.username}** a sélectionné le gif sur Putin n° `+ args[0]+ ".");
             if (gif[args[0]-1] === undefined){
-                setTimeout(function(){ message.channel.send('__Il n\'y a pas de gif avec ce numéro .__\n Il n\'y a actuellement que '+ gif.length +' gifs disponibles .'); }, 1200);
+                setTimeout(function(){ message.channel.send('__Il n\'y a pas de gif avec ce numéro .__\n Il n\'y a actuellement que '+ gif.length +' gifs disponibles .'); }, 1000);
             }
             else
             {
                 setTimeout(function () {
                     message.channel.send(gif[args[0] - 1]);
-                }, 1200);
-                //message.channel.send(gif[args[0] - 1])
+                }, 1000);
             }
         }
     }
@@ -213,14 +212,13 @@ bot.on('message', message=> {
         else {
             message.channel.send(`**${message.author.username}** a sélectionné le gif sur les singes n° `+ args[0]+ ".");
             if (gif[args[0]-1] === undefined){
-                setTimeout(function(){ message.channel.send('__Il n\'y a pas de gif avec ce numéro .__\n Il n\'y a actuellement que '+ gif.length +' gifs disponibles .'); }, 1200);
+                setTimeout(function(){ message.channel.send('__Il n\'y a pas de gif avec ce numéro .__\n Il n\'y a actuellement que '+ gif.length +' gifs disponibles .'); }, 1000);
             }
             else
             {
                 setTimeout(function () {
                     message.channel.send(gif[args[0] - 1]);
-                }, 1200);
-                //message.channel.send(gif[args[0] - 1])
+                }, 1000);
             }
         }
     }
@@ -234,14 +232,13 @@ bot.on('message', message=> {
         else {
             message.channel.send(`**${message.author.username}** a sélectionné le gif sur le popcorn n° `+ args[0]+ ".");
             if (gif[args[0]-1] === undefined){
-                setTimeout(function(){ message.channel.send('__Il n\'y a pas de gif avec ce numéro .__\n Il n\'y a actuellement que '+ gif.length +' gifs disponibles .'); }, 1200);
+                setTimeout(function(){ message.channel.send('__Il n\'y a pas de gif avec ce numéro .__\n Il n\'y a actuellement que '+ gif.length +' gifs disponibles .'); }, 1000);
             }
             else
             {
                 setTimeout(function () {
                     message.channel.send(gif[args[0] - 1]);
-                }, 1200);
-                //message.channel.send(gif[args[0] - 1])
+                }, 1000);
             }
         }
     }
@@ -254,14 +251,13 @@ bot.on('message', message=> {
         else {
             message.channel.send(`**${message.author.username}** a sélectionné le gif vent n° `+ args[0]+ ".");
             if (gif[args[0]-1] === undefined){
-                setTimeout(function(){ message.channel.send('__Il n\'y a pas de gif avec ce numéro .__\n Il n\'y a actuellement que '+ gif.length +' gifs disponibles .'); }, 1200);
+                setTimeout(function(){ message.channel.send('__Il n\'y a pas de gif avec ce numéro .__\n Il n\'y a actuellement que '+ gif.length +' gifs disponibles .'); }, 1000);
             }
             else
             {
                 setTimeout(function () {
                     message.channel.send(gif[args[0] - 1]);
-                }, 1200);
-                //message.channel.send(gif[args[0] - 1])
+                }, 1000);
             }
         }
     }
@@ -277,7 +273,7 @@ bot.on('message', message=> {
                 }
                 setTimeout(function () {
                     message.delete();
-                }, 2000);
+                }, 1500);
                 //message.delete();
                 message.channel.send(`${message.author.username} a dit : \`\`\` ` + chaine + ` \`\`\``);
             }
@@ -293,14 +289,13 @@ bot.on('message', message=> {
         else {
             message.channel.send(`**${message.author.username}** a sélectionné le gif sur Kim Jong Un n° `+ args[0]+ ".");
             if (gif[args[0]-1] === undefined){
-                setTimeout(function(){ message.channel.send('__Il n\'y a pas de gif avec ce numéro .__\n Il n\'y a actuellement que '+ gif.length +' gifs disponibles .'); }, 1200);
+                setTimeout(function(){ message.channel.send('__Il n\'y a pas de gif avec ce numéro .__\n Il n\'y a actuellement que '+ gif.length +' gifs disponibles .'); }, 1000);
             }
             else
             {
                 setTimeout(function () {
                     message.channel.send(gif[args[0] - 1]);
-                }, 1200);
-                //message.channel.send(gif[args[0] - 1])
+                }, 1000);
             }
         }
     }
@@ -316,14 +311,13 @@ bot.on('message', message=> {
         else {
             message.channel.send(`**${message.author.username}** a sélectionné le gif Shame n° `+ args[0]+ ".");
             if (gif[args[0]-1] === undefined){
-                setTimeout(function(){ message.channel.send('__Il n\'y a pas de gif avec ce numéro .__\n Il n\'y a actuellement que '+ gif.length +' gifs disponibles .'); }, 1200);
+                setTimeout(function(){ message.channel.send('__Il n\'y a pas de gif avec ce numéro .__\n Il n\'y a actuellement que '+ gif.length +' gifs disponibles .'); }, 1000);
             }
             else
             {
                 setTimeout(function () {
                     message.channel.send(gif[args[0] - 1]);
-                }, 1200);
-                //message.channel.send(gif[args[0] - 1])
+                }, 1000);
             }
         }
     }
@@ -336,32 +330,39 @@ bot.on('message', message=> {
         const command = message.content.toLocaleLowerCase();
         const auteur = message.author;
 
-        if (command === `bonjour` || command === `salut` || command === `yop` || command === `bonsoir` || command === 'yo' || command ==='wesh' || command ==='coucou') {
-            let valeur =nombreAleatoire(100);
-            if(valeur >= 10 && valeur <= 45){
-                if (valeur >= 10 && valeur < 15){
-                    message.channel.send("Bien le Bonjour " +auteur );
+        if (command === `bonjour` || command === `salut` || command === `yop` || command === `bonsoir` || command === 'yo' || command ==='wesh' || command ==='coucou' || command === 'slt') {
+            let valeur =nombreAleatoire(110);
+            setTimeout(function () {
+                if (valeur >= 10 && valeur < 50) {
+                    if (valeur >= 10 && valeur < 15) {
+                        message.channel.send("Bien le Bonjour " + auteur);
+                    }
+                    if (valeur >= 15 && valeur < 20) {
+                        message.channel.send("Bonsoir " + auteur);
+                    }
+                    if (valeur >= 20 && valeur < 25) {
+                        message.channel.send("Yolo !");
+                    }
+                    if (valeur >= 25 && valeur < 30) {
+                        message.channel.send("Salut à toi mon cher " + auteur);
+                    }
+                    if (valeur >= 30 && valeur < 35) {
+                        message.channel.send("Salut mon ami :wink:")
+                    }
+                    if (valeur >= 35 && valeur < 40) {
+                        message.channel.send("Wesh wesh !")
+                    }
+                    if (valeur >= 40 && valeur < 45) {
+                        message.channel.send("Yo !")
+                    }
+                    if (valeur >= 45 && valeur < 50){
+                        message.channel.send("Yop !");
+                    }
+                    if( valeur >= 50 && valeur < 55){
+                        message.channel.send("Holà"+ auteur + "! ")
+                    }
                 }
-                if (valeur >= 15 && valeur <20){
-                    message.channel.send("Bonjoir " + auteur);
-                }
-                if (valeur >= 20 && valeur < 25){
-                    message.channel.send("Yolo !");
-                }
-                if (valeur >= 25 && valeur < 30){
-                    message.channel.send("Salut à toi mon cher "+ auteur);
-                }
-                if (valeur >= 30 && valeur < 35){
-                    message.channel.send("Salut mon ami :wink:")
-                }
-                if(valeur >=35 && valeur < 40){
-                    message.channel.send("Wesh wesh !")
-                }
-                if(valeur >=40 && valeur <= 45){
-                    message.channel.send("Yo !")
-                }
-            };
-           // message.channel.send(auteur + "1")
+            },500);
         }
     }
 });
