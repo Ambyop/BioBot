@@ -1,3 +1,4 @@
+//  créé par @ambyop
 const Discord = require("discord.js");
 const bot = new Discord.Client();
 const { prefix, token } = require('./config.json');
@@ -137,7 +138,7 @@ bot.on('message', message=> {
             else if (joueur === "papier" || joueur === "Papier") {
                  valeurJoueur = 2;
             }
-            else if (joueur === "ciseaux" || joueur === "Ciseaux") {
+            else if (joueur === "ciseaux" || joueur === "Ciseaux" || joueur === "ciseau" || joueur === "Ciseau") {
                  valeurJoueur = 3;
             }
             let valeurOrdinateur =  (Math.floor((4-1)*Math.random())+1);
@@ -398,10 +399,13 @@ bot.on('message', message=> {
     }
     if (command === `${prefix}purge`) {
         if (!message.member.hasPermission("MANAGE_MESSAGES")){
-            message.channel.send(`Désolé ${message.author.username}, mais vous n'avez pas la permission **Gérer les messages** !! Si vous pensez qu'il s'agit d'une erreur, contacter un administrateur.`)
+            message.channel.send(`Désolé **${message.author.username}**, mais vous n'avez pas la permission **Gérer les messages** !! Si vous pensez qu'il s'agit d'une erreur, contacter un administrateur.`)
         }
         else if (!message.guild.member(bot.user).hasPermission("MANAGE_MESSAGES")){
-            message.channel.send(`Désolé ${message.author.username}, mais Je n'ai pas la permission **Gérer les messages** sur ce serveur`);
+            message.channel.send(`Désolé **${message.author.username}**, mais Je n'ai pas la permission **Gérer les messages** sur ce serveur.`);
+        }
+        else if (!message.channel.permissionsFor(bot.user).hasPermission("MANAGE_MESSAGES")){
+            message.channel.send(`Désolé **${message.author.username}**, mais Je n'ai pas la permission **Gérer les messages** sur ce channel.`)
         }
         else if (args[0] === undefined){
             message.channel.send('Vous devez spécifier un nombre de messages.');
