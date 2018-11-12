@@ -1,4 +1,3 @@
-//  créé par @ambyop
 const Discord = require("discord.js");
 const bot = new Discord.Client();
 const { prefix, token } = require('./config.json');
@@ -6,7 +5,7 @@ const { prefix, token } = require('./config.json');
 bot.on("ready",function() {
     bot.user.setGame(`${prefix}help [commande]`);
     console.log("Bot connecté");
-    bot.user.setStatus('dnd') // online, idle, dnd, invisible
+    bot.user.setStatus('idle') // online, idle, dnd, invisible
 });
 
 
@@ -38,10 +37,7 @@ bot.on('message', message=> {
     const command = message.content.toLowerCase();
     if (command ===`${prefix}help`){
         message.channel.send(`${prefix}help [commande]\n **commande disponible:** ${prefix}ping , ${prefix}blah ,${prefix}communiste , ${prefix}nazi , ${prefix}trump ; ${prefix}putin , ${prefix}singe`+
-        ` , ${prefix}popcorn , ${prefix}vent , ${prefix}kim , ${prefix}shame , ${prefix}roll , ${prefix}pileface , ${prefix}quote`)
-    }
-    if (command ===`${prefix}help date`){
-        message.channel.send(`**Commande Désactivée**\nVoici le format de la commande:\n ${prefix}date [dd] [mm] [yyyy] \n Pour l\'arrêter il suffit de taper ${prefix}datestop `);
+        ` , ${prefix}popcorn , ${prefix}vent , ${prefix}kim , ${prefix}shame , ${prefix}roll , ${prefix}pileface , ${prefix}quote , ${prefix}shifumi , ${prefix}ppc , ${prefix}purge`)
     }
     if (command ===`${prefix}help coco` || command === `${prefix}help communiste`){
         message.channel.send(`Envoie un Gif aléatoire de communiste\n aussi disponible : ${prefix}communiste , ${prefix}coco .`)
@@ -77,7 +73,13 @@ bot.on('message', message=> {
         message.channel.send(`Envoie un Gif Shame, de manière aléatoire.`)
     }
     if (command ===`${prefix}help kim`){
-        message.channel.send(`Envoie un Gif sur Kim Jong Un de manière aléatoire .`)
+        message.channel.send(`Envoie un Gif sur Kim-Jong-Un de manière aléatoire .`)
+    }
+    if (command ===`${prefix}help ppc` || command ===`${prefix}help shifumi` || command === `${prefix}help chifoumi`){
+        message.channel.send(`Pour jouer à Shifumi//pierre-papier-ciseaux \n __Format disponible:__ ${prefix}ppc [argument], ${prefix}shifumi [argument], ${prefix}chifoumi [argument] \n __arguments disponibles :__ Pierre, Papier, Ciseaux . `)
+    }
+    if (command ===`${prefix}help purge`){
+        message.channel.send(`Pour supprimer le nombre de messages mis en paramètres.`)
     }
 
 });
@@ -118,6 +120,53 @@ bot.on('message', message=> {
     if (command === `${prefix}serveur`) {
         message.channel.send(`__**Nom du serveur:**__ ${message.guild.name}\n__**Nombre de membres:**__ ${message.guild.memberCount}`);
     }
+    if (command === `${prefix}ppc` || command === `${prefix}shifumi` || command === `${prefix}chifoumi`){
+        if (args[0] === undefined) {
+            message.reply(`vous n'avez pas introduit d'arguments \n Valeurs disponibles : pierre , papier , ciseaux`);
+        }
+        else{
+            let valeurJoueur;
+            let ordinateur;
+            let joueur = args[0];
+            if (joueur !== "pierre"  && joueur !=="papier"  && joueur !=="ciseaux" && joueur !== "ciseau") {
+                message.reply("vous avez mis une valeur incorrecte \n Valeurs possibles : pierre , papier , ciseaux");
+            }
+            if (joueur === "pierre" || joueur === "Pierre" ) {
+                 valeurJoueur = 1;
+            }
+            else if (joueur === "papier" || joueur === "Papier") {
+                 valeurJoueur = 2;
+            }
+            else if (joueur === "ciseaux" || joueur === "Ciseaux") {
+                 valeurJoueur = 3;
+            }
+            let valeurOrdinateur =  (Math.floor((4-1)*Math.random())+1);
+            if (valeurOrdinateur === 1) {
+                 ordinateur = "Pierre";
+            }
+            else if (valeurOrdinateur === 2) {
+                 ordinateur ="Papier";
+            }
+            else if (valeurOrdinateur === 3) {
+                 ordinateur="Ciseaux";
+            }
+            if (valeurJoueur === 1 && valeurOrdinateur === 3) {
+                message.channel.send(`${message.author.username} : `+joueur+`\n ordinateur : `+ ordinateur+`\n **${message.author.username} gagne !** :smiley: `);
+            }
+            else if (valeurOrdinateur === 1 && valeurJoueur === 3) {
+                message.channel.send(`${message.author.username} : `+joueur+"\n ordinateur : "+ ordinateur+"\n **Je gagne !** :smiley:");
+            }
+            else if (valeurJoueur === valeurOrdinateur) {
+                message.channel.send(`${message.author.username} : `+joueur+"\n ordinateur : "+ ordinateur+"\n **égalité**")
+            }
+            else if (valeurJoueur > valeurOrdinateur) {
+                message.channel.send(`${message.author.username} : `+joueur+"\n ordinateur : "+ ordinateur+`\n **${message.author.username} gagne !** :smiley: `);
+            }
+            else if (valeurOrdinateur > valeurJoueur) {
+                message.channel.send(`${message.author.username} : `+joueur+"\n ordinateur : "+ ordinateur+"\n **Je gagne !** :smiley:");
+            }
+        }
+    }
     if (command ===`${prefix}coco` || command === `${prefix}communiste`){
         let gif=['https://i.imgur.com/0TWyD8S.gif','http://4.bp.blogspot.com/-FF3YYFzuWyc/WH5Q4bo6RII/AAAAAAAACMU/zf3NL5VmQXsj2daaSAGan98x9NG9vsp4gCK4B/s1600/8a6813e28358.gif','https://www.tenor.co/vLxU.gif ','https://www.tenor.co/vLye.gif ',
             'https://www.tenor.co/J5Qb.gif ','https://www.tenor.co/RhZE.gif ','https://giphy.com/gifs/animated-dancing-shittyreactiongifs-9vc3xK2OyMwzC ','https://media.giphy.com/media/axMy0g9z9khZC/giphy.gif','https://i.imgur.com/lVi8l2L.gif',
@@ -129,13 +178,13 @@ bot.on('message', message=> {
         else {
             message.channel.send(`**${message.author.username}** a sélectionné le gif communiste n° `+ args[0]+ ".");
             if (gif[args[0]-1] === undefined){
-                setTimeout(function(){ message.channel.send('__Il n\'y a pas de gif avec ce numéro .__\n Il n\'y a actuellement que '+ gif.length +' gifs disponibles .'); }, 1000);
+                setTimeout(function(){ message.channel.send('__Il n\'y a pas de gif avec ce numéro .__\n Il n\'y a actuellement que '+ gif.length +' gifs disponibles .'); }, 500);
             }
             else
             {
                 setTimeout(function () {
                     message.channel.send(gif[args[0] - 1]);
-                }, 1000);
+                }, 500);
             }
         }
     }
@@ -149,13 +198,13 @@ bot.on('message', message=> {
         else {
             message.channel.send(`**${message.author.username}** a sélectionné le gif nazi n° `+ args[0]+ ".");
             if (gif[args[0]-1] === undefined){
-                setTimeout(function(){ message.channel.send('__Il n\'y a pas de gif avec ce numéro .__\n Il n\'y a actuellement que '+ gif.length +' gifs disponibles .'); }, 1000);
+                setTimeout(function(){ message.channel.send('__Il n\'y a pas de gif avec ce numéro .__\n Il n\'y a actuellement que '+ gif.length +' gifs disponibles .'); }, 500);
             }
             else
             {
                 setTimeout(function () {
                     message.channel.send(gif[args[0] - 1]);
-                }, 1000);
+                }, 500);
             }
         }
     }
@@ -171,13 +220,13 @@ bot.on('message', message=> {
         else {
             message.channel.send(`**${message.author.username}** a sélectionné le gif sur Trump n° `+ args[0]+ ".");
             if (gif[args[0]-1] === undefined){
-                setTimeout(function(){ message.channel.send('__Il n\'y a pas de gif avec ce numéro .__\n Il n\'y a actuellement que '+ gif.length +' gifs disponibles .'); }, 1000);
+                setTimeout(function(){ message.channel.send('__Il n\'y a pas de gif avec ce numéro .__\n Il n\'y a actuellement que '+ gif.length +' gifs disponibles .'); }, 500);
             }
             else
             {
                 setTimeout(function () {
                     message.channel.send(gif[args[0] - 1]);
-                }, 1000);
+                }, 500);
             }
         }
     }
@@ -191,13 +240,13 @@ bot.on('message', message=> {
         else {
             message.channel.send(`**${message.author.username}** a sélectionné le gif sur Putin n° `+ args[0]+ ".");
             if (gif[args[0]-1] === undefined){
-                setTimeout(function(){ message.channel.send('__Il n\'y a pas de gif avec ce numéro .__\n Il n\'y a actuellement que '+ gif.length +' gifs disponibles .'); }, 1000);
+                setTimeout(function(){ message.channel.send('__Il n\'y a pas de gif avec ce numéro .__\n Il n\'y a actuellement que '+ gif.length +' gifs disponibles .'); }, 500);
             }
             else
             {
                 setTimeout(function () {
                     message.channel.send(gif[args[0] - 1]);
-                }, 1000);
+                }, 500);
             }
         }
     }
@@ -214,13 +263,13 @@ bot.on('message', message=> {
         else {
             message.channel.send(`**${message.author.username}** a sélectionné le gif sur les singes n° `+ args[0]+ ".");
             if (gif[args[0]-1] === undefined){
-                setTimeout(function(){ message.channel.send('__Il n\'y a pas de gif avec ce numéro .__\n Il n\'y a actuellement que '+ gif.length +' gifs disponibles .'); }, 1000);
+                setTimeout(function(){ message.channel.send('__Il n\'y a pas de gif avec ce numéro .__\n Il n\'y a actuellement que '+ gif.length +' gifs disponibles .'); }, 500);
             }
             else
             {
                 setTimeout(function () {
                     message.channel.send(gif[args[0] - 1]);
-                }, 1000);
+                }, 500);
             }
         }
     }
@@ -236,13 +285,13 @@ bot.on('message', message=> {
         else {
             message.channel.send(`**${message.author.username}** a sélectionné le gif sur le popcorn n° `+ args[0]+ ".");
             if (gif[args[0]-1] === undefined){
-                setTimeout(function(){ message.channel.send('__Il n\'y a pas de gif avec ce numéro .__\n Il n\'y a actuellement que '+ gif.length +' gifs disponibles .'); }, 1000);
+                setTimeout(function(){ message.channel.send('__Il n\'y a pas de gif avec ce numéro .__\n Il n\'y a actuellement que '+ gif.length +' gifs disponibles .'); }, 500);
             }
             else
             {
                 setTimeout(function () {
                     message.channel.send(gif[args[0] - 1]);
-                }, 1000);
+                }, 500);
             }
         }
     }
@@ -255,13 +304,13 @@ bot.on('message', message=> {
         else {
             message.channel.send(`**${message.author.username}** a sélectionné le gif vent n° `+ args[0]+ ".");
             if (gif[args[0]-1] === undefined){
-                setTimeout(function(){ message.channel.send('__Il n\'y a pas de gif avec ce numéro .__\n Il n\'y a actuellement que '+ gif.length +' gifs disponibles .'); }, 1000);
+                setTimeout(function(){ message.channel.send('__Il n\'y a pas de gif avec ce numéro .__\n Il n\'y a actuellement que '+ gif.length +' gifs disponibles .'); }, 500);
             }
             else
             {
                 setTimeout(function () {
                     message.channel.send(gif[args[0] - 1]);
-                }, 1000);
+                }, 500);
             }
         }
     }
@@ -294,13 +343,13 @@ bot.on('message', message=> {
         else {
             message.channel.send(`**${message.author.username}** a sélectionné le gif sur Kim Jong Un n° `+ args[0]+ ".");
             if (gif[args[0]-1] === undefined){
-                setTimeout(function(){ message.channel.send('__Il n\'y a pas de gif avec ce numéro .__\n Il n\'y a actuellement que '+ gif.length +' gifs disponibles .'); }, 1000);
+                setTimeout(function(){ message.channel.send('__Il n\'y a pas de gif avec ce numéro .__\n Il n\'y a actuellement que '+ gif.length +' gifs disponibles .'); }, 500);
             }
             else
             {
                 setTimeout(function () {
                     message.channel.send(gif[args[0] - 1]);
-                }, 1000);
+                }, 500);
             }
         }
     }
@@ -316,14 +365,60 @@ bot.on('message', message=> {
         else {
             message.channel.send(`**${message.author.username}** a sélectionné le gif Shame n° `+ args[0]+ ".");
             if (gif[args[0]-1] === undefined){
-                setTimeout(function(){ message.channel.send('__Il n\'y a pas de gif avec ce numéro .__\n Il n\'y a actuellement que '+ gif.length +' gifs disponibles .'); }, 1000);
+                setTimeout(function(){ message.channel.send('__Il n\'y a pas de gif avec ce numéro .__\n Il n\'y a actuellement que '+ gif.length +' gifs disponibles .'); }, 500);
             }
             else
             {
                 setTimeout(function () {
                     message.channel.send(gif[args[0] - 1]);
-                }, 1000);
+                }, 500);
             }
+        }
+    }
+    if (command ===`${prefix}chinois`){
+        let gif=["https://i.pinimg.com/originals/dc/da/cd/dcdacd4933a604daf37c2e4ca0dae8ad.gif","https://thumbs.gfycat.com/BestAmpleBinturong-size_restricted.gif","https://thumbs.gfycat.com/SlimyPerfumedDugong-small.gif","https://i.imgur.com/H71pvtV.gif",
+        "https://www.askideas.com/media/20/Eat-The-Rice-Everyday-Funny-Asian-Gif.gif","https://static.fjcdn.com/gifs/Chinese_b73fb7_2863548.gif","https://thumbs.gfycat.com/GeneralTepidHairstreak-size_restricted.gif","https://static.boredpanda.com/blog/wp-content/uploads/2016/08/funny-geeky-china-swimmer-fu-yuanhui-rio-olympics-3.gif",
+        "http://media.topito.com/wp-content/uploads/2014/03/leeb2.gif","https://giphy.com/gifs/lmao-relatable-bruce-lee-112YQ5P8fp12o0 ","https://www.tenor.co/wolF.gif "];
+        if (args[0] === undefined) {
+            let valeur = nombreAleatoire(gif.length);
+            message.channel.send(gif[valeur - 1])
+        }
+        else {
+            message.channel.send(`**${message.author.username}** a sélectionné le gif chinois n° `+ args[0]+ ".");
+            if (gif[args[0]-1] === undefined){
+                setTimeout(function(){ message.channel.send('__Il n\'y a pas de gif avec ce numéro .__\n Il n\'y a actuellement que '+ gif.length +' gifs disponibles .'); }, 500);
+            }
+            else
+            {
+                setTimeout(function () {
+                    message.channel.send(gif[args[0] - 1]);
+                }, 500);
+            }
+        }
+    }
+    if (command === `${prefix}purge`) {
+        if (!message.member.hasPermission("MANAGE_MESSAGES")){
+            message.channel.send(`Désolé ${message.author.username}, mais vous n'avez pas la permission **Gérer les messages** !! Si vous pensez qu'il s'agit d'une erreur, contacter un administrateur.`)
+        }
+        else if (!message.guild.member(bot.user).hasPermission("MANAGE_MESSAGES")){
+            message.channel.send(`Désolé ${message.author.username}, mais Je n'ai pas la permission **Gérer les messages** sur ce serveur`);
+        }
+        else if (args[0] === undefined){
+            message.channel.send('Vous devez spécifier un nombre de messages.');
+        }
+        else if (args[0] < 1){
+            message.channel.send('Vous devez mettre un nombre supérieur à 1.');
+        }
+        else if (args[0] > 100){
+            message.channel.send('Vous devez mettre un nombre inférieur à 100');
+        }
+        else if (isNaN(args[0])){
+            message.channel.send('Vous avez mit un nombre incorrect');
+        }
+        else {
+            message.channel.bulkDelete(args[0]).then(() => {
+                message.channel.send(`:pencil2: ${args[0]} messages on été supprimer par **${message.author.username}**.`).then(msg => msg.delete(5000));
+            });
         }
     }
 
