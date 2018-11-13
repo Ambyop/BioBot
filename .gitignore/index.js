@@ -4,11 +4,11 @@ const bot = new Discord.Client();
 const { prefix, token } = require('./config.json');
 
 bot.on("ready",function() {
-    bot.user.setGame(`${prefix}help [commande]`);
+    bot.user.setGame(`maintenance en cours`);
     console.log("Bot connecté");
     bot.user.setStatus('idle') // online, idle, dnd, invisible
 });
-
+/*
 
 
 // date
@@ -517,4 +517,4 @@ bot.on('error', console.error);
 function nombreAleatoire(nombre) {
     let nb = Math.floor(Math.random() * nombre+1);
     return nb;
-}
+}*/
