@@ -4,11 +4,11 @@ const bot = new Discord.Client();
 const { prefix, token } = require('./config.json');
 
 bot.on("ready",function() {
-    bot.user.setGame(`maintenance en cours`);
+    bot.user.setGame(`${prefix}help || créé par @AmByop`);
     console.log("Bot connecté");
     bot.user.setStatus('idle') // online, idle, dnd, invisible
 });
-/*
+
 
 
 // date
@@ -36,51 +36,36 @@ bot.on('message', message=> {
     if (message.author.bot) return;
 
     const command = message.content.toLowerCase();
-    if (command ===`${prefix}help`){
-        message.channel.send(`${prefix}help [commande]\n **commande disponible:** ${prefix}ping , ${prefix}blah ,${prefix}communiste , ${prefix}nazi , ${prefix}trump ; ${prefix}putin , ${prefix}singe`+
-        ` , ${prefix}popcorn , ${prefix}vent , ${prefix}kim , ${prefix}shame , ${prefix}roll , ${prefix}pileface , ${prefix}quote , ${prefix}shifumi , ${prefix}ppc , ${prefix}purge`)
-    }
-    if (command ===`${prefix}help coco` || command === `${prefix}help communiste`){
-        message.channel.send(`Envoie un Gif aléatoire de communiste\n aussi disponible : ${prefix}communiste , ${prefix}coco .`)
-    }
-    if (command ===`${prefix}help roll`){
-        message.channel.send(`Lance un dé avec la valeur indiquée\n ${prefix}roll [valeur] .`)
-    }
-    if (command ===`${prefix}help nazi`){
-        message.channel.send('Envoie un Gif aléatoire de nazi .')
-    }
-    if (command ===`${prefix}help trump`){
-        message.channel.send('Envoie un Gif aléatoire de Trump .')
-    }
-    if (command ===`${prefix}help poutine` || command === `${prefix}help putin`){
-        message.channel.send(`Envoie un Gif sur poutine de manière aléatoire :)\n aussi disponible : ${prefix}putin , ${prefix}poutine`)
-    }
-    if (command === `${prefix}help singe` || command === `${prefix}help darklos`){
-        message.channel.send('Envoie un Gif de singe, de manière aléatoire.')
-    }
-    if (command === `${prefix}help vent`){
-        message.channel.send('A faire quand quelqu\'un te fait un vent :grinning: ');
-    }
-    if (command === `${prefix}help popcorn`){
-        message.channel.send(`Envoie un Gif de popcorn, de manière aléatoire.\n aussi disponible : ${prefix}pop , ${prefix}corn , ${prefix}popcorn .`)
-    }
-    if (command === `${prefix}help pileface` || command === `${prefix}help pf` || command ===`${prefix}help pile-face`){
-        message.channel.send('Pile ou face ? la pièce sera lancée...')
-    }
-    if (command === `${prefix}help quote`){
-        message.channel.send(`Remet les arguments en quote entre \\\`\\\`\\\` [arguments]\\\`\\\`\\\` \n ${prefix}quote [arguments]`)
-    }
-    if (command === `${prefix}help shame`){
-        message.channel.send(`Envoie un Gif Shame, de manière aléatoire.`)
-    }
-    if (command ===`${prefix}help kim`){
-        message.channel.send(`Envoie un Gif sur Kim-Jong-Un de manière aléatoire .`)
-    }
-    if (command ===`${prefix}help ppc` || command ===`${prefix}help shifumi` || command === `${prefix}help chifoumi`){
-        message.channel.send(`Pour jouer à Shifumi//pierre-papier-ciseaux \n __Format disponible:__ ${prefix}ppc [argument], ${prefix}shifumi [argument], ${prefix}chifoumi [argument] \n __arguments disponibles :__ Pierre, Papier, Ciseaux . `)
-    }
-    if (command ===`${prefix}help purge`){
-        message.channel.send(`Pour supprimer le nombre de messages mis en paramètres.`)
+    if (command === `${prefix}help`) {
+        message.react("🤔");
+        message.channel.send(`**${message.author.username}** Je te l'ai envoyé en DM :wink`);
+        const embed = new Discord.RichEmbed()
+            .setColor('RANDOM')
+            .setTitle(`**${prefix}help : commande disponible:**`)
+            .addField(`**${prefix}ping :**`,` renvoie pong.`, true)
+            .addField(`**${prefix}blah :**`,` répond`, true)
+            .addField(`**${prefix}communiste :**`,` Envoie un Gif aléatoire de communiste\n autre forme : **${prefix}coco** .`, true)
+            .addField(`**${prefix}nazi :**`,` Envoie un Gif aléatoire de nazi .`)
+            .addField(`**${prefix}trump :**`,` Envoie un Gif aléatoire sur Trump .`)
+            .addField(`**${prefix}putin :**`,`Envoie un Gif sur poutine de manière aléatoire\n autre forme : **${prefix}poutine**`)
+            .addField(`**${prefix}singe :**`,'Envoie un Gif de singe de manière aléatoire.')
+            .addField(`**${prefix}popcorn :**`,`Envoie un Gif de popcorn, de manière aléatoire.\n autres formes : ${prefix}pop , ${prefix}corn .`)
+            .addField(`**${prefix}vent :**`,"A faire quand quelqu'un te fait un vent.")
+            .addField(`**${prefix}kim :**`,`Envoie un Gif sur Kim-Jong-Un de manière aléatoire .`)
+            .addField(`**${prefix}shame :**`,"Envoie un Gif Shame de manière aléatoire.")
+            .addField(`**${prefix}chinois :**`,"Envoie un Gif les chinois de manière aléatoire.")
+            .addField(`**${prefix}roll :**`,`Lance un dé avec la valeur indiquée\n ${prefix}roll [valeur] .`)
+            .addField(`**${prefix}pileface :**`,`Pile ou face ? la pièce sera lancée..\n autres formes : ${prefix}pf`)
+            .addField(`**${prefix}quote :**`,`Remet les arguments en quote entre \\\`\\\`\\\` [arguments]\\\`\\\`\\\`.`)
+            .addField(`**${prefix}shifumi :**`,`Pour jouer à Shifumi//pierre-papier-ciseaux \n autres formes ${prefix}ppc [argument] , ${prefix}chifoumi [argument] \n arguments disponibles : Pierre, Papier (feuille), Ciseaux .`)
+            .addField(`**${prefix}purge :**`,`Pour supprimer le nombre de messages mis en paramètres.`)
+            .addField(`**${prefix}serveur :**`,"donne des informations sur le serveur [pas complet]")
+            .addField(`**${prefix}lag :**`,"Vous donne la latence du BOt et de l'API.")
+            .addField(`**${prefix}uptime :**`,"indique le temps depuis que le bot est lancé")
+            .addField(`**${prefix}userinfo :**`,`donne les informations sur le joueur mit en  paramètre.\n autre forme : ${prefix}user-info`)
+
+            .setFooter(`Réponse à ${message.author.username}#${message.author.discriminator}`);
+        message.author.send({embed});
     }
 
 });
@@ -123,19 +108,19 @@ bot.on('message', message=> {
     }
     if (command === `${prefix}ppc` || command === `${prefix}shifumi` || command === `${prefix}chifoumi`){
         if (args[0] === undefined) {
-            message.reply(`vous n'avez pas introduit d'arguments \n Valeurs disponibles : pierre , papier , ciseaux`);
+            message.reply(`vous n'avez pas introduit d'arguments \n Valeurs disponibles : pierre , papier (feuille), ciseaux`);
         }
         else{
             let valeurJoueur;
             let ordinateur;
             let joueur = args[0];
-            if (joueur !== "pierre"  && joueur !=="papier"  && joueur !=="ciseaux" && joueur !== "ciseau") {
-                message.reply("vous avez mis une valeur incorrecte \n Valeurs possibles : pierre , papier , ciseaux");
+            if (joueur !== "pierre"  && joueur !=="papier"  && joueur !=="ciseaux" && joueur !== "ciseau" && joueur !== "feuilles" && joueur !== "feuille") {
+                message.reply("vous avez mis une valeur incorrecte \n Valeurs possibles : pierre , papier (feuille) , ciseaux");
             }
             if (joueur === "pierre" || joueur === "Pierre" ) {
                  valeurJoueur = 1;
             }
-            else if (joueur === "papier" || joueur === "Papier") {
+            else if (joueur === "papier" || joueur === "Papier" || joueur === "feuille" || joueur === "feuilles") {
                  valeurJoueur = 2;
             }
             else if (joueur === "ciseaux" || joueur === "Ciseaux" || joueur === "ciseau" || joueur === "Ciseau") {
@@ -152,19 +137,19 @@ bot.on('message', message=> {
                  ordinateur="Ciseaux";
             }
             if (valeurJoueur === 1 && valeurOrdinateur === 3) {
-                message.channel.send(`${message.author.username} : `+joueur+`\n ordinateur : `+ ordinateur+`\n **${message.author.username} gagne !** :smiley: `);
+                message.channel.send(`__${message.author.username}__ : `+joueur+`\n __${bot.user.username}__ : `+ ordinateur+`\n **${message.author.username} gagne !** :smiley: `);
             }
             else if (valeurOrdinateur === 1 && valeurJoueur === 3) {
-                message.channel.send(`${message.author.username} : `+joueur+"\n ordinateur : "+ ordinateur+"\n **Je gagne !** :smiley:");
+                message.channel.send(`__${message.author.username}__ : `+joueur+`\n __${bot.user.username}__ : `+ ordinateur+"\n **Je gagne !** :smiley:");
             }
             else if (valeurJoueur === valeurOrdinateur) {
-                message.channel.send(`${message.author.username} : `+joueur+"\n ordinateur : "+ ordinateur+"\n **égalité**")
+                message.channel.send(`__${message.author.username}__ : `+joueur+`\n __${bot.user.username}__ : `+ ordinateur+"\n **égalité**")
             }
             else if (valeurJoueur > valeurOrdinateur) {
-                message.channel.send(`${message.author.username} : `+joueur+"\n ordinateur : "+ ordinateur+`\n **${message.author.username} gagne !** :smiley: `);
+                message.channel.send(`__${message.author.username}__ : `+joueur+`\n __${bot.user.username}__ : `+ ordinateur+`\n **${message.author.username} gagne !** :smiley: `);
             }
             else if (valeurOrdinateur > valeurJoueur) {
-                message.channel.send(`${message.author.username} : `+joueur+"\n ordinateur : "+ ordinateur+"\n **Je gagne !** :smiley:");
+                message.channel.send(`__${message.author.username}__ : `+joueur+`\n __${bot.user.username}__ : `+ ordinateur+"\n **Je gagne !** :smiley:");
             }
         }
     }
@@ -397,6 +382,77 @@ bot.on('message', message=> {
             }
         }
     }
+    if (command === `${prefix}lag`){
+        let msgping1 = new Date();
+
+        let botping = new Date() - message.createdAt;
+
+        let msgping2 = new Date() - msgping1;
+
+        let pingembed = new Discord.RichEmbed()
+            .setColor("RANDOM")
+            .addField('API Ping : ', Math.floor(bot.ping) + ' ms')
+            .addField('Bot Ping : ', Math.floor(botping) + ' ms')
+            .addField('Message Ping : ', '~' + Math.round(msgping2) + ' ms')
+            .setTimestamp(new Date())
+            .setFooter(`requested by ${message.author.tag}`);
+
+
+        return message.channel.send(pingembed);
+    }
+    if (command ===`${prefix}uptime`){
+        let u = convertMS(bot.uptime);
+        let uptime = u.d + " jours : " + u.h + " heures : " + u.m + " minutes : " + u.s + " secondes.";
+       // const duration = bot.uptime;
+        message.channel.send(`:alarm_clock: ` + `**Je fonctionne depuis :**  ${uptime}`);
+    }
+    if (command ===`${prefix}userinfo` || command ===`${prefix}user-info`){
+        let user;
+        // If the user mentions someone, display their stats. If they just run userinfo without mentions, it will show their own stats.
+        if (message.mentions.users.first()) {
+            user = message.mentions.users.first();
+        } else {
+            user = message.author;
+        }
+        // creation utilisateur
+        let userCreated = user.createdAt.toString().split(' ');
+        // a rejoint le serveur
+        //let userJoined = user.joinedAt.toString().split(' ');
+        // status utilisateur
+        let userStatus = user.presence.status;
+        let status;
+        if (userStatus === "dnd"){
+            status = "Ne pas déranger"
+        }
+        if (userStatus === "idle"){
+            status = "Inactif"
+        }
+        if (userStatus === "online"){
+            status = "En ligne"
+        }
+        if (userStatus === "offline"){
+            status = "Déconnecté"
+        }
+        // Define the member of a guild.
+        const member = message.guild.member(user);
+
+        //Discord rich embed
+        const embed = new Discord.RichEmbed()
+            .setColor('RANDOM')
+            .setThumbnail(user.avatarURL)
+            .setTitle(`${user.username}#${user.discriminator}`)
+            .addField("ID:", `${user.id}`, true)
+            .addField("Surnom:", `${member.nickname !== null ? `${member.nickname}` : 'None'}`, true)
+            .addField("Créé :", userCreated[2]+' , '+ userCreated[1]+" , "+userCreated[3], true)
+            //.addField("a rejoint le serveur:", userJoined[2]+' , '+ userJoined[1]+" , "+userJoined[3], true)
+            .addField("Bot:", `${user.bot}`, true)
+            .addField("Status:", status, true)
+            .addField("Jeu:", `${user.presence.game ? user.presence.game.name : 'None'}`, true)
+            .addField("Rôles:", member.roles.map(roles => `${roles.name}`).join(', '), true)
+            .setFooter(`Réponse à ${message.author.username}#${message.author.discriminator}`);
+        message.channel.send({embed});
+    };
+
     if (command === `${prefix}purge`) {
         if (!message.member.hasPermission("MANAGE_MESSAGES")){
             message.channel.send(`Désolé **${message.author.username}**, mais vous n'avez pas la permission **Gérer les messages** !! Si vous pensez qu'il s'agit d'une erreur, contacter un administrateur.`)
@@ -469,6 +525,9 @@ bot.on('message', message=> {
             },500);
         }
     }
+    /*if (message.content.startsWith(prefix)){
+        message.react("🤔")
+    }*/
 });
 
 //boucle jour
@@ -503,13 +562,13 @@ bot.on('message', message=> {
                     console.log('exiting');
                     clearInterval(interval);
                 }
-            }, 4* 3600 * 1000);
+            }, 3 * 1000);
         }
     }
 
 
     });
-*/
+
 
 bot.login(process.env.TOKEN);
 bot.on('error', console.error);
@@ -518,3 +577,20 @@ function nombreAleatoire(nombre) {
     let nb = Math.floor(Math.random() * nombre+1);
     return nb;
 }
+
+function convertMS(ms) {
+    var d, h, m, s;
+    s = Math.floor(ms / 1000);
+    m = Math.floor(s / 60);
+    s = s % 60;
+    h = Math.floor(m / 60);
+    m = m % 60;
+    d = Math.floor(h / 24);
+    h = h % 24;
+    return {
+        d: d
+        , h: h
+        , m: m
+        , s: s
+    };
+};
