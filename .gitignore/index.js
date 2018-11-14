@@ -6,7 +6,7 @@ const { prefix, token } = require('./config.json');
 bot.on("ready",function() {
     bot.user.setGame(`${prefix}help || créé par @AmByop`);
     console.log("Bot connecté");
-    bot.user.setStatus('idle') // online, idle, dnd, invisible
+    bot.user.setStatus('dnd') // online, idle, dnd, invisible
 });
 
 
@@ -26,7 +26,6 @@ bot.on('message', message=>{
         let texte = ["Meh.","Blèh","Blè !","Bleh !","Oui !","Bla !"];
         let numero = nombreAleatoire(texte.length);
         message.channel.send(texte[numero-1])
-        //message.channel.send('Meh.');
     }
 
     
@@ -38,7 +37,7 @@ bot.on('message', message=> {
     const command = message.content.toLowerCase();
     if (command === `${prefix}help`) {
         message.react("🤔");
-        message.channel.send(`**${message.author.username}** Je te l'ai envoyé en DM :wink`);
+        message.channel.send(`**${message.author.username}** Je te l'ai envoyé en DM :wink:`);
         const embed = new Discord.RichEmbed()
             .setColor('RANDOM')
             .setTitle(`**${prefix}help : commande disponible:**`)
@@ -84,7 +83,7 @@ bot.on('message', message=> {
                 message.reply(`Vous avez oublié de mettre la valeur maximale\n ${prefix}roll [valeur]`)
             }
             else{
-                    message.reply('La valeur doit être strictement supérieure a 0 ...')
+                    message.reply('La valeur doit être strictement supérieure à 0 ...')
             }
         }
         else {
@@ -551,6 +550,7 @@ bot.on('message', message=> {
         }
         else {
             message.channel.send(`**${message.author.username}** lancement de la boucle journée à partir du `+ args[0] +"/"+args[1]+"/"+args[2]);
+            message.channel.send("Nous passons au jour : " + date);
             var count = 0;
             let temoin = 0;
             var interval = setInterval(function () {
@@ -562,7 +562,7 @@ bot.on('message', message=> {
                     console.log('exiting');
                     clearInterval(interval);
                 }
-            }, 3 * 1000);
+            }, 4* 3600 * 1000); //1h = 3600sec
         }
     }
 
