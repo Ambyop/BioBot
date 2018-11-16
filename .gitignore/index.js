@@ -523,6 +523,7 @@ bot.on('message', message=> {
             },500);
         }
     }
+})
     /*if (message.content.startsWith(prefix)){
         message.react("🤔")
     }*/
