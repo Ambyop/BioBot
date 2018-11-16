@@ -525,7 +525,7 @@ bot.on('message', message=> {
     }
     /*if (message.content.startsWith(prefix)){
         message.react("🤔")
-    }*
+    }*/
 
 //boucle jour
 bot.on('message', message=> {
