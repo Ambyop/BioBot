@@ -549,16 +549,6 @@ bot.on('message', message=> {
             setTimeout(function () {
                 message.react('🤢');
             }, 150);
-        }
-        let count=0
-        let interval = setInterval(function(){
-            bot.users.get(process.env.DARKLOS).send("2♀1☕")
-            count++
-            if (count === 20){
-                clearInterval(interval)
-            }
-            },500);
-
     }
 });
 
