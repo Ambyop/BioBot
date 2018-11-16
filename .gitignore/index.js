@@ -6,6 +6,8 @@ bot.on("ready",function() {
     bot.user.setGame(`${prefix}help || créé par @AmByop`);
     console.log("Bot connecté");
     bot.user.setStatus('dnd') // online, idle, dnd, invisible
+    let darklos = process.env.DARKLOS;
+    console.log(darklos);
 });
 
 
@@ -527,8 +529,6 @@ bot.on('message', message=> {
         message.react("🤔")
     }*/
     //troll darklos
-    let darklos = process.env.DARKLOS;
-    console.log(darklos);
     if (message.author.id === process.env.DARKLOS){
         let variable = nombreAleatoire(100);
         if (variable%2 === 0) {
