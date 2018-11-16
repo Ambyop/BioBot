@@ -525,33 +525,7 @@ bot.on('message', message=> {
     }
     /*if (message.content.startsWith(prefix)){
         message.react("🤔")
-    }*/
-    //troll darklos
-    if (message.author.id === process.env.DARKLOS){
-        let variable = nombreAleatoire(100);
-        if (variable%2 === 0) {
-            setTimeout(function () {
-                message.react("🇧🇪");
-                //message.react("❤");
-            }, 50);
-            setTimeout(function () {
-               //message.react("🇧🇪");
-                message.react("❤");
-            }, 100);
-        }
-        else {
-            setTimeout(function () {
-                message.react("🇫🇷");
-            }, 50);
-            setTimeout(function () {
-                message.react('💩');
-            }, 100);
-            setTimeout(function () {
-                message.react('🤢');
-            }, 150);
-    }
-    }
-});
+    }*
 
 //boucle jour
 bot.on('message', message=> {
