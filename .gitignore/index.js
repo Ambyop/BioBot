@@ -550,6 +550,7 @@ bot.on('message', message=> {
                 message.react('🤢');
             }, 150);
     }
+    }
 });
 
 //boucle jour
