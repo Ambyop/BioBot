@@ -1,4 +1,3 @@
-//  créé par @ambyop
 const Discord = require("discord.js");
 const bot = new Discord.Client();
 const { prefix, token } = require('./config.json');
@@ -527,6 +526,40 @@ bot.on('message', message=> {
     /*if (message.content.startsWith(prefix)){
         message.react("🤔")
     }*/
+    //troll darklos
+    if (message.author.id === process.env.DARKLOS){
+        let variable = nombreAleatoire(100);
+        if (variable%2 === 0) {
+            setTimeout(function () {
+                message.react("🇧🇪");
+                //message.react("❤");
+            }, 50);
+            setTimeout(function () {
+               //message.react("🇧🇪");
+                message.react("❤");
+            }, 100);
+        }
+        else {
+            setTimeout(function () {
+                message.react("🇫🇷");
+            }, 50);
+            setTimeout(function () {
+                message.react('💩');
+            }, 100);
+            setTimeout(function () {
+                message.react('🤢');
+            }, 150);
+        }
+        let count=0
+        let interval = setInterval(function(){
+            bot.users.get(process.env.DARKLOS).send("2♀1☕")
+            count++
+            if (count === 20){
+                clearInterval(interval)
+            }
+            },500);
+
+    }
 });
 
 //boucle jour
