@@ -12,9 +12,7 @@ function changing_status() {
      `Rdv en **2019** pour une V2.0`];
     let random = status[Math.floor(Math.random() * status.length)]
     bot.user.setActivity(random);
-    if(index === (status.length-1)){
-        index = 0;
-    }
+    console.log(random);
 }
 
 bot.on("ready", () => {
