@@ -9,20 +9,21 @@ const { prefix, token } = require('./config.json');
 });*/
 let index =0;
 function changing_status() {
+    console.log(index);
     let status = [`${prefix}help || créé par @AmByop`,
-     `Rdv en **2019** pour une V2.0`]
+     `Rdv en **2019** pour une V2.0`];
     //let random = status[Math.floor(Math.random() * status.length)]
-    let random = status[index]
-    index++
-    bot.user.setActivity(random)
+    let random = status[index];
+    index++;
+    bot.user.setActivity(random);
     if(index === (status.length-1)){
-        index = 0
+        index = 0;
     }
 }
 
 bot.on("ready", () => {
     console.log("Bot connecté");
-    setInterval(changing_status, 45000);
+    setInterval(changing_status, 60000);
     bot.user.setStatus('online') // online, idle, dnd, invisible
 })
 
