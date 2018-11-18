@@ -7,6 +7,7 @@ const { prefix, token } = require('./config.json');
     console.log("Bot connecté");
     bot.user.setStatus('dnd') // online, idle, dnd, invisible
 });*/
+let index = 0;
 bot.on('ready', function() {
     this.bot.setInterval(async () => {
         const statuslist = [
