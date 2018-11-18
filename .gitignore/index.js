@@ -7,36 +7,21 @@ const { prefix, token } = require('./config.json');
     console.log("Bot connecté");
     bot.user.setStatus('dnd') // online, idle, dnd, invisible
 });*/
-/*function changing_status() {
-    console.log(index);
+function changing_status() {
     let status = [`${prefix}help || créé par @AmByop`,
      `Rdv en **2019** pour une V2.0`];
-    //let random = status[Math.floor(Math.random() * status.length)]
-    let random = status[index];
-    index++;
-    bot.user.setActivity(random);
-    if(index === (status.length-1)){
-        index = 0;
-    }
-}*/
-
-bot.on("ready", () => {
-    console.log("Bot connecté");
-    let index =0;
-    setInterval(changing_status(), 60000);
-    bot.user.setStatus('online') // online, idle, dnd, invisible
-    function changing_status() {
-    console.log(index);
-    let status = [`${prefix}help || créé par @AmByop`,
-     `Rdv en **2019** pour une V2.0`];
-    //let random = status[Math.floor(Math.random() * status.length)]
-    let random = status[index];
-    index++;
+    let random = status[Math.floor(Math.random() * status.length)]
     bot.user.setActivity(random);
     if(index === (status.length-1)){
         index = 0;
     }
 }
+
+bot.on("ready", () => {
+    console.log("Bot connecté");
+    let index =0;
+    setInterval(changing_status(), 45000);
+    bot.user.setStatus('online') // online, idle, dnd, invisible
 })
 
 
