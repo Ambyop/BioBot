@@ -40,6 +40,7 @@ function changing_status() {
 bot.on("ready", () => {
     console.log("Bot connecté");
     setInterval(changing_status, 45000);
+    bot.user.setStatus('online') // online, idle, dnd, invisible
 })
 
 
