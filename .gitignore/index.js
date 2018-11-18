@@ -10,7 +10,8 @@ const { prefix, token } = require('./config.json');
 function changing_status() {
     let status = [`${prefix}help || créé par @AmByop`,
      `Rdv en **2019** pour une V2.0`];
-    let random = status[Math.floor(Math.random() * status.length)]
+    let valeur = nombreAleatoire[status.length]
+    let random = status[valeur-1]
     bot.user.setActivity(random);
     console.log(random);
 }
