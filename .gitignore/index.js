@@ -2,12 +2,27 @@ const Discord = require("discord.js");
 const bot = new Discord.Client();
 const { prefix, token } = require('./config.json');
 
-bot.on("ready",function() {
+/*bot.on("ready",function() {
     bot.user.setGame(`${prefix}help || créé par @AmByop`);
     console.log("Bot connecté");
     bot.user.setStatus('dnd') // online, idle, dnd, invisible
+});*/
+bot.on('ready', function() {
+    this.bot.setInterval(async () => {
+        const statuslist = [
+            `${prefix}help || créé par @AmByop`,
+            `Rdv en **2019** pour une V2.0`
+        ];
+        try {
+            await this.user.setActivity(statuslist[index]);
+        } catch (error) {
+            console.error(error);
+        };
+        if (index === statuslist.length)
+            return index = 0;
+        else +index;
+    }, 45000);
 });
-
 
 
 // date
