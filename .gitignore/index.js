@@ -24,20 +24,22 @@ bot.on('ready', function() {
         else +index;
     }, 45000);
 });*/
-var presences = [
-    `${prefix}help || créé par @AmByop`,
-     `Rdv en **2019** pour une V2.0`
-]
-
+let index =0;
 function changing_status() {
-    let status = ['status 1', 'status 2', 'status']
-    let random = status[Math.floor(Math.random() * status.length)]
+    let status = [`${prefix}help || créé par @AmByop`,
+     `Rdv en **2019** pour une V2.0`]
+    //let random = status[Math.floor(Math.random() * status.length)]
+    let random = status[index]
+    index++
     bot.user.setActivity(random)
+    if(index === (status.length-1)){
+        index = 0
+    }
 }
 
 bot.on("ready", () => {
     console.log("Bot connecté");
-    setInterval(changing_status, 9000);
+    setInterval(changing_status, 45000);
 })
 
 
