@@ -2,26 +2,11 @@ const Discord = require("discord.js");
 const bot = new Discord.Client();
 const { prefix, token } = require('./config.json');
 
-/*bot.on("ready",function() {
-    bot.user.setGame(`${prefix}help || créé par @AmByop`);
+bot.on("ready",function() {
+    bot.user.setGame(`${prefix}help | V2 en 2019`);
     console.log("Bot connecté");
-    bot.user.setStatus('dnd') // online, idle, dnd, invisible
-});*/
-function changing_status() {
-    let status = [`${prefix}help || créé par @AmByop`,
-     `Rdv en **2019** pour une V2.0`];
-    let valeur = nombreAleatoire[status.length]
-    let random = status[valeur-1]
-    bot.user.setActivity(random);
-    console.log(random);
-}
-
-bot.on("ready", () => {
-    console.log("Bot connecté");
-    let index =0;
-    setInterval(changing_status(), 45000);
     bot.user.setStatus('online') // online, idle, dnd, invisible
-})
+});
 
 
 // date
