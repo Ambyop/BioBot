@@ -7,7 +7,7 @@ const { prefix, token } = require('./config.json');
     console.log("Bot connecté");
     bot.user.setStatus('dnd') // online, idle, dnd, invisible
 });*/
-let index = 0;
+/*let index = 0;
 bot.on('ready', function() {
     this.bot.setInterval(async () => {
         const statuslist = [
@@ -23,7 +23,22 @@ bot.on('ready', function() {
             return index = 0;
         else +index;
     }, 45000);
-});
+});*/
+var presences = [
+    `${prefix}help || créé par @AmByop`,
+     `Rdv en **2019** pour une V2.0`
+]
+
+function changing_status() {
+    let status = ['status 1', 'status 2', 'status']
+    let random = status[Math.floor(Math.random() * status.length)]
+    bot.user.setActivity(random)
+}
+
+bot.on("ready", () => {
+    console.log("Bot connecté");
+    setInterval(changing_status, 9000);
+})
 
 
 // date
