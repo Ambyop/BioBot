@@ -7,8 +7,8 @@ const { prefix, token } = require('./config.json');
     console.log("Bot connecté");
     bot.user.setStatus('dnd') // online, idle, dnd, invisible
 });*/
-let index =0;
-function changing_status() {
+//let index =0;
+function changing_status(index) {
     console.log(index);
     let status = [`${prefix}help || créé par @AmByop`,
      `Rdv en **2019** pour une V2.0`];
@@ -23,7 +23,7 @@ function changing_status() {
 
 bot.on("ready", () => {
     console.log("Bot connecté");
-    setInterval(changing_status, 60000);
+    setInterval(changing_status(0), 60000);
     bot.user.setStatus('online') // online, idle, dnd, invisible
 })
 
