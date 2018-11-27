@@ -1,4 +1,5 @@
 {
   "prefix": ";",
+  "adminPrefix" : "==",
   "token": "process.env.TOKEN"
 }
