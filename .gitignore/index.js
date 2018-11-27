@@ -1,6 +1,5 @@
 //  créé par @ambyop
 const Discord = require("discord.js");
-superagent = require('superagent');
 const bot = new Discord.Client();
 const { prefix, adminPrefix, token } = require('./config.json');
 const ownerID = process.env.owner;
