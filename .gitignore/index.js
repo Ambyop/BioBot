@@ -3,7 +3,7 @@ const bot = new Discord.Client();
 const { prefix, token } = require('./config.json');
 
 bot.on("ready",function() {
-    bot.user.setGame(`V2 soon |${prefix}help`);
+    bot.user.setGame(`V2 soon 👌 | ${prefix}help`);
     console.log("Bot connecté");
     bot.user.setStatus('online') // online, idle, dnd, invisible
 });
