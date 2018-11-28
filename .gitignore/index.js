@@ -217,7 +217,7 @@ bot.on('message', message=>{
         if (message.author.id !== ownerID) return message.reply(`Seul mon créateur peut faire cette commande.`);
         let string = '';
         bot.guilds.forEach(guild => {
-            string += '***Noms:*** ' + guild.name + '\n' + '*** ID:***` ' + guild.id + ' ` ' + '\n\n';
+            string += '***Nom:*** ' + guild.name + '\n' + '*** ID:***` ' + guild.id + ' ` ' + '\n\n';
 
         });
         let botembed = new Discord.RichEmbed()
@@ -279,12 +279,12 @@ bot.on('message', message=>{
     }
     //roll
     if (command === `${prefix}roll`) {
-        if (args[0] === undefined || args[0] < 0 ){
+        if (args[0] === undefined || args[0] < 2 ){
             if (args[0] === undefined) {
                 message.reply(`Vous n'avez pas mit la valeur maximale\n \`${prefix}roll [valeur]\``)
             }
             else{
-                message.reply('La valeur mise être strictement supérieure à 0 ...')
+                message.reply('La valeur mise être strictement supérieure à 1 ...')
             }
         }
         else {
@@ -329,7 +329,7 @@ bot.on('message', message=>{
                 ordinateur="Pierre";
             }
             if (valeurJoueur === 3 && valeurOrdinateur === 1) {
-                message.channel.send(`__${message.author.username} :__ `+joueur+`\n__${bot.user.username} :__ `+ ordinateur+`\n**${message.author.username} a gagné !** 😛 `);
+                message.channel.send(`__${message.author.username} :__ `+joueur+`\n__${bot.user.username} :__ `+ ordinateur+`\n**${message.author.username} a gagné !** 😉 `);
             }
             else if (valeurOrdinateur === 3 && valeurJoueur === 1) {
                 message.channel.send(`__${message.author.username} :__ `+joueur+`\n__${bot.user.username} :__ `+ ordinateur+"\n**J'ai gagné !** 😛");
@@ -338,13 +338,14 @@ bot.on('message', message=>{
                 message.channel.send(`__${message.author.username} :__ `+joueur+`\n__${bot.user.username} :__ `+ ordinateur+"\n**égalité** :sweat_smile: ")
             }
             else if (valeurJoueur < valeurOrdinateur) {
-                message.channel.send(`__${message.author.username} :__ `+joueur+`\n__${bot.user.username} :__ `+ ordinateur+`\n**${message.author.username} a gagné !** 😛 `);
+                message.channel.send(`__${message.author.username} :__ `+joueur+`\n__${bot.user.username} :__ `+ ordinateur+`\n**${message.author.username} a gagné !** 😉 `);
             }
             else if (valeurOrdinateur < valeurJoueur) {
                 message.channel.send(`__${message.author.username} :__ `+joueur+`\n__${bot.user.username} :__ `+ ordinateur+"\n**J'ai gagné !** 😛");
             }
         }
     }
+    //gifs
     let gifs = {
         trump : ["http://wanna-joke.com/wp-content/uploads/2016/06/trump-gif-belgium-city.gif","https://media.giphy.com/media/hPPx8yk3Bmqys/giphy.gif","https://media.giphy.com/media/xTiTnHXbRoaZ1B1Mo8/giphy.gif",
             "https://www.tenor.co/PgFD.gif","https://www.tenor.co/yiQN.gif","https://media.giphy.com/media/3o7TKwiaIuMib5WVXO/giphy.gif","https://media1.tenor.com/images/19042a1d74a71a7694c0b9914e3aa29e/tenor.gif?itemid=8557097",
@@ -381,19 +382,28 @@ bot.on('message', message=>{
             "https://media.giphy.com/media/InhPEgAQym00g/giphy.gif","https://data.whicdn.com/images/206500793/original.gif","https://vignette.wikia.nocookie.net/glee/images/8/81/Shame.gif/revision/latest?cb=20150113225520"],
         chinois : ["https://i.pinimg.com/originals/dc/da/cd/dcdacd4933a604daf37c2e4ca0dae8ad.gif","https://thumbs.gfycat.com/BestAmpleBinturong-size_restricted.gif","https://thumbs.gfycat.com/SlimyPerfumedDugong-small.gif","https://i.imgur.com/H71pvtV.gif",
             "https://www.askideas.com/media/20/Eat-The-Rice-Everyday-Funny-Asian-Gif.gif","https://static.fjcdn.com/gifs/Chinese_b73fb7_2863548.gif","https://thumbs.gfycat.com/GeneralTepidHairstreak-size_restricted.gif","https://static.boredpanda.com/blog/wp-content/uploads/2016/08/funny-geeky-china-swimmer-fu-yuanhui-rio-olympics-3.gif",
-            "http://media.topito.com/wp-content/uploads/2014/03/leeb2.gif","https://giphy.com/gifs/lmao-relatable-bruce-lee-112YQ5P8fp12o0 ","https://www.tenor.co/wolF.gif "]
+            "http://media.topito.com/wp-content/uploads/2014/03/leeb2.gif","https://giphy.com/gifs/lmao-relatable-bruce-lee-112YQ5P8fp12o0 ","https://www.tenor.co/wolF.gif "],
+        ninja : ["https://giphy.com/gifs/cheezburger-baby-ninja-flip-ErdfMetILIMko","https://giphy.com/gifs/snl-l1BgSChjSFz3opBAs","https://giphy.com/gifs/hero-wut-hmxJUEB1xRYPK",
+            "https://giphy.com/gifs/ninja-laminutecaprice-en-cas-de-caprice-26h0oZIGGOFZdZj4Q","https://media.giphy.com/media/ISw0yRECghp1C/giphy.gif","https://i.gifer.com/1QIm.gif",
+            "https://media.giphy.com/media/6Na7w7yHshyvu/giphy.gif","https://i.gifer.com/2iX9.gif","https://media.giphy.com/media/epWt2dwVTXrDG/giphy.gif"],
+        chat : ["https://media.giphy.com/media/F0eb5L2xJJJNC/giphy.gif","http://mississippi.m.i.pic.centerblog.net/d80ef475.gif","http://www.goldenmoustache.com/wp-content/uploads/2015/12/cce986e6a54d4bd578e5bc4c1e24b382.gif",
+            "https://78.media.tumblr.com/8d436c65d48daf01fa3fdf0d7dc25686/tumblr_mtszvm8a8q1qbfm1po1_r1_250.gif","http://aws-cf.imdoc.fr/prod/photos/3/3/2/4472332/21694574/img-21694574ff1.gif?v=11",
+            "https://static.mmzstatic.com/wp-content/uploads/2013/08/gifchat18.gif","https://i.pinimg.com/originals/a1/76/40/a17640a1e2f3971cfab9719d4a1d4a53.gif","https://i.chzbgr.com/full/8481047040/hDC882EFD/",
+            "https://78.media.tumblr.com/eeb645802420d560d808fdb1a9d1474c/tumblr_n06ucvPGX31rmwzkdo1_400.gif","http://1.bp.blogspot.com/-D-kjWMKPypo/VUYYiu-IqGI/AAAAAAAAI-0/OzL1qlnDYK4/s1600/why-cats-need-9-lives.gif",
+            "https://media.giphy.com/media/v6aOjy0Qo1fIA/giphy.gif","https://media.giphy.com/media/a34HjLEsKchWM/giphy.gif","https://media.giphy.com/media/Mp592a0PuVzbi/giphy.gif","https://media.giphy.com/media/elbTBI76GNRp6/giphy.gif",
+            "https://data.photofunky.net/output/image/e/b/c/c/ebcc2e/photofunky.gif"]
     };
     if (command ===`${prefix}gif` || command ===`${prefix}gifs`) {
         if (args[0] === undefined) {
-            let genreMax = (Object.keys(gifs).length) - 1;
+            let genreMax = (Object.keys(gifs).length);
             let genreChoix = nombreAleatoire(genreMax);
             let genre = Object.keys(gifs)[genreChoix - 1];
             let random = nombreAleatoire(gifs[genre].length);
             let affichage = gifs[genre][random - 1];
-            console.log("gif " + genre + " " + (random - 1));
+            console.log("commande gifs " + genre + " " + (random - 1));
             setTimeout(function () {
                 message.channel.send(affichage);
-            }, 200);
+            }, 500);
         }
         else{
             if (args[0] === "communiste") args[0] = "coco";
@@ -403,19 +413,78 @@ bot.on('message', message=>{
             if (args[1] === undefined) {
                 let random = nombreAleatoire(gifs[genre].length);
                 let affichage = gifs[genre][random - 1];
-                console.log("gif " + genre + " " + (random - 1));
+                console.log("commande gifs genre " + genre + " " + (random - 1));
                 setTimeout(function () {
                     message.channel.send(affichage);
-                }, 200);
+                }, 500);
             }
             else {
                 if (args[1] > gifs[genre].length) return message.reply("Il n'y a que "+gifs[genre].length +" de genre : " + genre);
                 let random = args[1];
                 let affichage = message.author + " a sélectionné le gif "+args[0]+" numéro : "+args[1]+" sur "+ gifs[genre].length +" gifs.   " +gifs[genre][random - 1];
-                console.log("gif " + genre + " " + (random - 1));
+                console.log("commande gifs genre num " + genre + " " + (random - 1));
                 setTimeout(function () {
                     message.channel.send(affichage);
-                }, 200);
+                }, 500);
+            }
+        }
+    }
+    // invite
+    if (command ===`${prefix}invite`){
+        setTimeout(function () {
+            message.reply("https://discordapp.com/api/oauth2/authorize?client_id=506184450405826562&permissions=0&scope=bot");
+        }, 200);
+    }
+    //bonjour
+    if(!message.content.startsWith(prefix)) {
+        if (message.author.bot) return;
+        const command = message.content.toLocaleLowerCase();
+        const auteur = message.author;
+
+        if (command ===`bonjour` ||command ===`salut` ||command ===`yop` ||command ===`bonsoir` ||command ==='yo' ||command ==='wesh' ||command ==='coucou' ||command === 'slt' ||command ==='bjour' ||command ==='hola' ||command ==='holà') {
+            let autorise = nombreAleatoire(10);
+            let action =nombreAleatoire(100);
+            console.log("bonjour commande " + autorise +" "+ action);
+            if (autorise === 1 || autorise === 2 || autorise === 3) {
+                console.log("bonjour commande Exécution");
+                setTimeout(function () {
+                        if (action >= 0 && action < 5) {
+                            message.channel.send("Bien le Bonjour " + auteur);
+                        }
+                        if (action >= 5 && action <10){
+                            message.channel.send("Bijour Monsieur "+ auteur)
+                        }
+                        if (action >= 10 && action < 15) {
+                            message.channel.send("Yolo !");
+                        }
+                        if (action >= 15 && action < 20) {
+                            message.channel.send("Bongour ");
+                        }
+                        if (action >= 20 && action < 30) {
+                            message.channel.send("Salut ! Comment vas-tu " + auteur +" ?");
+                        }
+                        if (action >= 30 && action < 40) {
+                            message.channel.send("Hey !..");
+                        }
+                        if (action >= 40 && action < 50) {
+                            message.channel.send("Salut mon ami :wink:")
+                        }
+                        if (action >= 50 && action < 60) {
+                            message.channel.send("Wesh wesh !")
+                        }
+                        if (action >= 60 && action < 70) {
+                            message.channel.send("Yo !")
+                        }
+                        if (action >= 70 && action < 80) {
+                            message.channel.send("Yop !");
+                        }
+                        if (action >= 80 && action < 90) {
+                            message.channel.send("Holà " + auteur + "! ")
+                        }
+                    if (action >= 90 && action < 100) {
+                        message.channel.send("Holà quetal ?")
+                    }
+                }, 800);
             }
         }
     }
@@ -435,13 +504,14 @@ bot.on('message', message=>{
             .addField(`**${prefix}poll :**`,`Pour organiser un vote \n Aussi disponibles: **${prefix}sondage** , **${prefix}sondage**`)
             .addField(`**${prefix}userinfo :**`,`donne les informations sur le joueur mentionner en  paramètre.`)
             .addField(`**${prefix}bot :**`,`donne les informations sur le bot\n Aussi disponible : **${prefix}botinfo**`)
-            .addField(`**${prefix}serveur :**`, `donne les informations sur le bot\\n Aussi disponible : **${prefix}serveurinfo**`)
+            .addField(`**${prefix}serveur :**`, `donne les informations sur le bot\n Aussi disponible : **${prefix}serveurinfo**`)
             .addField(`**${adminPrefix}serveurs :**`,'*[ seulement créateur]* Liste et identifie mes serveurs')
             .addField(`**${prefix}uptime :**`,"Indique le temps écoulé depuis le démarrage du bot.")
             .addField(`**${prefix}pf :**`,`Pile ou face ? la pièce sera lancée..\n Aussi disponible : **${prefix}pileface**`)
             .addField(`**${prefix}roll :**`,`Lance un dé avec la valeur indiquée .`)
             .addField(`**${prefix}ppc :**`,`Pour jouer à Shifumi//pierre-papier-ciseaux \n Aussi disponible : **${prefix}shifumi** .`)
-            .addField(`**${prefix}gif :**`,`Affiche un gif de manière aléatoire \n **Arguments disponibles : trump ,nazi ,coco, putin ,singe ,corn ,vent ,shame ,chinois .**`)
+            .addField(`**${prefix}gif :**`,`Affiche un gif de manière aléatoire \n **Arguments disponibles : trump ,nazi ,coco, putin ,singe ,corn ,vent ,shame ,chinois ,ninja ,chat .**`)
+            .addField(`**${prefix}invite**`,"Invite moi sur ton serveur :wink:")
 
             .setTimestamp(new Date());
         message.author.send({embed});
