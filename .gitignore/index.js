@@ -24,10 +24,9 @@ function nombreAleatoire(nombre) {
     return Math.floor(Math.random() * nombre+1);
 }
 
-
 bot.on("ready", () => {
     console.log( "bot connecté"/*Whatever you want to say*/ );
-    bot.user.setStatus('dnd');// online, idle, dnd, invisible
+    bot.user.setStatus('idle');// online, idle, dnd, invisible
     bot.user.setActivity(`${prefix}help | créé par @AmByop`, { type: 'WATCHING' })
 });
 
@@ -87,7 +86,7 @@ bot.on('message', message=>{
             } else {
                 let nombre = Number(args[0]) + 1;
                 message.channel.bulkDelete(nombre).then(() => {
-                    message.channel.send(`:pencil: ${args[0]} messages on été supprimé par **${message.author.username}**.`).then(msg => msg.delete(6000));
+                    message.channel.send(`:pencil: ${args[0]} messages ont été supprimés par **${message.author.username}**.`).then(msg => msg.delete(6000));
                 });
             }
         }
@@ -396,7 +395,7 @@ bot.on('message', message=>{
                 if (args[0] === "communiste") args[0] = "coco";
                 if (args[0] === "corn" || args[0] === "pop") args[0] = "popcorn";
                 if (args[0] === "darklos") args[0] = "singe";
-                if (args[0] === "bananestar") return message.reply("T'es Sérieux FDP ?");
+                if (args[0] === "bananestar") return message.reply("T'es Sérieux FDP ? https://www.tenor.co/zgxO.gif ");
                 if (args[0] === "help") return message.reply("Thème disponible : `trump`, `nazi`, `coco`, `putin`, `singe`, `popcorn`, `vent`, `shame`, `chinois`, `ninja`, `chat`, `fail`.");
                 let genre = args[0];
                 if (gifs[genre] === undefined) return message.reply("Il n'y a pas de gif avec le thème " + genre);
@@ -430,6 +429,32 @@ bot.on('message', message=>{
                 message.reply("Réponse en MP :wink:");
                 message.author.send("voici le lien du serveur Test : https://discord.gg/E3uhqMg");
             }, 400);
+        }
+        // slots machine a sous
+        if (command === `${prefix}slot` || command === `${prefix}slots`) {
+            let slots = ["🍎", "🍌", "🍒", "🍓", "🍈"];
+            let result1 = nombreAleatoire(slots.length-1);
+            let result2 = nombreAleatoire(slots.length-1);
+            let result3 = nombreAleatoire(slots.length-1);
+            let name = message.author.username;
+            let aicon = message.author.displayAvatarURL;
+
+            if (slots[result1] === slots[result2] && slots[result3]) {
+                let Embed = new Discord.RichEmbed()
+                    .setFooter(name +" You Won!", aicon)
+                    .setTitle(':slot_machine:Slots:slot_machine:')
+                    .addField('Result:', slots[result1] + slots[result2] + slots[result3], true)
+                    .setColor("#f4e842");
+                message.channel.send(Embed);
+            } else {
+                let embed = new Discord.RichEmbed()
+                    .setFooter(name +' You Lost!', aicon)
+                    .setTitle(':slot_machine:Slots:slot_machine:')
+                    .addField('Result', slots[result1] + slots[result2] + slots[result3], true)
+                    .setColor("#f4e842");
+                message.channel.send(embed);
+            }
+
         }
         //bonjour
         if (!message.content.startsWith(prefix)) {
@@ -541,13 +566,15 @@ bot.on('message', message=>{
                 .addField(`**${prefix}uptime :**`, "Indique le temps écoulé depuis le démarrage du bot.")
                 .addField(`**${prefix}pf :**`, `Pile ou face ? la pièce sera lancée..\n Aussi disponible : **${prefix}pileface**`)
                 .addField(`**${prefix}roll :**`, `Lance un dé avec la valeur indiquée .`)
+                .addField(`**${prefix}slot :**`, `Lance la machine à sous.`)
                 .addField(`**${prefix}ppc :**`, `Pour jouer à Shifumi//pierre-papier-ciseaux \n Aussi disponible : **${prefix}shifumi** .`)
                 .addField(`**${prefix}gif :**`, `Affiche un gif de manière aléatoire \n Pour avoir les thèmes **${prefix}gif help**`)
                 .addField(`**${prefix}invite**`, "Invite moi sur ton serveur Discord  :wink:")
-                .addField(`**${prefix}serveurtest**`, `Je t'invite sur mon serveur de développement :smiley: \nAussi disponible: **${prefix}serveurtest**    `)
+                .addField(`**${prefix}serveurtest**`, `Je t'invite sur mon serveur de développement :smiley: \nAussi disponible: **${prefix}serveurtest**`)
 
                 .setTimestamp(new Date());
             message.author.send({embed});
         }
-    });bot.login(process.env.TOKEN);
+    });
+bot.login(process.env.TOKEN);
 bot.on("error", console.error);
