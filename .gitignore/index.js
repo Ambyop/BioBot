@@ -2,7 +2,7 @@
 const Discord = require("discord.js");
 const bot = new Discord.Client();
 const { prefix, adminPrefix, token } = require('./config.json');
-const ownerID = 'process.env.owner';
+const ownerID = process.env.owner;
 
 function convertMS(ms) {
     var d, h, m, s;
