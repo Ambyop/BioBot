@@ -36,7 +36,9 @@ bot.on('message', message=>{
         }//if the message is a command
         if (message.author.bot && message.content.startsWith(prefix)) return message.channel.send(":x: Je ne parle pas aux Bots! :x:");
         // This is where we'll put our code.
-        const args = message.content.slice().trim().split(/ +/g);
+        const args = message.content.toLocaleLowerCase().slice().trim().split(/ +/g);
+        const argsAffichage = message.content.slice().trim().split(/ +/g);
+        argsAffichage.shift();
         const command = args.shift().toLowerCase();
 
         //blah
@@ -45,7 +47,7 @@ bot.on('message', message=>{
             let numero = nombreAleatoire(texte.length);
             setTimeout(function () {
                 message.channel.send(texte[numero - 1])
-            }, 400);
+            }, 500);
 
         }
         //quote
@@ -57,9 +59,9 @@ bot.on('message', message=>{
 
                     setTimeout(function () {
                         message.delete();
-                    }, 5000);
+                    }, 4000);
                     //message.delete();
-                    message.channel.send(`**${message.author.username}** annonce :  \`\`\`  ${args[0]}  \`\`\``);
+                    message.channel.send(`**${message.author.username}** annonce :  \`\`\`  ${argsAffichage[0]}  \`\`\``);
                 }
 
 
@@ -92,7 +94,7 @@ bot.on('message', message=>{
         }
         //sondage
         if (command === `${prefix}sondage` || command === `${prefix}poll` || command === `${prefix}question`) {
-            let question = args.slice(0).join(" ");
+            let question = argsAffichage.slice(0).join(" ");
 
             if (args.length === 0)
                 return message.reply(`Vous avez oublié d'introduire la question .\n \`${prefix}poll [Question]\``);
@@ -104,20 +106,20 @@ bot.on('message', message=>{
                 .setFooter(`Sondage par: ${message.author.username}`, `${message.author.avatarURL}`);
             setTimeout(function () {
                 message.delete();
-            }, 3000);
+            }, 4000);
 
             message.channel.send({embed})
                 .then(msg => {
                     setTimeout(function () {
                         msg.react('👍')
-                    }, 200);
+                    }, 100);
                     setTimeout(function () {
                         //msg.react('✍')
                         msg.react('🤔')
-                    }, 600);
+                    }, 400);
                     setTimeout(function () {
                         msg.react('👎')
-                    }, 400);
+                    }, 200);
                 })
                 .catch(() => console.error('Erreur au chargement des emojis.'));
         }
@@ -250,14 +252,14 @@ bot.on('message', message=>{
             // const duration = bot.uptime;
             setTimeout(function () {
                 message.reply(`:alarm_clock: ` + `**Je fonctionne depuis :**  ${uptime}`);
-            }, 400);
+            }, 500);
         }
         //pile face
         if (command === `${prefix}pf` || command === `${prefix}pileface`) {
             let valeur = nombreAleatoire(2);
             setTimeout(function () {
                 message.delete();
-            }, 5000);
+            }, 4000);
             let msg;
             if (valeur === 1) {
                 msg = message.author + ', la pièce indique  **Pile** !'
@@ -266,27 +268,23 @@ bot.on('message', message=>{
             }
             message.reply("Je lance la pièce ...").then(sentMessage => setTimeout(function () {
                 sentMessage.edit(msg)
-            }, 400));
+            }, 900));
         }
         //roll
-        if (command === `${prefix}roll`) {
-            if (args[0] === undefined || args[0] < 2) {
-                if (args[0] === undefined) {
-                    message.reply(`Vous n'avez pas mit la valeur maximale\n \`${prefix}roll [valeur]\``)
-                } else {
-                    message.reply('La valeur mise être strictement supérieure à 1 ...')
-                }
-            } else {
-                args[0] = Math.round(args[0]);
-                let aleatoire = nombreAleatoire(args[0]);
-                setTimeout(function () {
-                    message.delete();
-                }, 5000);
-                let msg = (message.author + ', dé de ' + args[0] + " lancé ... \n Résultat: " + aleatoire + " .");
-                message.reply("Je lance le dé de " + args[0] + " ...").then(sentMessage => setTimeout(function () {
-                    sentMessage.edit(msg)
-                }, 1500));
-            }
+        if (command === `${prefix}roll` || command === `${prefix}dice`) {
+            if (args[0] === undefined) return message.reply(`Vous n'avez pas mit la valeur maximale\n \`${prefix}roll [valeur]\``)
+            if (isNaN(args[0])) return message.reply('La valeur **'+ argsAffichage +'** n\'est pas un nombre...')
+            if (args[0] <= 1)return message.reply('La valeur mise être strictement supérieure à 1 ...')
+
+            args[0] = Math.round(args[0]);
+            let aleatoire = nombreAleatoire(args[0]);
+            setTimeout(function () {
+                message.delete();
+                }, 4000);
+            let msg = (message.author + ', dé de ' + args[0] + " lancé ... \n Résultat: " + aleatoire + " .");
+            message.reply("Je lance le dé de " + args[0] + " ...").then(sentMessage => setTimeout(function () {
+                sentMessage.edit(msg)
+            }, 900));
         }
         // shifumi
         if (command === `${prefix}ppc` || command === `${prefix}shifumi`) {
@@ -300,14 +298,15 @@ bot.on('message', message=>{
                 let valeurJoueur;
                 let ordinateur;
                 let joueur = args[0];
-                if (joueur !== "pierre" && joueur !== "papier" && joueur !== "ciseaux" && joueur !== "ciseau" && joueur !== "feuilles" && joueur !== "feuille") {
-                    message.reply("Vous avez mis une valeur incorrecte \n Valeurs disponibles : `pierre , papier , ciseaux`");
+                let joueurAffichage = argsAffichage[0];
+                if (joueur !== "pierre"&& joueur!=="pierres" && joueur !== "papier" && joueur !== "ciseaux" && joueur !== "ciseau" && joueur !== "feuilles" && joueur !== "feuille") {
+                    message.reply("Je ne connais pas la valeur **"+ joueurAffichage +"**\n Valeurs disponibles : `pierre , papier , ciseaux`");
                 }
-                if (joueur === "pierre" || joueur === "Pierre") {
+                if (joueur === "pierre" || joueur === "pierres") {
                     valeurJoueur = 3;
-                } else if (joueur === "papier" || joueur === "Papier" || joueur === "feuille" || joueur === "feuilles") {
+                } else if (joueur === "papier"|| joueur === "feuille") {
                     valeurJoueur = 2;
-                } else if (joueur === "ciseaux" || joueur === "Ciseaux" || joueur === "ciseau" || joueur === "Ciseau") {
+                } else if (joueur === "ciseaux"|| joueur === "ciseau") {
                     valeurJoueur = 1;
                 }
                 let valeurOrdinateur = Math.floor((3) * Math.random()) + 1;
@@ -319,15 +318,15 @@ bot.on('message', message=>{
                     ordinateur = "Pierre";
                 }
                 if (valeurJoueur === 3 && valeurOrdinateur === 1) {
-                    message.channel.send(`__${member} :__ ` + joueur + `\n__${robot} :__ ` + ordinateur + `\n**${message.author} a gagné !** 😉 `);
+                    message.channel.send(`__${member} :__ ` + joueurAffichage + `\n__${robot} :__ ` + ordinateur + `\n**${message.author} a gagné !** 😉 `);
                 } else if (valeurOrdinateur === 3 && valeurJoueur === 1) {
-                    message.channel.send(`__${member} :__ ` + joueur + `\n__${robot} :__ ` + ordinateur + "\n**J'ai gagné !** 😛");
+                    message.channel.send(`__${member} :__ ` + joueurAffichage + `\n__${robot} :__ ` + ordinateur + "\n**J'ai gagné !** 😛");
                 } else if (valeurJoueur === valeurOrdinateur) {
-                    message.channel.send(`__${member} :__ ` + joueur + `\n__${robot} :__ ` + ordinateur + "\n**égalité** :sweat_smile: ")
+                    message.channel.send(`__${member} :__ ` + joueurAffichage + `\n__${robot} :__ ` + ordinateur + "\n**égalité** :sweat_smile: ")
                 } else if (valeurJoueur < valeurOrdinateur) {
-                    message.channel.send(`__${member} :__ ` + joueur + `\n__${robot} :__ ` + ordinateur + `\n**${message.author} a gagné !** 😉 `);
+                    message.channel.send(`__${member} :__ ` + joueurAffichage + `\n__${robot} :__ ` + ordinateur + `\n**${message.author} a gagné !** 😉 `);
                 } else if (valeurOrdinateur < valeurJoueur) {
-                    message.channel.send(`__${member} :__ ` + joueur + `\n__${robot} :__ ` + ordinateur + "\n**J'ai gagné !** 😛");
+                    message.channel.send(`__${member} :__ ` + joueurAffichage + `\n__${robot} :__ ` + ordinateur + "\n**J'ai gagné !** 😛");
                 }
             }
         }
@@ -386,34 +385,42 @@ bot.on('message', message=>{
                 let genreChoix = nombreAleatoire(genreMax);
                 let genre = Object.keys(gifs)[genreChoix - 1];
                 let random = nombreAleatoire(gifs[genre].length);
-                let affichage = gifs[genre][random - 1];
+                let affichargeGifs = gifs[genre][random - 1];
                 console.log("commande gifs " + genre + " " + (random - 1));
                 setTimeout(function () {
-                    message.channel.send(affichage);
-                }, 400);
+                    message.channel.send(affichargeGifs);
+                }, 500);
             } else {
                 if (args[0] === "communiste") args[0] = "coco";
                 if (args[0] === "corn" || args[0] === "pop") args[0] = "popcorn";
                 if (args[0] === "darklos") args[0] = "singe";
                 if (args[0] === "bananestar") return message.reply("T'es Sérieux FDP ? https://www.tenor.co/zgxO.gif ");
-                if (args[0] === "help") return message.reply("Thème disponible : `trump`, `nazi`, `coco`, `putin`, `singe`, `popcorn`, `vent`, `shame`, `chinois`, `ninja`, `chat`, `fail`.");
+                if (args[0] === "help"){
+                    let affichageHelp = "";
+                    let genreMax = (Object.keys(gifs).length);
+                    for (let nom in gifs){
+                        affichageHelp += '`'+nom+'`';
+                        if ((Object.keys(gifs))[genreMax-1] !== nom) affichageHelp += ' , '
+                    }
+                    return message.reply("Thèmes disponibles : "+ affichageHelp +".")
+                }
                 let genre = args[0];
-                if (gifs[genre] === undefined) return message.reply("Il n'y a pas de gif avec le thème " + genre);
+                if (gifs[genre] === undefined) return message.reply("Il n'y a pas de gif avec le thème " + argsAffichage[0]);
                 if (args[1] === undefined) {
                     let random = nombreAleatoire(gifs[genre].length);
-                    let affichage = gifs[genre][random - 1];
-                    console.log("commande gifs genre " + genre + " " + (random - 1));
+                    let affichargeGifs = gifs[genre][random - 1];
+                    console.log("commande gifs genre " + argsAffichage[0] + " " + (random - 1));
                     setTimeout(function () {
-                        message.channel.send(affichage);
+                        message.channel.send(affichargeGifs);
                     }, 500);
                 } else {
                     if (args[1] > gifs[genre].length) return message.reply("Il n'y a que " + gifs[genre].length + " de genre : " + genre);
                     let random = args[1];
-                    let affichage = message.author + " a sélectionné le gif " + args[0] + " numéro : " + args[1] + " sur " + gifs[genre].length + " gifs.   " + gifs[genre][random - 1];
+                    let affichargeGifs = message.author + " a sélectionné le gif " + argsAffichage[0] + " numéro : " + args[1] + " sur " + gifs[genre].length + " gifs.   " + gifs[genre][random - 1];
                     console.log("commande gifs genre num " + genre + " " + (random - 1));
                     setTimeout(function () {
-                        message.channel.send(affichage);
-                    }, 400);
+                        message.channel.send(affichargeGifs);
+                    }, 500);
                 }
             }
         }
@@ -421,18 +428,18 @@ bot.on('message', message=>{
         if (command === `${prefix}invite`) {
             setTimeout(function () {
                 message.reply("https://discordapp.com/api/oauth2/authorize?client_id=506184450405826562&permissions=0&scope=bot");
-            }, 400);
+            }, 500);
         }
         // invite serveurtest
         if (command === `${prefix}serveurtest` || command === `${prefix}bottest`) {
             setTimeout(function () {
                 message.reply("Réponse en MP :wink:");
                 message.author.send("voici le lien du serveur Test : https://discord.gg/E3uhqMg");
-            }, 400);
+            }, 500);
         }
         // slots machine a sous
         if (command === `${prefix}slot` || command === `${prefix}slots`) {
-            let slots = ["🍎", "🍌", "🍒", "🍓", "🍈"];
+            let slots = ["🍎", "🍌", "🍒", "🍓", "🍈", "🍇"];
             let result1 = nombreAleatoire(slots.length-1);
             let result2 = nombreAleatoire(slots.length-1);
             let result3 = nombreAleatoire(slots.length-1);
@@ -441,16 +448,16 @@ bot.on('message', message=>{
 
             if (slots[result1] === slots[result2] && slots[result3]) {
                 let Embed = new Discord.RichEmbed()
-                    .setFooter(name +" You Won!", aicon)
-                    .setTitle(':slot_machine:Slots:slot_machine:')
+                    .setFooter(name +" Tu a gagné !", aicon)
+                    .setAuthor(':slot_machine:Slots:slot_machine:')
                     .addField('Result:', slots[result1] + slots[result2] + slots[result3], true)
                     .setColor("#f4e842");
                 message.channel.send(Embed);
             } else {
                 let embed = new Discord.RichEmbed()
-                    .setFooter(name +' You Lost!', aicon)
-                    .setTitle(':slot_machine:Slots:slot_machine:')
-                    .addField('Result', slots[result1] + slots[result2] + slots[result3], true)
+                    .setFooter(name +' Tu as perdu!', aicon)
+                    .setAuthor('Machine à sous')
+                    .addField(':slot_machine:Result:slot_machine:', slots[result1] + slots[result2] + slots[result3], true)
                     .setColor("#f4e842");
                 message.channel.send(embed);
             }
@@ -511,7 +518,7 @@ bot.on('message', message=>{
                         if (action === 14) {
                             message.channel.send("Plop :wink:")
                         }
-                    }, 800);
+                    }, 900);
                 }
             }
             if (command === 'fdp') {
@@ -564,8 +571,8 @@ bot.on('message', message=>{
                 .addField(`**${prefix}serveur :**`, `donne les informations sur le bot\n Aussi disponible : **${prefix}serveurinfo**`)
                 .addField(`**${adminPrefix}serveurs :**`, '*[ seulement créateur]* Liste et identifie mes serveurs')
                 .addField(`**${prefix}uptime :**`, "Indique le temps écoulé depuis le démarrage du bot.")
-                .addField(`**${prefix}pf :**`, `Pile ou face ? la pièce sera lancée..\n Aussi disponible : **${prefix}pileface**`)
-                .addField(`**${prefix}roll :**`, `Lance un dé avec la valeur indiquée .`)
+                .addField(`**${prefix}pf :**`, `Pile ou face ? la pièce sera lancée...\n Aussi disponible : **${prefix}pileface**`)
+                .addField(`**${prefix}roll :**`, `Lance un dé avec la valeur indiquée .\\n Aussi disponible : **${prefix}dice**\``)
                 .addField(`**${prefix}slot :**`, `Lance la machine à sous.`)
                 .addField(`**${prefix}ppc :**`, `Pour jouer à Shifumi//pierre-papier-ciseaux \n Aussi disponible : **${prefix}shifumi** .`)
                 .addField(`**${prefix}gif :**`, `Affiche un gif de manière aléatoire \n Pour avoir les thèmes **${prefix}gif help**`)
