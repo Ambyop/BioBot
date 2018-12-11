@@ -26,7 +26,7 @@ function nombreAleatoire(nombre) {
 
 bot.on("ready", () => {
     console.log( "bot connecté"/*Whatever you want to say*/ );
-    bot.user.setStatus('idle');// online, idle, dnd, invisible
+    bot.user.setStatus('online');// online, idle, dnd, invisible
     bot.user.setActivity(`${prefix}help | créé par @AmByop`, { type: 'WATCHING' })
 });
 
