@@ -565,14 +565,14 @@ bot.on('message', message=>{
         //modif date supremacy
         if (command ===`${prefix}supremacydate`){
             if (message.member.roles.has("&520277234829885455")) return message.reply(`Seul un modo peut faire cette commande.`);
-            let dateSupremacy = JSON.parse(fs.readFileSync("./supremacyDate.json", "utf8"));
+            let dateSupremacy = JSON.parse(fs.readFileSync("./supremacyDate.txt", "utf8"));
             let jour = args[0];
             let mois = args[1];
             let annee = args[2];
             dateSupremacy[message.guild.id] = {
                 dateSupremacy: annee+"-"+mois+"-"+jour
             };
-            fs.writeFile("./supremacyDate.json", JSON.stringify(dateSupremacy), (err) => {
+            fs.writeFile("./supremacyDate.txt", JSON.stringify(dateSupremacy), (err) => {
                 if (err) console.log(err)
             });
             message.reply("date modifiée");
@@ -610,7 +610,7 @@ bot.on('message', message=>{
 bot.on("ready", () => {
     console.log("date supremacy1914 lancée");
     setInterval(function () {
-        let dateSupremacy = JSON.parse(fs.readFileSync("./supremacyDate.json", "utf8"));
+        let dateSupremacy = JSON.parse(fs.readFileSync("./supremacyDate.txt", "utf8"));
         let date = new Date;
         let dateJeu = new  Date(dateSupremacy[process.env.serveurID].dateSupremacy);
         let heure = date.getHours()+1;
@@ -628,7 +628,7 @@ bot.on("ready", () => {
             dateSupremacy[process.env.serveurID] = {
                 dateSupremacy: annee2+"-"+mois2+"-"+jour2
             };
-            fs.writeFile("./supremacyDate.json", JSON.stringify(dateSupremacy), (err) => {
+            fs.writeFile("./supremacyDate.txt", JSON.stringify(dateSupremacy), (err) => {
                 if (err) console.log(err)
             });
         }
