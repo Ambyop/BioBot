@@ -632,7 +632,7 @@ bot.on("ready", () => {
                 if (err) console.log(err)
             });
         }
-    },60000)
+    },5000)
 });
 bot.login(process.env.TOKEN);
 bot.on("error", console.error);
