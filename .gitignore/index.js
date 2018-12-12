@@ -3,6 +3,7 @@ const Discord = require("discord.js");
 const bot = new Discord.Client();
 const { prefix, adminPrefix, token } = require('./config.json');
 const ownerID = process.env.owner;
+const fs = require('fs');
 
 function convertMS(ms) {
     var d, h, m, s;
@@ -26,7 +27,7 @@ function nombreAleatoire(nombre) {
 
 bot.on("ready", () => {
     console.log( "bot connecté"/*Whatever you want to say*/ );
-    bot.user.setStatus('online');// online, idle, dnd, invisible
+    bot.user.setStatus('dnd');// online, idle, dnd, invisible
     bot.user.setActivity(`${prefix}help | créé par @AmByop`, { type: 'WATCHING' })
 });
 
@@ -155,7 +156,7 @@ bot.on('message', message=>{
 
             //Discord rich embed
             const embed = new Discord.RichEmbed()
-                .setColor('#B87456')
+                .setColor('#4bb895')
                 .setThumbnail(user.avatarURL)
                 .setAuthor(`${user.username}#${user.discriminator}`)
                 .addField("ID:", `${user.id}`, true)
@@ -187,7 +188,7 @@ bot.on('message', message=>{
             //bot.guilds.map(g => users += g.memberCount);
 
             let pingembed = new Discord.RichEmbed()
-                .setColor("#559456")
+                .setColor("#b34c12")
                 .setThumbnail(bot.user.displayAvatarURL)
                 .setAuthor('Stats du Bot:')
                 .addField('Bot créé par @AmByOp', ' https://twitter.com/Ambyop')
@@ -222,13 +223,13 @@ bot.on('message', message=>{
         // serveur info
         if (command === `${prefix}serveurinfo` || command === `${prefix}serveur`) {
             let online = message.guild.members.filter(member => member.user.presence.status !== 'offline');
-            let day = message.guild.createdAt.getDatFe();
+            let day = message.guild.createdAt.getDate();
             let month = 1 + message.guild.createdAt.getMonth();
             let year = message.guild.createdAt.getFullYear();
             let sicon = message.guild.iconURL;
             let serverembed = new Discord.RichEmbed()
                 .setAuthor(message.guild.name, sicon)
-                .setColor("#AEEABE")
+                .setColor("#90bdea")
                 .setThumbnail(sicon)
                 //.addField("ID", message.guild.id, true)
                 .addField("Nom", message.guild.name, true)
@@ -394,7 +395,7 @@ bot.on('message', message=>{
                 if (args[0] === "communiste") args[0] = "coco";
                 if (args[0] === "corn" || args[0] === "pop") args[0] = "popcorn";
                 if (args[0] === "darklos") args[0] = "singe";
-                if (args[0] === "bananestar") return message.reply("T'es Sérieux FDP ? https://www.tenor.co/zgxO.gif ");
+                if (args[0] === "bananestar") args[0] = "singe";
                 if (args[0] === "help"){
                     let affichageHelp = "";
                     let genreMax = (Object.keys(gifs).length);
@@ -405,8 +406,16 @@ bot.on('message', message=>{
                     return message.reply("Thèmes disponibles : "+ affichageHelp +".")
                 }
                 let genre = args[0];
-                if (gifs[genre] === undefined) return message.reply("Il n'y a pas de gif avec le thème " + argsAffichage[0]);
-                if (args[1] === undefined) {
+                if (gifs[genre] === undefined){
+                    let affichageHelp = "";
+                    let genreMax = (Object.keys(gifs).length);
+                    for (let nom in gifs){
+                        affichageHelp += '`'+nom+'`';
+                        if ((Object.keys(gifs))[genreMax-1] !== nom) affichageHelp += ' , '
+                    }
+                    return message.reply("Il n'y a pas de gif avec le thème **" + argsAffichage[0] +"**\nThèmes disponibles : "+ affichageHelp +".")
+                }
+                if (args[1] === undefined || isNaN(args[1])) {
                     let random = nombreAleatoire(gifs[genre].length);
                     let affichargeGifs = gifs[genre][random - 1];
                     console.log("commande gifs genre " + argsAffichage[0] + " " + (random - 1));
@@ -451,14 +460,14 @@ bot.on('message', message=>{
                     .setFooter(name +" Tu a gagné !", aicon)
                     .setAuthor(':slot_machine:Slots:slot_machine:')
                     .addField('Result:', slots[result1] + slots[result2] + slots[result3], true)
-                    .setColor("#f4e842");
+                    .setColor("#c15366");
                 message.channel.send(Embed);
             } else {
                 let embed = new Discord.RichEmbed()
                     .setFooter(name +' Tu as perdu!', aicon)
                     .setAuthor('Machine à sous')
                     .addField(':slot_machine:Result:slot_machine:', slots[result1] + slots[result2] + slots[result3], true)
-                    .setColor("#f4e842");
+                    .setColor("#c15366");
                 message.channel.send(embed);
             }
 
@@ -553,6 +562,21 @@ bot.on('message', message=>{
                 }
             }
         }
+        //modif date supremacy
+        if (command ===`${prefix}supremacydate`){
+            if (message.member.roles.has("&520277234829885455")) return message.reply(`Seul un modo peut faire cette commande.`);
+            let dateSupremacy = JSON.parse(fs.readFileSync("./supremacyDate.json", "utf8"));
+            let jour = args[0];
+            let mois = args[1];
+            let annee = args[2];
+            dateSupremacy[message.guild.id] = {
+                dateSupremacy: annee+"-"+mois+"-"+jour
+            };
+            fs.writeFile("./supremacyDate.json", JSON.stringify(dateSupremacy), (err) => {
+                if (err) console.log(err)
+            });
+            message.reply("date modifiée");
+        }
 
 
         //help
@@ -560,7 +584,7 @@ bot.on('message', message=>{
             message.react("🤖");
             message.channel.send(`**${message.author.username}** Je te l'ai envoyé en MP :wink:`);
             const embed = new Discord.RichEmbed()
-                .setColor('#3FFA3F')
+                .setColor('#c8d83a')
                 .setAuthor(`Commande disponible :`)
                 .addField(`**${prefix}blah :**`, ` Répond quelque chose aléatoirement`)
                 .addField(`**${prefix}quote :**`, `Met les arguments en quote .`)
@@ -583,5 +607,32 @@ bot.on('message', message=>{
             message.author.send({embed});
         }
     });
+bot.on("ready", () => {
+    console.log("date supremacy1914 lancée");
+    setInterval(function () {
+        let dateSupremacy = JSON.parse(fs.readFileSync("./supremacyDate.json", "utf8"));
+        let date = new Date;
+        let dateJeu = new  Date(dateSupremacy["420530737738153984"].dateSupremacy);
+        let heure = date.getHours();
+        let minutes = date.getMinutes();
+        let jourJeu = dateJeu.getDate();
+        let moisJeu = ["Janvier","Février","Mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","decembre"];
+        let anneeJeu = dateJeu.getFullYear();
+        if((heure === 0 || heure === 4 || heure === 8 || heure === 12 || heure === 16 || heure === 20 || heure === 24)&& minutes === 0) {
+            bot.guilds.get("420530737738153984").channels.get("522417604795695105").send("nous passons à la date du : " + jourJeu +" " + moisJeu[dateJeu.getMonth()]+" "+ anneeJeu);
+            console.log("date supremacy " + dateJeu);
+            dateJeu.setDate(dateJeu.getDate() + 1);
+            let jour2 = dateJeu.getDate();
+            let mois2 = dateJeu.getMonth()+1;
+            let annee2 = dateJeu.getFullYear();
+            dateSupremacy["420530737738153984"] = {
+                dateSupremacy: annee2+"-"+mois2+"-"+jour2
+            };
+            fs.writeFile("./supremacyDate.json", JSON.stringify(dateSupremacy), (err) => {
+                if (err) console.log(err)
+            });
+        }
+    },60000)
+});
 bot.login(process.env.TOKEN);
 bot.on("error", console.error);
