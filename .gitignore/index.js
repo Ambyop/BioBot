@@ -618,7 +618,7 @@ bot.on("ready", () => {
         let jourJeu = dateJeu.getDate();
         let moisJeu = ["Janvier","Février","Mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","decembre"];
         let anneeJeu = dateJeu.getFullYear();
-        if((heure === 0 || heure === 4 || heure === 8 || heure === 12 || heure === 17 || heure === 20 || heure === 24)/*&& minutes === 0*/) {
+        if((heure === 0 || heure === 4 || heure === 8 || heure === 12 || heure === 18 || heure === 20 || heure === 24)/*&& minutes === 0*/) {
             bot.guilds.get(process.env.serveurID).channels.get(process.env.channelID).send("nous passons à la date du : " + jourJeu +" " + moisJeu[dateJeu.getMonth()]+" "+ anneeJeu);
             console.log("date supremacy " + dateJeu);
             dateJeu.setDate(dateJeu.getDate() + 1);
