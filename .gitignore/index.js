@@ -612,20 +612,20 @@ bot.on("ready", () => {
     setInterval(function () {
         let dateSupremacy = JSON.parse(fs.readFileSync("./supremacyDate.json", "utf8"));
         let date = new Date;
-        let dateJeu = new  Date(dateSupremacy["420530737738153984"].dateSupremacy);
+        let dateJeu = new  Date(dateSupremacy[process.env.serveurID].dateSupremacy);
         let heure = date.getHours();
         let minutes = date.getMinutes();
         let jourJeu = dateJeu.getDate();
         let moisJeu = ["Janvier","Février","Mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","decembre"];
         let anneeJeu = dateJeu.getFullYear();
         if((heure === 0 || heure === 4 || heure === 8 || heure === 12 || heure === 16 || heure === 20 || heure === 24)&& minutes === 0) {
-            bot.guilds.get("420530737738153984").channels.get("522417604795695105").send("nous passons à la date du : " + jourJeu +" " + moisJeu[dateJeu.getMonth()]+" "+ anneeJeu);
+            bot.guilds.get(process.env.serveurID).channels.get(process.env.channelID).send("nous passons à la date du : " + jourJeu +" " + moisJeu[dateJeu.getMonth()]+" "+ anneeJeu);
             console.log("date supremacy " + dateJeu);
             dateJeu.setDate(dateJeu.getDate() + 1);
             let jour2 = dateJeu.getDate();
             let mois2 = dateJeu.getMonth()+1;
             let annee2 = dateJeu.getFullYear();
-            dateSupremacy["420530737738153984"] = {
+            dateSupremacy[process.env.serveurID] = {
                 dateSupremacy: annee2+"-"+mois2+"-"+jour2
             };
             fs.writeFile("./supremacyDate.json", JSON.stringify(dateSupremacy), (err) => {
