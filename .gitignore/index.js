@@ -610,7 +610,7 @@ bot.on('message', message=>{
 bot.on("ready", () => {
     console.log("date supremacy1914 lancée");
     setInterval(function () {
-        let dateSupremacy = JSON.parse(fs.readFileSync("./supremacyDate.txt", "utf8"));
+        let dateSupremacy = JSON.parse(fs.readFileSync("./supremacyDate.json", "utf8"));
         let date = new Date;
         let dateJeu = new  Date(dateSupremacy[process.env.serveurID].dateSupremacy);
         let heure = date.getHours()+1;
