@@ -614,7 +614,7 @@ bot.on("ready", () => {
         let date = new Date;
         let dateJeu = new  Date(dateSupremacy[process.env.serveurID].dateSupremacy);
         dateJeu.setDate(dateJeu.getDate() + 1);
-        let heure = date.getHours();
+        let heure = date.getHours()+1;
         let minutes = date.getMinutes();
         let jourJeu = dateJeu.getDate();
         if (isNaN(jourJeu)) return bot.guilds.get(process.env.serveurID).channels.get(process.env.channelID).send(`La date n'est pas définie... utilisez la commande \`${prefix}supremacydate jj mm aaaa\``);
