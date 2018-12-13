@@ -562,9 +562,9 @@ bot.on('message', message=>{
                 }
             }
         }
-        //modif date supremacy
+         //modif date supremacy
         if (command ===`${prefix}supremacydate`){
-            if (message.member.roles.has("&520277234829885455")) return message.reply(`Seul un modo peut faire cette commande.`);
+            if (message.member.roles.has(process.env.master)) return message.channel.reply(`**Seul un modo peut faire cette commande.**`);
             let dateSupremacy = JSON.parse(fs.readFileSync("./supremacyDate.json", "utf8"));
             let jour = args[0];
             let mois = args[1];
@@ -613,15 +613,17 @@ bot.on("ready", () => {
         let dateSupremacy = JSON.parse(fs.readFileSync("./supremacyDate.json", "utf8"));
         let date = new Date;
         let dateJeu = new  Date(dateSupremacy[process.env.serveurID].dateSupremacy);
-        let heure = date.getHours()+1;
+        dateJeu.setDate(dateJeu.getDate() + 1);
+        let heure = date.getHours();
         let minutes = date.getMinutes();
         let jourJeu = dateJeu.getDate();
+        if (isNaN(jourJeu)) return bot.guilds.get(process.env.serveurID).channels.get("522417604795695105").send(`La date n'est pas définie... utilisez la commande \`${prefix}supremacydate jj mm aaaa\``);
         let moisJeu = ["Janvier","Février","Mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","decembre"];
         let anneeJeu = dateJeu.getFullYear();
-        if(heure/*(heure === 0 || heure === 4 || heure === 8 || heure === 12 || heure === 18 || heure === 20 || heure === 24)&& minutes === 0*/) {
+        if((heure === 0 || heure === 4 || heure === 8 || heure === 12 || heure === 16 || heure === 20 || heure === 24)&& minutes === 0*/) {
             bot.guilds.get(process.env.serveurID).channels.get(process.env.channelID).send("nous passons à la date du : " + jourJeu +" " + moisJeu[dateJeu.getMonth()]+" "+ anneeJeu);
             console.log("date supremacy " + dateJeu);
-            dateJeu.setDate(dateJeu.getDate() + 1);
+            //dateJeu.setDate(dateJeu.getDate() + 1);
             let jour2 = dateJeu.getDate();
             let mois2 = dateJeu.getMonth()+1;
             let annee2 = dateJeu.getFullYear();
@@ -632,7 +634,7 @@ bot.on("ready", () => {
                 if (err) console.log(err)
             });
         }
-    },180000)
+    },60000)
 });
 bot.login(process.env.TOKEN);
 bot.on("error", console.error);
