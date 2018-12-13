@@ -617,7 +617,7 @@ bot.on("ready", () => {
         let heure = date.getHours();
         let minutes = date.getMinutes();
         let jourJeu = dateJeu.getDate();
-        if (isNaN(jourJeu)) return bot.guilds.get(process.env.serveurID).channels.get("522417604795695105").send(`La date n'est pas définie... utilisez la commande \`${prefix}supremacydate jj mm aaaa\``);
+        if (isNaN(jourJeu)) return bot.guilds.get(process.env.serveurID).channels.get(process.env.channelID).send(`La date n'est pas définie... utilisez la commande \`${prefix}supremacydate jj mm aaaa\``);
         let moisJeu = ["Janvier","Février","Mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","decembre"];
         let anneeJeu = dateJeu.getFullYear();
         if((heure === 0 || heure === 4 || heure === 8 || heure === 12 || heure === 16 || heure === 20 || heure === 24)&& minutes === 0*/) {
