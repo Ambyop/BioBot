@@ -2,6 +2,7 @@
 const Discord = require("discord.js");
 const bot = new Discord.Client();
 const { prefix, adminPrefix, token } = require('./config.json');
+const { version } = require('./package');
 const ownerID = process.env.owner;
 const fs = require('fs');
 
@@ -24,19 +25,26 @@ function convertMS(ms) {
 function nombreAleatoire(nombre) {
     return Math.floor(Math.random() * nombre+1);
 }
-
+console.log( "Démarrage..." );
 bot.on("ready", () => {
-    console.log( "bot connecté"/*Whatever you want to say*/ );
-    bot.user.setStatus('idle');// online, idle, dnd, invisible
-    bot.user.setActivity(`En maintenance...`, { type: 'playing' })
+    console.log( "Connexion établie !");
+    bot.user.setStatus('dnd');// online, idle, dnd, invisible
+    bot.user.setActivity(`${prefix}help | créé par @AmByop`, { type: 'WATCHING' });
+    let compteur = 0;
+    setInterval(function () {
+        compteur++;
+        let activites = [`${prefix}help | créé par AmByop`,`${prefix}help || ${bot.users.size} Utilisateurs`,`${prefix}help || ${bot.guilds.size} serveurs`,`${prefix}help || Ping API : ${Math.floor(bot.ping)} ms`,`${prefix}help || BLAH !!!`,`${prefix}help || Version : ${version}`];
+        bot.user.setActivity(activites[compteur], {type: "Listening"}); //Playing , Streaming, Watching, Listening
+        if (compteur === activites.length)compteur = 0;
+    },70000)
 });
 
-/*bot.on('message', message=>{
-    if (message.channel.type === "dm") { //if the channel is a DM channel
-        if (message.content.startsWith(prefix)) return message.channel.send(":x: Merci d'utiliser les commandes dans un vrai serveur; :x:")
-    }//if the message is a command
-    if (message.author.bot && message.content.startsWith(prefix)) return message.channel.send(":x: Je ne parle pas aux Bots! :x:");
-    // This is where we'll put our code.
+bot.on('message', message=>{
+    if (message.channel.type === "dm") {
+        if (message.content.startsWith(prefix) && message.content !== `${prefix}help`) return message.channel.send(":x: Merci d'utiliser cette commande dans un vrai serveur. :x:")
+    }
+    if (message.author.bot && message.content.startsWith(prefix)) return message.channel.send(":x: Je ne réponds pas aux Bots! :x:");
+    // le code commence ici
     const args = message.content.toLocaleLowerCase().slice().trim().split(/ +/g);
     const argsAffichage = message.content.slice().trim().split(/ +/g);
     argsAffichage.shift();
@@ -89,7 +97,7 @@ bot.on("ready", () => {
         } else {
             let nombre = Number(args[0]) + 1;
             message.channel.bulkDelete(nombre).then(() => {
-                message.channel.send(`:pencil: ${args[0]} messages ont été supprimés par **${message.author.username}**.`).then(msg => msg.delete(6000));
+                message.channel.send(`:pencil: ${args[0]} messages ont été supprimés par **${message.author.username}**.`).then(msg => msg.delete(4000));
             });
         }
     }
@@ -132,10 +140,15 @@ bot.on("ready", () => {
         } else {
             user = message.author;
         }
+        // défini le membre du serveur
+        const member = message.guild.member(user);
+
         // creation utilisateur
-        let userCreated = user.createdAt.toString().split(' ');
+        let creationDate = user.createdAt;
+        //let userCreated = creationDate.toString().split(' ');
         // a rejoint le serveur
-        //let userJoined = user.joinedAt;
+        let arriveeDate = member.joinedAt;
+        //let userJoined = member.joinedAt.toString().split(' ');
         // status utilisateur
         let userStatus = user.presence.status;
         let status;
@@ -151,20 +164,20 @@ bot.on("ready", () => {
         if (userStatus === "offline") {
             status = "Déconnecté"
         }
-        // Define the member of a guild.
-        const member = message.guild.member(user);
+        //liste de mois
+        let mois = ["Janvier","Février","Mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","decembre"]
 
         //Discord rich embed
         const embed = new Discord.RichEmbed()
-            .setColor('#4bb895')
+            .setColor('#5d5db8')
             .setThumbnail(user.avatarURL)
-            .setAuthor(`${user.username}#${user.discriminator}`)
+            .setAuthor(`${user.tag}`)
             .addField("ID:", `${user.id}`, true)
-            .addField('Pseudo', user.username, false)
+            .addField('Pseudo', user.username, true)
             .addField('Discriminateur', '#' + user.discriminator, true)
             .addField("Surnom:", `${member.nickname !== null ? `${member.nickname}` : 'Aucun'}`, true)
-            .addField("Créé :", userCreated[2] + ' , ' + userCreated[1] + " , " + userCreated[3], true)
-            //.addField("a rejoint le serveur:", userJoined, true)
+            .addField("Créé :", creationDate.getDate() + ' , ' + mois[creationDate.getMonth()] + " , " + creationDate.getFullYear(), true)
+            .addField("a rejoint le serveur:", arriveeDate.getDate()+' , '+ mois[arriveeDate.getMonth()]+" , "+ arriveeDate.getFullYear(), true)
             .addField("Bot:", `${user.bot}`, true)
             .addField("Status:", status, true)
             .addField("Jeu:", `${user.presence.game ? user.presence.game.name : 'Aucun'}`, true)
@@ -174,15 +187,14 @@ bot.on("ready", () => {
             .setFooter(`Réponse à ${message.author.tag}`, `${message.author.avatarURL}`);
         message.channel.send({embed});
     }
-    ;
 // bot
-    if (command === `${prefix}botinfo` || command === `${prefix}bot`) {
+    if (command === `${prefix}botinfo` || command === `${prefix}bot`|| command === `${prefix}info`) {
         let msgping1 = new Date();
         let botping = new Date() - message.createdAt;
         let msgping2 = new Date() - msgping1;
         let u = convertMS(bot.uptime);
         let uptime = u.d + " jours : " + u.h + " heures : " + u.m + " minutes : " + u.s + " secondes.";
-        let servers = bot.guilds.size; // Server Count
+        let serveurs = bot.guilds.size; // Server Count
         let users = bot.users.size; // User count
         let channels = bot.channels.size; // Channel Count
         //bot.guilds.map(g => users += g.memberCount);
@@ -192,8 +204,9 @@ bot.on("ready", () => {
             .setThumbnail(bot.user.displayAvatarURL)
             .setAuthor('Stats du Bot:')
             .addField('Bot créé par @AmByOp', ' https://twitter.com/Ambyop')
+            .addField(`Version :`,version, true)
             .addField(`Fonctionne depuis :`, uptime)
-            .addField('Serveurs', servers, true)
+            .addField('Serveurs', serveurs, true)
             .addField('Utilisateurs', users, true)
             .addField('Channels', channels, true)
             .addField('Message Ping : ', '~' + Math.round(msgping2) + ' ms', true)
@@ -293,14 +306,16 @@ bot.on("ready", () => {
         if (member === null)  member = message.author.username;
         let robot = message.guild.member(bot.user.id).nickname;
         if (robot === null)  robot = bot.user.username;
-        if (args[0] === undefined) {
-            message.reply(`Vous n'avez pas mit de valeur \n Valeurs disponibles : \`pierre , papier , ciseaux\``);
+        if (args[0] === undefined || args[0] ==="help") {
+            if (args[0] === "help") message.reply("Voici les valeurs disponibles : `Pierre , Papier , Ciseaux` ");
+            else message.reply(`Vous n'avez pas mit de valeur \n Valeurs disponibles : \`Pierre , Papier , Ciseaux\``);
         } else {
+            let affichage = "";
             let valeurJoueur;
             let ordinateur;
             let joueur = args[0];
             let joueurAffichage = argsAffichage[0];
-            if (joueur !== "pierre"&& joueur!=="pierres" && joueur !== "papier" && joueur !== "ciseaux" && joueur !== "ciseau" && joueur !== "feuilles" && joueur !== "feuille") {
+            if (joueur !== "pierre"&& joueur!=="pierres" && joueur !== "papier" && joueur !== "ciseaux" && joueur !== "ciseau" && joueur !== "feuilles" && joueur !== "feuille" && joueur !== "puit" && joueur !== "puits") {
                 message.reply("Je ne connais pas la valeur **"+ joueurAffichage +"**\n Valeurs disponibles : `pierre , papier , ciseaux`");
             }
             if (joueur === "pierre" || joueur === "pierres") {
@@ -309,6 +324,9 @@ bot.on("ready", () => {
                 valeurJoueur = 2;
             } else if (joueur === "ciseaux"|| joueur === "ciseau") {
                 valeurJoueur = 1;
+            }else if (joueur === "puits" || joueur === "puit"){
+                valeurJoueur = 4;
+                affichage += message.author +", **"+joueur + "** c'est pour les lâches 😛 \n"
             }
             let valeurOrdinateur = Math.floor((3) * Math.random()) + 1;
             if (valeurOrdinateur === 1) {
@@ -319,16 +337,17 @@ bot.on("ready", () => {
                 ordinateur = "Pierre";
             }
             if (valeurJoueur === 3 && valeurOrdinateur === 1) {
-                message.channel.send(`__${member} :__ ` + joueurAffichage + `\n__${robot} :__ ` + ordinateur + `\n**${message.author} a gagné !** 😉 `);
+                affichage +=(`__${member} :__ ` + joueurAffichage + `\n__${robot} :__ ` + ordinateur + `\n**${message.author} a gagné !** 😉 `);
             } else if (valeurOrdinateur === 3 && valeurJoueur === 1) {
-                message.channel.send(`__${member} :__ ` + joueurAffichage + `\n__${robot} :__ ` + ordinateur + "\n**J'ai gagné !** 😛");
+                affichage +=(`__${member} :__ ` + joueurAffichage + `\n__${robot} :__ ` + ordinateur + "\n**J'ai gagné !** 😛");
             } else if (valeurJoueur === valeurOrdinateur) {
-                message.channel.send(`__${member} :__ ` + joueurAffichage + `\n__${robot} :__ ` + ordinateur + "\n**égalité** :sweat_smile: ")
+                affichage +=(`__${member} :__ ` + joueurAffichage + `\n__${robot} :__ ` + ordinateur + "\n**égalité** 😗")
             } else if (valeurJoueur < valeurOrdinateur) {
-                message.channel.send(`__${member} :__ ` + joueurAffichage + `\n__${robot} :__ ` + ordinateur + `\n**${message.author} a gagné !** 😉 `);
+                affichage +=(`__${member} :__ ` + joueurAffichage + `\n__${robot} :__ ` + ordinateur + `\n**${message.author} a gagné !** 😉 `);
             } else if (valeurOrdinateur < valeurJoueur) {
-                message.channel.send(`__${member} :__ ` + joueurAffichage + `\n__${robot} :__ ` + ordinateur + "\n**J'ai gagné !** 😛");
+                affichage +=(`__${member} :__ ` + joueurAffichage + `\n__${robot} :__ ` + ordinateur + "\n**J'ai gagné !** 😛");
             }
+            message.channel.send(affichage);
         }
     }
     //gifs
@@ -537,41 +556,10 @@ bot.on("ready", () => {
                         message.channel.send("Holà quetal ?")
                     }
                     if (action === 13) {
-                        message.channel.send("Hello" + auteur)
+                        message.channel.send("Longue vie et prospérité " + auteur)
                     }
                     if (action === 14) {
                         message.channel.send("Plop :wink:")
-                    }
-                }, 900);
-            }
-        }
-        if (command === 'fdp') {
-            let autorise = nombreAleatoire(10);
-            let action = nombreAleatoire(7);
-            console.log("fdp commande " + autorise + " " + action);
-            if (autorise >= 1 && autorise <= 4) {
-                console.log("fdp commande Exécution");
-                setTimeout(function () {
-                    if (action === 1) {
-                        message.react("😱");
-                    }
-                    if (action === 2) {
-                        message.react("🙄");
-                    }
-                    if (action === 3) {
-                        message.react("😅");
-                    }
-                    if (action === 4) {
-                        message.react("😄");
-                    }
-                    if (action === 5) {
-                        message.react("❤");
-                    }
-                    if (action === 6) {
-                        message.react("😗");
-                    }
-                    if (action === 7) {
-                        message.react("😮")
                     }
                 }, 900);
             }
@@ -590,7 +578,7 @@ bot.on("ready", () => {
         fs.writeFile("./supremacyDate.json", JSON.stringify(dateSupremacy), (err) => {
             if (err) console.log(err)
         });
-        message.reply("date modifiée");
+        message.reply("date modifiée, \n Nous sommes actuellement le "+jour +" / "+mois+" / "+ annee+" .");
     }
 
 
@@ -604,14 +592,14 @@ bot.on("ready", () => {
             .addField(`**${prefix}blah :**`, ` Répond quelque chose aléatoirement`)
             .addField(`**${prefix}quote :**`, `Met les arguments en quote .`)
             .addField(`**${prefix}purge :**`, `Supprime le nombre de messages mis en paramètres.`)
-            .addField(`**${prefix}poll :**`, `Pour organiser un vote \n Aussi disponibles: **${prefix}sondage** , **${prefix}sondage**`)
+            .addField(`**${prefix}poll :**`, `Pour organiser un vote \n Aussi disponibles: **${prefix}sondage**`)
             .addField(`**${prefix}user :**`, `donne les informations sur le joueur mentionner en  paramètre.\n Aussi disponible : **${prefix}userinfo**`)
-            .addField(`**${prefix}bot :**`, `donne les informations sur le bot\n Aussi disponible : **${prefix}botinfo**`)
+            .addField(`**${prefix}info :**`, `donne les informations sur le bot\n Aussi disponible : **${prefix}bot** ,**${prefix}botinfo**`)
             .addField(`**${prefix}serveur :**`, `donne les informations sur le bot\n Aussi disponible : **${prefix}serveurinfo**`)
-            .addField(`**${adminPrefix}serveurs :**`, '*[ seulement créateur]* Liste et identifie mes serveurs')
+            .addField(`**${adminPrefix}serveurs :**`, '*[seulement créateur]* Liste les serveurs où je suis présent.')
             .addField(`**${prefix}uptime :**`, "Indique le temps écoulé depuis le démarrage du bot.")
             .addField(`**${prefix}pf :**`, `Pile ou face ? la pièce sera lancée...\n Aussi disponible : **${prefix}pileface**`)
-            .addField(`**${prefix}roll :**`, `Lance un dé avec la valeur indiquée .\\n Aussi disponible : **${prefix}dice**\``)
+            .addField(`**${prefix}roll :**`, `Lance un dé avec la valeur indiquée .\\n Aussi disponible : **${prefix}dice**`)
             .addField(`**${prefix}slot :**`, `Lance la machine à sous.`)
             .addField(`**${prefix}ppc :**`, `Pour jouer à Shifumi//pierre-papier-ciseaux \n Aussi disponible : **${prefix}shifumi** .`)
             .addField(`**${prefix}gif :**`, `Affiche un gif de manière aléatoire \n Pour avoir les thèmes **${prefix}gif help**`)
@@ -623,7 +611,7 @@ bot.on("ready", () => {
     }
 });
 bot.on("ready", () => {
-    console.log("date supremacy1914 lancée");
+    //console.log("date supremacy1914 lancée");
     setInterval(function () {
         let dateSupremacy = JSON.parse(fs.readFileSync("./supremacyDate.json", "utf8"));
         let date = new Date;
@@ -650,6 +638,6 @@ bot.on("ready", () => {
             });
         }
     },60000)
-});*/
+});
 bot.login(process.env.TOKEN);
 bot.on("error", console.error);
