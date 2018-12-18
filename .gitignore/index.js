@@ -27,11 +27,11 @@ function nombreAleatoire(nombre) {
 
 bot.on("ready", () => {
     console.log( "bot connecté"/*Whatever you want to say*/ );
-    bot.user.setStatus('dnd');// online, idle, dnd, invisible
-    bot.user.setActivity(`${prefix}help | créé par @AmByop`, { type: 'WATCHING' })
+    bot.user.setStatus('idle');// online, idle, dnd, invisible
+    bot.user.setActivity(`En maintenance...`, { type: 'playing' })
 });
 
-bot.on('message', message=>{
+/*bot.on('message', message=>{
     if (message.channel.type === "dm") { //if the channel is a DM channel
         if (message.content.startsWith(prefix)) return message.channel.send(":x: Merci d'utiliser les commandes dans un vrai serveur; :x:")
     }//if the message is a command
@@ -650,6 +650,6 @@ bot.on("ready", () => {
             });
         }
     },60000)
-});
+});*/
 bot.login(process.env.TOKEN);
 bot.on("error", console.error);
