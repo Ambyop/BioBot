@@ -5,7 +5,6 @@ const { prefix, adminPrefix, token } = require('./config.json');
 const { version } = require('./package');
 const ownerID = process.env.owner;
 const fs = require('fs');
-
 function convertMS(ms) {
     var d, h, m, s;
     s = Math.floor(ms / 1000);
@@ -32,11 +31,11 @@ bot.on("ready", () => {
     bot.user.setActivity(`${prefix}help | créé par @AmByop`, { type: 'WATCHING' });
     let compteur = 0;
     setInterval(function () {
-        compteur++;
         let activites = [`${prefix}help | créé par AmByop`,`${prefix}help || ${bot.users.size} Utilisateurs`,`${prefix}help || ${bot.guilds.size} serveurs`,`${prefix}help || Ping API : ${Math.floor(bot.ping)} ms`,`${prefix}help || BLAH !!!`,`${prefix}help || Version : ${version}`];
         bot.user.setActivity(activites[compteur], {type: "Listening"}); //Playing , Streaming, Watching, Listening
+        compteur++;
         if (compteur === activites.length)compteur = 0;
-    },70000)
+    },80000)
 });
 
 bot.on('message', message=>{
@@ -56,7 +55,7 @@ bot.on('message', message=>{
         let numero = nombreAleatoire(texte.length);
         setTimeout(function () {
             message.channel.send(texte[numero - 1])
-        }, 500);
+        }, 200);
 
     }
     //quote
@@ -110,13 +109,12 @@ bot.on('message', message=>{
 
         const embed = new Discord.RichEmbed()
             .setTitle("Sondage :")
-            .setColor("GREEN")
+            .setColor("#a17e4d")
             .setDescription(`${question}`)
             .setFooter(`Sondage par: ${message.author.username}`, `${message.author.avatarURL}`);
         setTimeout(function () {
             message.delete();
         }, 4000);
-
         message.channel.send({embed})
             .then(msg => {
                 setTimeout(function () {
@@ -142,13 +140,10 @@ bot.on('message', message=>{
         }
         // défini le membre du serveur
         const member = message.guild.member(user);
-
         // creation utilisateur
         let creationDate = user.createdAt;
-        //let userCreated = creationDate.toString().split(' ');
         // a rejoint le serveur
         let arriveeDate = member.joinedAt;
-        //let userJoined = member.joinedAt.toString().split(' ');
         // status utilisateur
         let userStatus = user.presence.status;
         let status;
@@ -166,7 +161,6 @@ bot.on('message', message=>{
         }
         //liste de mois
         let mois = ["Janvier","Février","Mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","decembre"]
-
         //Discord rich embed
         const embed = new Discord.RichEmbed()
             .setColor('#5d5db8')
@@ -203,7 +197,7 @@ bot.on('message', message=>{
             .setColor("#b34c12")
             .setThumbnail(bot.user.displayAvatarURL)
             .setAuthor('Stats du Bot:')
-            .addField('Bot créé par @AmByOp', ' https://twitter.com/Ambyop')
+            .addField('Bot créé par AmByOp', ' https://twitter.com/Ambyop')
             .addField(`Version :`,version, true)
             .addField(`Fonctionne depuis :`, uptime)
             .addField('Serveurs', serveurs, true)
@@ -227,7 +221,7 @@ bot.on('message', message=>{
 
         });
         let botembed = new Discord.RichEmbed()
-            .setColor("#000FF")
+            .setColor("#a7951d")
             .addField("Connecté à : ", string)
             .setTimestamp()
             .setFooter("Exécuté par: " + message.author.username, message.author.avatarURL);
@@ -266,7 +260,7 @@ bot.on('message', message=>{
         // const duration = bot.uptime;
         setTimeout(function () {
             message.reply(`:alarm_clock: ` + `**Je fonctionne depuis :**  ${uptime}`);
-        }, 500);
+        }, 200);
     }
     //pile face
     if (command === `${prefix}pf` || command === `${prefix}pileface`) {
@@ -416,7 +410,7 @@ bot.on('message', message=>{
             console.log("commande gifs " + genre + " " + (random - 1));
             setTimeout(function () {
                 message.channel.send(affichargeGifs);
-            }, 500);
+            }, 200);
         } else {
             if (args[0] === "communiste") args[0] = "coco";
             if (args[0] === "corn" || args[0] === "pop") args[0] = "popcorn";
@@ -447,7 +441,7 @@ bot.on('message', message=>{
                 console.log("commande gifs genre " + argsAffichage[0] + " " + (random - 1));
                 setTimeout(function () {
                     message.channel.send(affichargeGifs);
-                }, 500);
+                }, 200);
             } else {
                 if (args[1] > gifs[genre].length) return message.reply("Il n'y a que " + gifs[genre].length + " de genre : **" + genre+"**");
                 let random = args[1];
@@ -455,7 +449,7 @@ bot.on('message', message=>{
                 console.log("commande gifs genre num " + genre + " " + (random - 1));
                 setTimeout(function () {
                     message.channel.send(affichargeGifs);
-                }, 500);
+                }, 200);
             }
         }
     }
@@ -463,14 +457,14 @@ bot.on('message', message=>{
     if (command === `${prefix}invite`) {
         setTimeout(function () {
             message.reply("https://discordapp.com/api/oauth2/authorize?client_id=506184450405826562&permissions=0&scope=bot");
-        }, 500);
+        }, 200);
     }
     // invite serveurtest
     if (command === `${prefix}serveurtest` || command === `${prefix}bottest`) {
         setTimeout(function () {
             message.reply("Réponse en MP :wink:");
             message.author.send("voici le lien du serveur Test : https://discord.gg/E3uhqMg");
-        }, 500);
+        }, 200);
     }
     // slots machine a sous
     if (command === `${prefix}slot` || command === `${prefix}slots`) {
@@ -486,7 +480,7 @@ bot.on('message', message=>{
                 .setFooter(name + " JACKPOT", aicon)
                 .setAuthor(':slot_machine:Slots:slot_machine:')
                 .addField('Result:', slots[result1] + slots[result2] + slots[result3], true)
-                .setColor("#c15366");
+                .setColor("#a4d5ed");
             message.channel.send(Embed)
         }
         else if (slots[result1] === slots[result2] && slots[result3]) {
@@ -494,14 +488,14 @@ bot.on('message', message=>{
                 .setFooter(name +" Tu a gagné !", aicon)
                 .setAuthor(':slot_machine:Slots:slot_machine:')
                 .addField('Result:', slots[result1] + slots[result2] + slots[result3], true)
-                .setColor("#c15366");
+                .setColor("#a4d5ed");
             message.channel.send(Embed);
         } else {
             let embed = new Discord.RichEmbed()
                 .setFooter(name +' Tu as perdu!', aicon)
                 .setAuthor('Machine à sous')
                 .addField(':slot_machine:Result:slot_machine:', slots[result1] + slots[result2] + slots[result3], true)
-                .setColor("#c15366");
+                .setColor("#a4d5ed");
             message.channel.send(embed);
         }
 
@@ -584,8 +578,15 @@ bot.on('message', message=>{
 
     //help
     if (command === `${prefix}help`) {
-        message.react("🤖");
-        message.channel.send(`**${message.author.username}** Je te l'ai envoyé en MP :wink:`);
+        setTimeout(function () {
+            message.react('🇲')
+        }, 100);
+        setTimeout(function () {
+            message.react('🇵')
+        }, 400);
+        setTimeout(function () {
+            message.react('🤖')
+        }, 200);
         const embed = new Discord.RichEmbed()
             .setColor('#c8d83a')
             .setAuthor(`Commande disponible :`)
@@ -599,7 +600,7 @@ bot.on('message', message=>{
             .addField(`**${adminPrefix}serveurs :**`, '*[seulement créateur]* Liste les serveurs où je suis présent.')
             .addField(`**${prefix}uptime :**`, "Indique le temps écoulé depuis le démarrage du bot.")
             .addField(`**${prefix}pf :**`, `Pile ou face ? la pièce sera lancée...\n Aussi disponible : **${prefix}pileface**`)
-            .addField(`**${prefix}roll :**`, `Lance un dé avec la valeur indiquée .\\n Aussi disponible : **${prefix}dice**`)
+            .addField(`**${prefix}roll :**`, `Lance un dé avec la valeur indiquée .\n Aussi disponible : **${prefix}dice**`)
             .addField(`**${prefix}slot :**`, `Lance la machine à sous.`)
             .addField(`**${prefix}ppc :**`, `Pour jouer à Shifumi//pierre-papier-ciseaux \n Aussi disponible : **${prefix}shifumi** .`)
             .addField(`**${prefix}gif :**`, `Affiche un gif de manière aléatoire \n Pour avoir les thèmes **${prefix}gif help**`)
@@ -607,7 +608,9 @@ bot.on('message', message=>{
             .addField(`**${prefix}serveurtest**`, `Je t'invite sur mon serveur de développement :smiley: \nAussi disponible: **${prefix}serveurtest**`)
 
             .setTimestamp(new Date());
-        message.author.send({embed});
+        setTimeout(function () {
+            message.author.send(embed);
+        },200)
     }
 });
 bot.on("ready", () => {
@@ -624,7 +627,7 @@ bot.on("ready", () => {
         let anneeJeu = dateJeu.getFullYear();
         if((heure === 0 || heure === 4 || heure === 8 || heure === 12 || heure === 16 || heure === 20 || heure === 24)&& minutes === 0) {
             if (isNaN(jourJeu)) return bot.guilds.get(process.env.serveurID).channels.get(process.env.channelID).send(`La date n'est pas définie... utilisez la commande \`${prefix}supremacydate jj mm aaaa\` (date actuelle) \n En tout cas on avance d'un jour :P`);
-            bot.guilds.get(process.env.serveurID).channels.get(process.env.channelID).send("nous passons à la date du : " + jourJeu +" " + moisJeu[dateJeu.getMonth()]+" "+ anneeJeu);
+            bot.guilds.get(process.env.serveurID).channels.get(process.env.channelID).send("Nous passons à la date du : " + jourJeu +" " + moisJeu[dateJeu.getMonth()]+" "+ anneeJeu);
             console.log("date supremacy " + dateJeu);
             //dateJeu.setDate(dateJeu.getDate() + 1);
             let jour2 = dateJeu.getDate();
