@@ -1,7 +1,7 @@
 {
   "name": "biobot",
-  "version": "2.4.3.3",
-  "description": "bot par ambio",
+  "version": "2.4.8",
+  "description": "bot par AmBiO",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
