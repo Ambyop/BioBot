@@ -5,6 +5,7 @@ const { prefix, adminPrefix, token } = require('./config.json');
 const { version } = require('./package');
 const ownerID = process.env.owner;
 const fs = require('fs');
+
 function convertMS(ms) {
     var d, h, m, s;
     s = Math.floor(ms / 1000);
@@ -28,10 +29,10 @@ console.log( "Démarrage..." );
 bot.on("ready", () => {
     console.log( "Connexion établie !");
     bot.user.setStatus('dnd');// online, idle, dnd, invisible
-    bot.user.setActivity(`${prefix}help | créé par @AmByop`, { type: 'WATCHING' });
+    bot.user.setActivity(`${prefix}help | créé par AmByOp`, { type: 'WATCHING' });
     let compteur = 0;
     setInterval(function () {
-        let activites = [`${prefix}help | créé par AmByop`,`${prefix}help || ${bot.users.size} Utilisateurs`,`${prefix}help || ${bot.guilds.size} serveurs`,`${prefix}help || Ping API : ${Math.floor(bot.ping)} ms`,`${prefix}help || BLAH !!!`,`${prefix}help || Version : ${version}`];
+        let activites = [`${prefix}help | créé par AmByOp`,`${prefix}help || ${bot.users.size} Utilisateurs`,`${prefix}help || ${bot.guilds.size} serveurs`,`${prefix}help || Ping API : ${Math.floor(bot.ping)} ms`,`${prefix}help || BLAH !!!`,`${prefix}help || Version : ${version}`];
         bot.user.setActivity(activites[compteur], {type: "Listening"}); //Playing , Streaming, Watching, Listening
         compteur++;
         if (compteur === activites.length)compteur = 0;
@@ -39,6 +40,7 @@ bot.on("ready", () => {
 });
 
 bot.on('message', message=>{
+    // vérifier que la commande st écrite au bon endroit
     if (message.channel.type === "dm") {
         if (message.content.startsWith(prefix) && message.content !== `${prefix}help`) return message.channel.send(":x: Merci d'utiliser cette commande dans un vrai serveur. :x:")
     }
@@ -68,11 +70,8 @@ bot.on('message', message=>{
                 setTimeout(function () {
                     message.delete();
                 }, 4000);
-                //message.delete();
                 message.channel.send(`**${message.author.username}** annonce :  \`\`\`  ${argsAffichage[0]}  \`\`\``);
             }
-
-
         }
     }
     //purge
@@ -103,10 +102,8 @@ bot.on('message', message=>{
     //sondage
     if (command === `${prefix}sondage` || command === `${prefix}poll` || command === `${prefix}question`) {
         let question = argsAffichage.slice(0).join(" ");
-
         if (args.length === 0)
             return message.reply(`Vous avez oublié d'introduire la question .\n \`${prefix}poll [Question]\``);
-
         const embed = new Discord.RichEmbed()
             .setTitle("Sondage :")
             .setColor("#a17e4d")
@@ -147,20 +144,12 @@ bot.on('message', message=>{
         // status utilisateur
         let userStatus = user.presence.status;
         let status;
-        if (userStatus === "dnd") {
-            status = "Ne pas déranger"
-        }
-        if (userStatus === "idle") {
-            status = "Inactif"
-        }
-        if (userStatus === "online") {
-            status = "En ligne"
-        }
-        if (userStatus === "offline") {
-            status = "Déconnecté"
-        }
+        if (userStatus === "dnd") status = "Ne pas déranger";
+        if (userStatus === "idle") status = "Inactif";
+        if (userStatus === "online") status = "En ligne";
+        if (userStatus === "offline") status = "Déconnecté";
         //liste de mois
-        let mois = ["Janvier","Février","Mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","decembre"]
+        let mois = ["Janvier","Février","Mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","decembre"];
         //Discord rich embed
         const embed = new Discord.RichEmbed()
             .setColor('#5d5db8')
@@ -170,7 +159,7 @@ bot.on('message', message=>{
             .addField('Pseudo', user.username, true)
             .addField('Discriminateur', '#' + user.discriminator, true)
             .addField("Surnom:", `${member.nickname !== null ? `${member.nickname}` : 'Aucun'}`, true)
-            .addField("Créé :", creationDate.getDate() + ' , ' + mois[creationDate.getMonth()] + " , " + creationDate.getFullYear(), true)
+            .addField("a rejoint discord :", creationDate.getDate() + ' , ' + mois[creationDate.getMonth()] + " , " + creationDate.getFullYear(), true)
             .addField("a rejoint le serveur:", arriveeDate.getDate()+' , '+ mois[arriveeDate.getMonth()]+" , "+ arriveeDate.getFullYear(), true)
             .addField("Bot:", `${user.bot}`, true)
             .addField("Status:", status, true)
@@ -214,7 +203,7 @@ bot.on('message', message=>{
     }
     // nbre serveur
     if (command === `${adminPrefix}serveurs`) {
-        if (message.author.id !== ownerID) return message.reply(`Seul mon créateur peut faire cette commande.`);
+        if (message.author.id !== ownerID) return message.reply(`Seulement mon créateur peut faire cette commande.`);
         let string = '';
         bot.guilds.forEach(guild => {
             string += '***Nom:*** ' + guild.name + '\n' + '*** ID:***` ' + guild.id + ' ` ' + '\n\n';
@@ -230,9 +219,8 @@ bot.on('message', message=>{
     // serveur info
     if (command === `${prefix}serveurinfo` || command === `${prefix}serveur`) {
         let online = message.guild.members.filter(member => member.user.presence.status !== 'offline');
-        let day = message.guild.createdAt.getDate();
-        let month = 1 + message.guild.createdAt.getMonth();
-        let year = message.guild.createdAt.getFullYear();
+        let creation = message.guild.createdAt;
+        let mois = ["Janvier","Février","Mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","decembre"];
         let sicon = message.guild.iconURL;
         let serverembed = new Discord.RichEmbed()
             .setAuthor(message.guild.name, sicon)
@@ -241,12 +229,11 @@ bot.on('message', message=>{
             //.addField("ID", message.guild.id, true)
             .addField("Nom", message.guild.name, true)
             .addField("Propriétaire", message.guild.owner.user.tag, true)
-            .addField(`Création`, `${day}.${month}.${year}`)
+            .addField(`Créé le`, creation.getDate() + ' , ' + mois[creation.getMonth()] + " , " + creation.getFullYear())
             .addField("Région", message.guild.region, true)
-            .addField("Channels", message.guild.channels.size, true)
-            .addField("Membres", message.guild.memberCount, true)
-            .addField("Humains", message.guild.memberCount - message.guild.members.filter(m => m.user.bot).size, true)
-            .addField("Bots", message.guild.members.filter(m => m.user.bot).size, true)
+            .addField("Salons",`${message.guild.channels.filter(channel => channel.type === 'text').size} textuels, ${message.guild.channels.filter(channel => channel.type === 'voice').size} vocaux`)
+            .addField("Membres",`${message.guild.memberCount - message.guild.members.filter(m => m.user.bot).size} humains, ${message.guild.members.filter(m => m.user.bot).size} bots.`, true)
+            .addField("Denier membres",Array.from(message.channel.guild.members.values()).sort((a, b) => b.joinedAt - a.joinedAt).map(m => `<@!${m.id}>`).splice(0, 1),true)
             .addField("Online", online.size, true)
             .addField("Roles", message.guild.roles.size, true)
             .setTimestamp(new Date())
@@ -265,17 +252,17 @@ bot.on('message', message=>{
     //pile face
     if (command === `${prefix}pf` || command === `${prefix}pileface`) {
         let valeur = nombreAleatoire(2);
-        setTimeout(function () {
+        /*setTimeout(function () {
             message.delete();
-        }, 4000);
-        let msg;
+        }, 4000);*/
+        let piece;
         if (valeur === 1) {
-            msg = message.author + ', la pièce indique  **Pile** !'
+             piece = `Face`
         } else {
-            msg = message.author + ', la pièce indique  **Face** !'
+             piece = `Pile`
         }
         message.reply("Je lance la pièce ...").then(sentMessage => setTimeout(function () {
-            sentMessage.edit(msg)
+            sentMessage.edit(`${message.author}, la pièce indique **${piece}** !`)
         }, 900));
     }
     //roll
@@ -313,32 +300,32 @@ bot.on('message', message=>{
                 message.reply("Je ne connais pas la valeur **"+ joueurAffichage +"**\n Valeurs disponibles : `pierre , papier , ciseaux`");
             }
             if (joueur === "pierre" || joueur === "pierres") {
-                valeurJoueur = 3;
+                valeurJoueur = 1;
             } else if (joueur === "papier"|| joueur === "feuille") {
                 valeurJoueur = 2;
             } else if (joueur === "ciseaux"|| joueur === "ciseau") {
-                valeurJoueur = 1;
+                valeurJoueur = 3;
             }else if (joueur === "puits" || joueur === "puit"){
-                valeurJoueur = 4;
+                valeurJoueur = 0;
                 affichage += message.author +", **"+joueur + "** c'est pour les lâches 😛 \n"
             }
             let valeurOrdinateur = Math.floor((3) * Math.random()) + 1;
-            if (valeurOrdinateur === 1) {
+            if (valeurOrdinateur === 3) {
                 ordinateur = "Ciseaux";
             } else if (valeurOrdinateur === 2) {
                 ordinateur = "Papier";
-            } else if (valeurOrdinateur === 3) {
+            } else if (valeurOrdinateur === 1) {
                 ordinateur = "Pierre";
             }
-            if (valeurJoueur === 3 && valeurOrdinateur === 1) {
+            if (valeurJoueur === 1 && valeurOrdinateur === 3) {
                 affichage +=(`__${member} :__ ` + joueurAffichage + `\n__${robot} :__ ` + ordinateur + `\n**${message.author} a gagné !** 😉 `);
-            } else if (valeurOrdinateur === 3 && valeurJoueur === 1) {
+            } else if (valeurOrdinateur === 1 && valeurJoueur === 3) {
                 affichage +=(`__${member} :__ ` + joueurAffichage + `\n__${robot} :__ ` + ordinateur + "\n**J'ai gagné !** 😛");
             } else if (valeurJoueur === valeurOrdinateur) {
                 affichage +=(`__${member} :__ ` + joueurAffichage + `\n__${robot} :__ ` + ordinateur + "\n**égalité** 😗")
-            } else if (valeurJoueur < valeurOrdinateur) {
+            } else if (valeurJoueur > valeurOrdinateur) {
                 affichage +=(`__${member} :__ ` + joueurAffichage + `\n__${robot} :__ ` + ordinateur + `\n**${message.author} a gagné !** 😉 `);
-            } else if (valeurOrdinateur < valeurJoueur) {
+            } else if (valeurOrdinateur > valeurJoueur) {
                 affichage +=(`__${member} :__ ` + joueurAffichage + `\n__${robot} :__ ` + ordinateur + "\n**J'ai gagné !** 😛");
             }
             message.channel.send(affichage);
@@ -550,7 +537,7 @@ bot.on('message', message=>{
                         message.channel.send("Holà quetal ?")
                     }
                     if (action === 13) {
-                        message.channel.send("Longue vie et prospérité " + auteur)
+                        message.channel.send("Longue vie et prospérité " + auteur+" 🖖")
                     }
                     if (action === 14) {
                         message.channel.send("Plop :wink:")
@@ -574,8 +561,6 @@ bot.on('message', message=>{
         });
         message.reply("date modifiée, \n Nous sommes actuellement le "+jour +" / "+mois+" / "+ annee+" .");
     }
-
-
     //help
     if (command === `${prefix}help`) {
         setTimeout(function () {
@@ -606,15 +591,15 @@ bot.on('message', message=>{
             .addField(`**${prefix}gif :**`, `Affiche un gif de manière aléatoire \n Pour avoir les thèmes **${prefix}gif help**`)
             .addField(`**${prefix}invite**`, "Invite moi sur ton serveur Discord  :wink:")
             .addField(`**${prefix}serveurtest**`, `Je t'invite sur mon serveur de développement :smiley: \nAussi disponible: **${prefix}serveurtest**`)
-
             .setTimestamp(new Date());
         setTimeout(function () {
             message.author.send(embed);
         },200)
     }
 });
+//boucle supremacy
 bot.on("ready", () => {
-    //console.log("date supremacy1914 lancée");
+    console.log("Démarrage de la boucle supremacy1914...");
     setInterval(function () {
         let dateSupremacy = JSON.parse(fs.readFileSync("./supremacyDate.json", "utf8"));
         let date = new Date;
@@ -623,13 +608,13 @@ bot.on("ready", () => {
         let heure = date.getHours()+1;
         let minutes = date.getMinutes();
         let jourJeu = dateJeu.getDate();
-        let moisJeu = ["Janvier","Février","Mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","decembre"];
+        let jourNomJeu = ["Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dimanche"];
+        let moisJeu = ["Janvier","Février","Mars","avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
         let anneeJeu = dateJeu.getFullYear();
         if((heure === 0 || heure === 4 || heure === 8 || heure === 12 || heure === 16 || heure === 20 || heure === 24)&& minutes === 0) {
             if (isNaN(jourJeu)) return bot.guilds.get(process.env.serveurID).channels.get(process.env.channelID).send(`La date n'est pas définie... utilisez la commande \`${prefix}supremacydate jj mm aaaa\` (date actuelle) \n En tout cas on avance d'un jour :P`);
-            bot.guilds.get(process.env.serveurID).channels.get(process.env.channelID).send("Nous passons à la date du : " + jourJeu +" " + moisJeu[dateJeu.getMonth()]+" "+ anneeJeu);
-            console.log("date supremacy " + dateJeu);
-            //dateJeu.setDate(dateJeu.getDate() + 1);
+            bot.guilds.get(process.env.serveurID).channels.get(process.env.channelID).send("Nous passons au : "+ jourNomJeu[dateJeu.getDay()-1] +", " + jourJeu +" " + moisJeu[dateJeu.getMonth()]+" "+ anneeJeu);
+            console.log("Exécution de la boucle supremacy : " + dateJeu);
             let jour2 = dateJeu.getDate();
             let mois2 = dateJeu.getMonth()+1;
             let annee2 = dateJeu.getFullYear();
