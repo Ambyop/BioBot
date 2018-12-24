@@ -31,7 +31,7 @@ bot.on("ready", () => {
     bot.user.setStatus('dnd');// online, idle, dnd, invisible
     bot.user.setActivity(`Maintenance en cours...`);
     let compteur = 0;
-   /* setInterval(function () {
+});/* setInterval(function () {
         let activites = [`${prefix}help | créé par AmByOp`,`${prefix}help || ${bot.users.size} Utilisateurs`,`${prefix}help || ${bot.guilds.size} serveurs`,`${prefix}help || Ping API : ${Math.floor(bot.ping)} ms`,`${prefix}help || BLAH !!!`,`${prefix}help || Version : ${version}`];
         bot.user.setActivity(activites[compteur], {type: "Listening"}); //Playing , Streaming, Watching, Listening
         compteur++;
