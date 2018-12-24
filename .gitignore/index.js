@@ -254,7 +254,7 @@ bot.on('message', message=>{
         let valeur = nombreAleatoire(2);
         /*setTimeout(function () {
             message.delete();
-        }, 4000);*/
+        }, 4000);
         let piece;
         if (valeur === 1) {
              piece = `Face`
@@ -626,6 +626,6 @@ bot.on("ready", () => {
             });
         }
     },60000)
-});
+});*/
 bot.login(process.env.TOKEN);
 bot.on("error", console.error);
