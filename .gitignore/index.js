@@ -595,7 +595,7 @@ bot.on('message', message=>{
             .addField(`**${prefix}serveurtest**`, `Je t'invite sur mon serveur de développement :smiley: \nAussi disponible: **${prefix}serveurtest**`)
             .addField(`**${VIPprefix}serveurs :**`, '*[Programmeur]* Liste les serveurs où je suis présent.')
             .addField(`**${VIPprefix}reboot :**`, '*[Programmeur]* me redémarre')
-            .addField(`**${VIPprefix}reboot :**`, '*[Programmeur]* m\'éteint.')
+            .addField(`**${VIPprefix}stop :**`, '*[Programmeur]* m\'éteint.')
             .setTimestamp(new Date());
         setTimeout(function () {
             message.author.send(embed);
