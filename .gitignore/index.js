@@ -535,7 +535,7 @@ bot.on('message', message=>{
         const command = message.content.toLocaleLowerCase();
         const auteur = message.author;
         if (command === `bonjour` || command === `salut` || command === `yop` || command === `bonsoir` || command === 'yo' || command === 'wesh' || command === 'coucou' || command === 'slt' || command === 'bjour' || command === 'hola' || command === 'holà' || command === "Salutation"|| command === 'plop') {
-            let autorise = nombreAleatoire(3);
+            let autorise = nombreAleatoire(10);
             if (autorise > 0 && autorise < 4) {
                 let bonjour = [`Bien le bonjour ${auteur}`,`Bijour Bijour, ${auteur}`,`Salut à toi mon brave ${message.author.username}`,`Bijour monsieur ${message.author.username}`,`Yolo ! 😁`,`Bonjour 😁`,`Yolo !`,`Salut comment-va ? ${auteur}`,
                 `Salut ${message.author.username}`,`Salut ! Comment vas-tu ?`,`Salut ${auteur} ! Comment vas-tu ?`,`Hey !..`,`Salut mon pote 😊`,`Wesh Wesh !!`,`Yo !`,`Yop !`,`Arthour Couillère !!!! https://thumbs.gfycat.com/FineOilyGrebe-small.gif`,
