@@ -42,7 +42,7 @@ bot.on("ready", () => {
 bot.on('message', message=>{
     // vérifier que la commande st écrite au bon endroit
     if (message.channel.type === "dm") {
-        if (message.content.startsWith(prefix) && message.content !== `${prefix}help`) return message.channel.send(":x: Merci d'utiliser cette commande dans un vrai serveur. :x:")
+        if (message.content.startsWith(prefix) && message.content !== `${prefix}help` && message.content !== `${prefix}aide`) return message.channel.send(":x: Merci d'utiliser cette commande dans un vrai serveur. :x:")
     }
     if (message.author.bot && message.content.startsWith(prefix)) return message.channel.send(":x: Je ne réponds pas aux Bots! :x:");
     // le code commence ici
@@ -101,12 +101,13 @@ bot.on('message', message=>{
     }
     //sondage
     if (command === `${prefix}sondage` || command === `${prefix}poll` || command === `${prefix}question`) {
+        console.log("création de sondage");
         let question = argsAffichage.slice(0).join(" ");
         if (args.length === 0)
             return message.reply(`Vous avez oublié d'introduire la question .\n \`${prefix}poll [Question]\``);
         const embed = new Discord.RichEmbed()
             .setTitle("Sondage :")
-            .setColor("#a17e4d")
+            .setColor("#79a000")
             .setDescription(`${question}`)
             .setFooter(`Sondage par: ${message.author.username}`, `${message.author.avatarURL}`);
         setTimeout(function () {
@@ -152,7 +153,7 @@ bot.on('message', message=>{
         let mois = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
         //Discord rich embed
         const embed = new Discord.RichEmbed()
-            .setColor('#5d5db8')
+            .setColor('#2b93b8')
             .setThumbnail(user.avatarURL)
             .setAuthor(`${user.tag}`)
             .addField("ID:", `${user.id}`, true)
@@ -183,7 +184,7 @@ bot.on('message', message=>{
         //bot.guilds.map(g => users += g.memberCount);
 
         let pingembed = new Discord.RichEmbed()
-            .setColor("#b34c12")
+            .setColor("#2b93b8")
             .setThumbnail(bot.user.displayAvatarURL)
             .setAuthor('Stats du Bot:')
             .addField('Bot créé par AmByOp', ' https://twitter.com/Ambyop')
@@ -202,7 +203,7 @@ bot.on('message', message=>{
         return message.channel.send(pingembed);
     }
     // nbre serveur
-    if (command === `${adminPrefix}serveurs`) {
+    if (command === `${VIPprefix}serveurs`) {
         if (message.author.id !== ownerID) return message.reply(`Seulement mon créateur peut faire cette commande.`);
         let string = '';
         bot.guilds.forEach(guild => {
@@ -210,7 +211,7 @@ bot.on('message', message=>{
 
         });
         let botembed = new Discord.RichEmbed()
-            .setColor("#a7951d")
+            .setColor("#a74445")
             .addField("Connecté à : ", string)
             .setTimestamp()
             .setFooter("Exécuté par: " + message.author.username, message.author.avatarURL);
@@ -239,7 +240,7 @@ bot.on('message', message=>{
 
         let serverembed = new Discord.RichEmbed()
             .setAuthor(message.guild.name, sicon)
-            .setColor("#90bdea")
+            .setColor("#2b93b8")
             .setThumbnail(sicon)
             //.addField("ID", message.guild.id, true)
             .addField("Nom", message.guild.name, true)
@@ -482,7 +483,7 @@ bot.on('message', message=>{
                 .setFooter(name + " JACKPOT", aicon)
                 .setAuthor(':slot_machine:Slots:slot_machine:')
                 .addField('Result:', slots[result1] + slots[result2] + slots[result3], true)
-                .setColor("#a4d5ed");
+                .setColor("#a56b2c");
             message.channel.send(Embed)
         }
         else if (slots[result1] === slots[result2] && slots[result3]) {
@@ -490,73 +491,60 @@ bot.on('message', message=>{
                 .setFooter(name +" Tu a gagné !", aicon)
                 .setAuthor(':slot_machine:Slots:slot_machine:')
                 .addField('Result:', slots[result1] + slots[result2] + slots[result3], true)
-                .setColor("#a4d5ed");
+                .setColor("#a56b2c");
             message.channel.send(Embed);
         } else {
             let embed = new Discord.RichEmbed()
                 .setFooter(name +' Tu as perdu!', aicon)
                 .setAuthor('Machine à sous')
                 .addField(':slot_machine:Result:slot_machine:', slots[result1] + slots[result2] + slots[result3], true)
-                .setColor("#a4d5ed");
+                .setColor("#a56b2c");
             message.channel.send(embed);
         }
+    }
+    //reboot
+    if(message.content === `${VIPprefix}reboot` || message.content === `${VIPprefix}restart`) {
+        if (message.author.id === ownerID) {
+            message.react("☑");
+            bot.destroy();
+            bot.destroy();
+            bot.login(process.env.TOKEN);
+            setTimeout(function () {
+                message.channel.send(`:gear: **${bot.user.username}** a redémarré avec succès :gear:`)
+            },1500)
 
+        } else {
+            message.channel.send("Seulement mon créateur peut faire cette commande !")
+        }
+    }
+    //arrêt du bot
+    if(message.content === `${VIPprefix}crash` || message.content === `${VIPprefix}stop`) {
+        if (message.author.id === ownerID) {
+            message.react("🛑");
+            message.reply(`:x: Arrêt du bot jusqu'au prochain redémarrage automatique. :x:`);
+            bot.destroy();
+            bot.destroy();
+
+        } else {
+            message.channel.send("Seulement mon créateur peut faire cette commande !")
+        }
     }
     //bonjour
     if (!message.content.startsWith(prefix)) {
         if (message.author.bot) return;
         const command = message.content.toLocaleLowerCase();
         const auteur = message.author;
-
         if (command === `bonjour` || command === `salut` || command === `yop` || command === `bonsoir` || command === 'yo' || command === 'wesh' || command === 'coucou' || command === 'slt' || command === 'bjour' || command === 'hola' || command === 'holà' || command === "Salutation"|| command === 'plop') {
-            let autorise = nombreAleatoire(10);
-            let action = nombreAleatoire(14);
-            console.log("bonjour commande " + autorise + " " + action);
-            if (autorise >= 1 && autorise <= 3) {
-                console.log("bonjour commande Exécution");
+            let autorise = nombreAleatoire(3);
+            if (autorise > 0 && autorise < 4) {
+                let bonjour = [`Bien le bonjour ${auteur}`,`Bijour Bijour, ${auteur}`,`Salut à toi mon brave ${message.author.username}`,`Bijour monsieur ${message.author.username}`,`Yolo ! 😁`,`Bonjour 😁`,`Yolo !`,`Salut comment-va ? ${auteur}`,
+                `Salut ${message.author.username}`,`Salut ! Comment vas-tu ?`,`Salut ${auteur} ! Comment vas-tu ?`,`Hey !..`,`Salut mon pote 😊`,`Wesh Wesh !!`,`Yo !`,`Yop !`,`Arthour Couillère !!!! https://thumbs.gfycat.com/FineOilyGrebe-small.gif`,
+                `Yo ${message.author.username} !`,`Yop ${message.author.username} !`,`Holà ${auteur} !`,`Hola, cómo estás ?`,`Hola quetal ?`,`Buenos dias`,`hallo hoe gaat het met jouw ?`,`Dag !`,`Hallo ${message.author.username}`,
+                `Longue vie et prospérité ${auteur} 🖖`,`Flop :wink:`];
+                let action = nombreAleatoire(bonjour.length)-1;
+                console.log(`Bonjour commande,autorisé ${autorise}, numero ${action}`);
                 setTimeout(function () {
-                    if (action === 1) {
-                        message.channel.send("Bien le Bonjour " + auteur);
-                    }
-                    if (action === 2) {
-                        message.channel.send("Bijour Monsieur " + auteur)
-                    }
-                    if (action === 3) {
-                        message.channel.send("Yolo !");
-                    }
-                    if (action === 4) {
-                        message.channel.send("Bongour ");
-                    }
-                    if (action === 5) {
-                        message.channel.send("Salut ! Comment vas-tu " + auteur + " ?");
-                    }
-                    if (action === 6) {
-                        message.channel.send("Hey !..");
-                    }
-                    if (action === 7) {
-                        message.channel.send("Salut mon ami :wink:")
-                    }
-                    if (action === 8) {
-                        message.channel.send("Wesh wesh !")
-                    }
-                    if (action === 9) {
-                        message.channel.send("Yo !")
-                    }
-                    if (action === 10) {
-                        message.channel.send("Yop !");
-                    }
-                    if (action === 11) {
-                        message.channel.send("Holà " + auteur + "! ")
-                    }
-                    if (action === 12) {
-                        message.channel.send("Holà quetal ?")
-                    }
-                    if (action === 13) {
-                        message.channel.send("Longue vie et prospérité " + auteur+" 🖖")
-                    }
-                    if (action === 14) {
-                        message.channel.send("Plop :wink:")
-                    }
+                    message.channel.send(bonjour[action])
                 }, 900);
             }
         }
@@ -577,7 +565,7 @@ bot.on('message', message=>{
         message.reply("date modifiée, \n Nous sommes actuellement le "+jour +" / "+mois+" / "+ annee+" .");
     }
     //help
-    if (command === `${prefix}help`) {
+    if (command === `${prefix}help` || command === `${prefix}aide`) {
         setTimeout(function () {
             message.react('🇲')
         }, 100);
@@ -588,7 +576,7 @@ bot.on('message', message=>{
             message.react('🤖')
         }, 200);
         const embed = new Discord.RichEmbed()
-            .setColor('#c8d83a')
+            .setColor('#79a000')
             .setAuthor(`Commande disponible :`)
             .addField(`**${prefix}blah :**`, ` Répond quelque chose aléatoirement`)
             .addField(`**${prefix}quote :**`, `Met les arguments en quote .`)
@@ -597,7 +585,6 @@ bot.on('message', message=>{
             .addField(`**${prefix}user :**`, `Donne les informations sur le joueur mentionner en  paramètre.\n Aussi disponible : **${prefix}userinfo**`)
             .addField(`**${prefix}info :**`, `Donne les informations sur le bot\n Aussi disponible : **${prefix}bot** ,**${prefix}botinfo**`)
             .addField(`**${prefix}serveur :**`, `Donne les informations sur le bot\n Aussi disponible : **${prefix}serveurinfo**`)
-            .addField(`**${adminPrefix}serveurs :**`, '*[Seulement créateur]* Liste les serveurs où je suis présent.')
             .addField(`**${prefix}uptime :**`, "Indique le temps écoulé depuis le démarrage du bot.")
             .addField(`**${prefix}pf :**`, `Pile ou face ? la pièce sera lancée...\n Aussi disponible : **${prefix}pileface**`)
             .addField(`**${prefix}roll :**`, `Lance un dé avec la valeur indiquée .\n Aussi disponible : **${prefix}dice**`)
@@ -606,10 +593,13 @@ bot.on('message', message=>{
             .addField(`**${prefix}gif :**`, `Affiche un gif de manière aléatoire \n Pour avoir les thèmes **${prefix}gif help**`)
             .addField(`**${prefix}invite**`, "Invite moi sur ton serveur Discord  :wink:")
             .addField(`**${prefix}serveurtest**`, `Je t'invite sur mon serveur de développement :smiley: \nAussi disponible: **${prefix}serveurtest**`)
+            .addField(`**${VIPprefix}serveurs :**`, '*[Programmeur]* Liste les serveurs où je suis présent.')
+            .addField(`**${VIPprefix}reboot :**`, '*[Programmeur]* me redémarre')
+            .addField(`**${VIPprefix}reboot :**`, '*[Programmeur]* m\'éteint.')
             .setTimestamp(new Date());
         setTimeout(function () {
             message.author.send(embed);
-        },200)
+        },250)
     }
 });
 //boucle supremacy
