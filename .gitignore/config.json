@@ -1,5 +1,5 @@
 {
   "prefix": ";",
-  "adminPrefix" : "!!",
+  "VIPprefix"  : "!!",
   "token": "process.env.TOKEN"
 }
