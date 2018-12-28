@@ -1,7 +1,7 @@
-//  créé par @ambyop
+//  créé par AmByOp
 const Discord = require("discord.js");
 const bot = new Discord.Client();
-const { prefix, adminPrefix, token } = require('./config.json');
+const { prefix, VIPprefix, token } = require('./config.json');
 const { version } = require('./package');
 const ownerID = process.env.owner;
 const fs = require('fs');
