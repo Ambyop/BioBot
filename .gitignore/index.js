@@ -28,15 +28,19 @@ function nombreAleatoire(nombre) {
 console.log( "Démarrage..." );
 bot.on("ready", () => {
     console.log( "Connexion établie !");
-    bot.user.setStatus('dnd');// online, idle, dnd, invisible
-    bot.user.setActivity(`${prefix}help | créé par AmByOp`, { type: 'WATCHING' });
+    bot.guilds.get("420530737738153984").channels.get("530693686665674763").send(`**${bot.user.username}** a démarré avec succès !`);
+    bot.user.setStatus('online');// online, idle, dnd, invisible
+    bot.user.setActivity(`${prefix}help || Démarré à l'insant`, { type: 'Playing' });
     let compteur = 0;
+    let heure = new Date();
     setInterval(function () {
-        let activites = [`${prefix}help | créé par AmByOp`,`${prefix}help || ${bot.users.size} Utilisateurs`,`${prefix}help || ${bot.guilds.size} serveurs`,`${prefix}help || Ping API : ${Math.floor(bot.ping)} ms`,`${prefix}help || I see You`,`${prefix}help || Version : ${version}`];
+        if (compteur === 1) heure= new Date();
+        let activites = [`${prefix}help || Créé par AmByOp`,`${prefix}help || Ping API : ${Math.floor(bot.ping)} ms`,`${prefix}help || Version : ${version}`,`${prefix}help || ${bot.users.size} Utilisateurs`,`${prefix}help || ${bot.guilds.size} serveurs`];
+        // ,`${prefix}help || I see You`,`${heure.getHours()}:${heure.getMinutes()} || ${prefix}help`,
         bot.user.setActivity(activites[compteur], {type: "Listening"}); //Playing , Streaming, Watching, Listening
         compteur++;
         if (compteur === activites.length)compteur = 0;
-    },80000)
+    },65000)//65000
 });
 
 bot.on('message', message=>{
@@ -436,7 +440,7 @@ bot.on('message', message=>{
                     affichageHelp += '`'+nom+'`';
                     if ((Object.keys(gifs))[genreMax-1] !== nom) affichageHelp += ' , '
                 }
-                return message.reply("Il n'y a pas de gif avec le thème **" + argsAffichage[0] +"**\nThèmes disponibles : "+ affichageHelp +".")
+                return message.reply("Il n'y a pas de gif de thème **" + argsAffichage[0] +"**\nThèmes disponibles : "+ affichageHelp +".")
             }
             if (args[1] === undefined || isNaN(args[1])) {
                 let random = nombreAleatoire(gifs[genre].length);
@@ -447,8 +451,9 @@ bot.on('message', message=>{
                 }, 200);
             } else {
                 if (args[1] > gifs[genre].length) return message.reply("Il n'y a que " + gifs[genre].length + " de genre : **" + genre+"**");
+                if (args[1] < 1) return message.reply("Il n'y a pas de gifs avant le permier !");
                 let random = args[1];
-                let affichargeGifs = message.author + " a sélectionné le gif " + argsAffichage[0] + " numéro : " + args[1] + " sur " + gifs[genre].length + " gifs.   " + gifs[genre][random - 1];
+                let affichargeGifs = message.author + " a sélectionné le gif du thème *" + argsAffichage[0] + "* numéro : " + args[1] + " sur " + gifs[genre].length + " gifs.   " + gifs[genre][random - 1];
                 console.log("commande gifs genre num " + genre + " " + (random - 1));
                 setTimeout(function () {
                     message.channel.send(affichargeGifs);
@@ -534,24 +539,24 @@ bot.on('message', message=>{
         if (message.author.bot) return;
         const command = message.content.toLocaleLowerCase();
         const auteur = message.author;
-        if (command === `bonjour` || command === `salut` || command === `yop` || command === `bonsoir` || command === 'yo' || command === 'wesh' || command === 'coucou' || command === 'slt' || command === 'bjour' || command === 'hola' || command === 'holà' || command === "Salutation"|| command === 'plop') {
+        if (command === `bonjour` || command === `salut` || command === `yop` || command === `bonsoir` || command === 'yo' || command === 'wesh' || command === 'coucou' || command === 'slt' || command === 'bjour' || command === 'hola' || command === 'holà' || command === "Salutation"|| command === 'plop'|| command === 'hello') {
             let autorise = nombreAleatoire(10);
             if (autorise > 0 && autorise < 4) {
                 let bonjour = [`Bien le bonjour ${auteur}`,`Bijour Bijour, ${auteur}`,`Salut à toi mon brave ${message.author.username}`,`Bijour monsieur ${message.author.username}`,`Yolo ! 😁`,`Bonjour 😁`,`Yolo !`,`Salut comment-va ? ${auteur}`,
                 `Salut ${message.author.username}`,`Salut ! Comment vas-tu ?`,`Salut ${auteur} ! Comment vas-tu ?`,`Hey !..`,`Salut mon pote 😊`,`Wesh Wesh !!`,`Yo !`,`Yop !`,`Arthour Couillère !!!! https://thumbs.gfycat.com/FineOilyGrebe-small.gif`,
                 `Yo ${message.author.username} !`,`Yop ${message.author.username} !`,`Holà ${auteur} !`,`Hola, cómo estás ?`,`Hola quetal ?`,`Buenos dias`,`hallo hoe gaat het met jouw ?`,`Dag !`,`Hallo ${message.author.username}`,
-                `Longue vie et prospérité ${auteur} 🖖`,`Flop :wink:`];
+                `Longue vie et prospérité ${auteur} 🖖`,`Flop :wink:`,`Hi`,`plop ${auteur}`,`Plop !`,`Hello ${auteur}`,`Hello there`,`Hello there ! https://tenor.com/NMDa.gif`,`-Hello There !\n - General Kenobi !`];
                 let action = nombreAleatoire(bonjour.length)-1;
                 console.log(`Bonjour commande,autorisé ${autorise}, numero ${action}`);
                 setTimeout(function () {
                     message.channel.send(bonjour[action])
-                }, 900);
+                }, 500);
             }
         }
     }
     //modif date supremacy
     if (command ===`${prefix}supremacydate`){
-        if (!message.member.roles.has(process.env.master)) return message.reply(`**Seul un <@${process.env.master}> peut faire cette commande.**`);
+        if (!message.member.roles.has(process.env.master)) return message.reply(`**Seul un <@&${process.env.master}> peut faire cette commande.**`);
         let dateSupremacy = JSON.parse(fs.readFileSync("./supremacyDate.json", "utf8"));
         let jour = args[0];
         let mois = args[1];
@@ -562,7 +567,7 @@ bot.on('message', message=>{
         fs.writeFile("./supremacyDate.json", JSON.stringify(dateSupremacy), (err) => {
             if (err) console.log(err)
         });
-        message.reply("date modifiée, \n Nous sommes actuellement le "+jour +" / "+mois+" / "+ annee+" .");
+        message.reply("Date modifiée, \n Nous sommes actuellement le "+jour +" / "+mois+" / "+ annee+" .");
     }
     //help
     if (command === `${prefix}help` || command === `${prefix}aide`) {
@@ -617,7 +622,7 @@ bot.on("ready", () => {
         let moisJeu = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
         let anneeJeu = dateJeu.getFullYear();
         if((heure === 0 || heure === 4 || heure === 8 || heure === 12 || heure === 16 || heure === 20 || heure === 24)&& minutes === 0) {
-            if (isNaN(jourJeu)) return bot.guilds.get(process.env.serveurID).channels.get(process.env.channelID).send(`La date n'est pas définie... utilisez la commande \`${prefix}supremacydate jj mm aaaa\` (date actuelle) \n En tout cas on avance d'un jour :P`);
+            if (isNaN(jourJeu)) return bot.guilds.get(process.env.serveurID).channels.get(process.env.channelID).send(`La date n'est pas définie... utilisez la commande \`${prefix}supremacydate jj mm aaaa\` (date actuelle) \n En tout cas on avance d'un jour :stuck_out_tongue_winking_eye: `);
             bot.guilds.get(process.env.serveurID).channels.get(process.env.channelID).send("Nous passons au : "+ jourNomJeu[dateJeu.getDay()] +", " + jourJeu +" " + moisJeu[dateJeu.getMonth()]+" "+ anneeJeu);
             console.log("Exécution de la boucle supremacy : " + dateJeu);
             let jour2 = dateJeu.getDate();
@@ -630,7 +635,7 @@ bot.on("ready", () => {
                 if (err) console.log(err)
             });
         }
-    },60000)
+    },60000)//60000
 });
 bot.login(process.env.TOKEN);
 bot.on("error", console.error);
