@@ -29,7 +29,7 @@ console.log( "Démarrage..." );
 bot.on("ready", () => {
     console.log( "Connexion établie !");
     bot.guilds.get("420530737738153984").channels.get("530693686665674763").send(`**${bot.user.username}** a démarré avec succès !`);
-    bot.user.setStatus('online');// online, idle, dnd, invisible
+    bot.user.setStatus('dnd');// online, idle, dnd, invisible
     bot.user.setActivity(`${prefix}help || Démarré à l'insant`, { type: 'Playing' });
     let compteur = 0;
     let heure = new Date();
@@ -92,7 +92,7 @@ bot.on('message', message=>{
             message.channel.send(`Vous devez spécifier un nombre de messages à supprimer...\n \`${prefix}purge [argument]\``);
         } else if (args[0] < 1) {
             message.channel.send('Vous devez mettre un nombre supérieur à 1.');
-        } else if (args[0] > 100) {
+        } else if (args[0] >= 100) {
             message.channel.send('Vous devez mettre un nombre inférieur à 100.');
         } else if (isNaN(args[0])) {
             message.channel.send('Vous avez mit un nombre incorrect.');
@@ -111,7 +111,7 @@ bot.on('message', message=>{
             return message.reply(`Vous avez oublié d'introduire la question .\n \`${prefix}poll [Question]\``);
         const embed = new Discord.RichEmbed()
             .setTitle("Sondage :")
-            .setColor("#79a000")
+            .setColor("#d1ab00")
             .setDescription(`${question}`)
             .setFooter(`Sondage par: ${message.author.username}`, `${message.author.avatarURL}`);
         setTimeout(function () {
@@ -157,7 +157,7 @@ bot.on('message', message=>{
         let mois = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
         //Discord rich embed
         const embed = new Discord.RichEmbed()
-            .setColor('#2b93b8')
+            .setColor('#1fda7a')
             .setThumbnail(user.avatarURL)
             .setAuthor(`${user.tag}`)
             .addField("ID:", `${user.id}`, true)
@@ -188,7 +188,7 @@ bot.on('message', message=>{
         //bot.guilds.map(g => users += g.memberCount);
 
         let pingembed = new Discord.RichEmbed()
-            .setColor("#2b93b8")
+            .setColor("#1fda7a")
             .setThumbnail(bot.user.displayAvatarURL)
             .setAuthor('Stats du Bot:')
             .addField('Bot créé par AmByOp', ' https://twitter.com/Ambyop')
@@ -208,7 +208,7 @@ bot.on('message', message=>{
     }
     // nbre serveur
     if (command === `${VIPprefix}serveurs`) {
-        if (message.author.id !== ownerID) return message.reply(`Seulement mon créateur peut faire cette commande.`);
+        if (message.author.id !== ownerID) return message.reply(`Seulement un de mes développeurs peut faire cette commande.`);
         let string = '';
         bot.guilds.forEach(guild => {
             string += '***Nom:*** ' + guild.name + '\n' + '*** ID:***` ' + guild.id + ' ` ' + '\n\n';
@@ -244,7 +244,7 @@ bot.on('message', message=>{
 
         let serverembed = new Discord.RichEmbed()
             .setAuthor(message.guild.name, sicon)
-            .setColor("#2b93b8")
+            .setColor("#1fda7a")
             .setThumbnail(sicon)
             //.addField("ID", message.guild.id, true)
             .addField("Nom", message.guild.name, true)
@@ -286,7 +286,7 @@ bot.on('message', message=>{
     if (command === `${prefix}roll` || command === `${prefix}dice`) {
         if (args[0] === undefined) return message.reply(`Vous n'avez pas mit la valeur maximale\n \`${prefix}roll [valeur]\``);
         if (isNaN(args[0])) return message.reply('La valeur **'+ argsAffichage +'** n\'est pas un nombre...');
-        if (args[0] <= 1)return message.reply('La valeur mise être strictement supérieure à 1 ...');
+        if (args[0] < 2)return message.reply('La valeur mise ne peut pas être inférieure à 2 ...');
 
         args[0] = Math.round(args[0]);
         let aleatoire = nombreAleatoire(args[0]);
@@ -405,7 +405,8 @@ bot.on('message', message=>{
             "https://media.giphy.com/media/P6jhIEAMx6srC/giphy.gif","https://media.tenor.com/images/a2bac4d6a1eea3bfb2f371323914360e/tenor.gif","https://media1.tenor.com/images/c62207367c217db34e295d519e2dd59e/tenor.gif?itemid=8138721",
             "https://media.giphy.com/media/HdwrQX45CI9ZS/giphy.gif","https://thumbs.gfycat.com/FlawlessOddballAsp-max-1mb.gif","https://media.giphy.com/media/a0Lgc1JvbfS4o/giphy.gif","https://thumbs.gfycat.com/InfiniteLastAmethystgemclam-max-1mb.gif",
             "http://gif-finder.com/wp-content/uploads/2015/04/Tigger-Bravo.gif","https://media.giphy.com/media/3oz8xrlxi4mm1KnE7C/source.gif","https://media.giphy.com/media/d31w24psGYeekCZy/giphy.gif","https://i.gifer.com/5ln.gif",
-            "https://media.giphy.com/media/ecVcN1B2h1cpW/giphy.gif","https://media.giphy.com/media/qIXVd1RoKGqlO/giphy.gif","https://thumbs.gfycat.com/SorrowfulIllBlackbear-size_restricted.gif"]
+            "https://media.giphy.com/media/ecVcN1B2h1cpW/giphy.gif","https://media.giphy.com/media/qIXVd1RoKGqlO/giphy.gif","https://thumbs.gfycat.com/SorrowfulIllBlackbear-size_restricted.gif"],
+        johnny: ["https://media.giphy.com/media/RoajqIorBfSE/200.gif","https://media.giphy.com/media/5p8GSEwUjaWdi/giphy.gif","https://media1.tenor.com/images/eed4a8c3b37f29ab802ab796179c42fe/tenor.gif?itemid=3519295"]
     };
     if (command === `${prefix}gif` || command === `${prefix}gifs`) {
         if (args[0] === undefined) {
@@ -423,6 +424,7 @@ bot.on('message', message=>{
             if (args[0] === "corn" || args[0] === "pop") args[0] = "popcorn";
             if (args[0] === "darklos") args[0] = "singe";
             if (args[0] === "clap" || args[0] === 'clapclap') args[0] = "bravo";
+            if (args[0] === "john") args[0] = "johnny";
             if (args[0] === "help"){
                 let affichageHelp = "";
                 let genreMax = (Object.keys(gifs).length);
@@ -519,33 +521,91 @@ bot.on('message', message=>{
             },1500)
 
         } else {
-            message.channel.send("Seulement mon créateur peut faire cette commande !")
+            message.channel.send("Seulement un de mes développeurs peut faire cette commande !")
         }
     }
     //arrêt du bot
     if(message.content === `${VIPprefix}crash` || message.content === `${VIPprefix}stop`) {
         if (message.author.id === ownerID) {
-            message.react("🛑");
+            message.react("⛔");
             message.reply(`:x: Arrêt du bot jusqu'au prochain redémarrage automatique. :x:`);
             bot.destroy();
             bot.destroy();
 
         } else {
-            message.channel.send("Seulement mon créateur peut faire cette commande !")
+            message.channel.send("Seulement un de mes développeurs peut faire cette commande !")
         }
+    }
+    //article anonymes
+    if (command === `${prefix}anonyme` || command === `${prefix}artan` || command === `${prefix}an`|| command === `${prefix}articleanonyme`) {
+        const auteur = message.author;
+        console.log(`création d'un article anonyme par ${auteur.username}#${auteur.discriminator}`);
+        let article = argsAffichage.slice(0).join(" ");
+        if (args.length === 0){
+            setTimeout(function () {
+                message.delete();
+            },200);
+             return message.channel.send(`Vous avez oublié d'introduire l'article .\n \`${prefix}an [Article]\``).then(msg => msg.delete(5000));
+        }
+        const embed = new Discord.RichEmbed()
+            .setTitle(`Articles Anonymes :`)
+            .setColor("#0093c1")
+            .setDescription(`${article}`)
+            .setTimestamp(new Date())
+            .setFooter(`Pour éviter tout abus, des logs sont sauvegardés.`);
+        setTimeout(function () {
+            message.delete();
+        }, 500);
+        bot.guilds.get("420530737738153984").channels.get("532100632484511776").send(`création d'un article anonyme par @${auteur.username}#${auteur.discriminator}`);
+        bot.guilds.get("420530737738153984").channels.get("532100632484511776").send(embed);
+        message.channel.send(embed)
+            .then(msg => {
+                msg.react('🕵')
+            })
+            .catch(() => console.error('Erreur au chargement des emojis.'));
+    }
+    //image anonyme
+    if (command === `${prefix}imageanonyme` || command === `${prefix}iman`) {
+        const auteur = message.author;
+        console.log(`création d'une anonyme par ${auteur.username}#${auteur.discriminator}`);
+        let image = argsAffichage.slice(0).join(" ");
+        if (args.length === 0){
+            setTimeout(function () {
+                message.delete();
+            },200);
+            return message.channel.send(`Vous avez oublié d'introduire l'image .\n \`${prefix}an [URL]\``).then(msg => msg.delete(5000));
+        }
+        const embed = new Discord.RichEmbed()
+            .setTitle(`Articles Anonymes :`)
+            .setColor("#0093c1")
+            .setImage(`${image}`)
+            .setTimestamp(new Date())
+            .setFooter(`Pour éviter tout abus, des logs sont sauvegardés.`);
+        setTimeout(function () {
+            message.delete();
+        }, 500);
+        bot.guilds.get("420530737738153984").channels.get("532100632484511776").send(`création d'une image anonyme par @${auteur.username}#${auteur.discriminator}`);
+        bot.guilds.get("420530737738153984").channels.get("532100632484511776").send(embed);
+        message.channel.send(embed)
+            .then(msg => {
+                msg.react('🖼')
+            })
+            .catch(() => {bot.guilds.get("420530737738153984").channels.get("532100632484511776").send(`L'image de @${auteur.username}#${auteur.discriminator} n'est pas valide'`);
+                message.channel.send(`L'URL de l'image n'est pas valide...`).then(msg => msg.delete(5000));
+            });
     }
     //bonjour
     if (!message.content.startsWith(prefix)) {
         if (message.author.bot) return;
         const command = message.content.toLocaleLowerCase();
         const auteur = message.author;
-        if (command === `bonjour` || command === `salut` || command === `yop` || command === `bonsoir` || command === 'yo' || command === 'wesh' || command === 'coucou' || command === 'slt' || command === 'bjour' || command === 'hola' || command === 'holà' || command === "Salutation"|| command === 'plop'|| command === 'hello') {
+        if (command === `bonjour` || command === `bjr` || command === `salut` || command === `yop` || command === `bonsoir` || command === `bsr` || command === 'yo' || command === 'wesh' || command === 'coucou' || command === 'cc' || command === 'slt' || command === 'bjour' || command === 'hola' || command === 'holà' || command === "Salutation"|| command === 'plop'|| command === 'hello') {
             let autorise = nombreAleatoire(10);
             if (autorise > 0 && autorise < 4) {
-                let bonjour = [`Bien le bonjour ${auteur}`,`Bijour Bijour, ${auteur}`,`Salut à toi mon brave ${message.author.username}`,`Bijour monsieur ${message.author.username}`,`Yolo ! 😁`,`Bonjour 😁`,`Yolo !`,`Salut comment-va ? ${auteur}`,
-                `Salut ${message.author.username}`,`Salut ! Comment vas-tu ?`,`Salut ${auteur} ! Comment vas-tu ?`,`Hey !..`,`Salut mon pote 😊`,`Wesh Wesh !!`,`Yo !`,`Yop !`,`Arthour Couillère !!!! https://thumbs.gfycat.com/FineOilyGrebe-small.gif`,
-                `Yo ${message.author.username} !`,`Yop ${message.author.username} !`,`Holà ${auteur} !`,`Hola, cómo estás ?`,`Hola quetal ?`,`Buenos dias`,`hallo hoe gaat het met jouw ?`,`Dag !`,`Hallo ${message.author.username}`,
-                `Longue vie et prospérité ${auteur} 🖖`,`Flop :wink:`,`Hi`,`plop ${auteur}`,`Plop !`,`Hello ${auteur}`,`Hello there`,`Hello there ! https://tenor.com/NMDa.gif`,`-Hello There !\n - General Kenobi !`];
+                let bonjour = [`Bien le bonjour ${auteur}`,`Bijour Bijour, ${auteur}`,`Salut à toi mon brave ${auteur.username}`,`Bijour monsieur ${auteur.username}`,`Yolo ! 😁`,`Bonjour 😁`,`Yolo !`,`Salut comment-va ? ${auteur}`,
+                `Salut ${auteur.username}`,`Salut ! Comment vas-tu ?`,`Salut ${auteur} ! Comment vas-tu ?`,`Hello there`,`Hey !..`,`Salut mon pote 😊`,`Wesh Wesh !!`,`Yo !`,`Yop !`,`Arthour Couillère !!!! https://thumbs.gfycat.com/FineOilyGrebe-small.gif`,
+                `Yo ${auteur.username} !`,`Yop ${auteur.username} !`,`Holà ${auteur} !`,`Hola, cómo estás ?`,`Hola quetal ?`,`Buenos dias`,`hallo hoe gaat het met jouw ?`,`Dag !`,`Hallo ${auteur.username}`,
+                `Longue vie et prospérité ${auteur} 🖖`,`Flop :wink:`,`Hi`,`plop ${auteur}`,`Plop !`,`Hello ${auteur}`,`Hello there ! https://tenor.com/NMDa.gif`,`-Hello There !\n - General Kenobi !`,'Salut , ça boum ?  :bomb:'];
                 let action = nombreAleatoire(bonjour.length)-1;
                 console.log(`Bonjour commande,autorisé ${autorise}, numero ${action}`);
                 setTimeout(function () {
@@ -555,7 +615,7 @@ bot.on('message', message=>{
         }
     }
     //modif date supremacy
-    if (command ===`${prefix}supremacydate`){
+    if (command ===`${prefix}supremacydate` || command ===`${prefix}supdate`){
         if (!message.member.roles.has(process.env.master)) return message.reply(`**Seul un <@&${process.env.master}> peut faire cette commande.**`);
         let dateSupremacy = JSON.parse(fs.readFileSync("./supremacyDate.json", "utf8"));
         let jour = args[0];
@@ -581,7 +641,7 @@ bot.on('message', message=>{
             message.react('🤖')
         }, 200);
         const embed = new Discord.RichEmbed()
-            .setColor('#79a000')
+            .setColor('#2e8900')
             .setAuthor(`Commande disponible :`)
             .addField(`**${prefix}blah :**`, ` Répond quelque chose aléatoirement`)
             .addField(`**${prefix}quote :**`, `Met les arguments en quote .`)
@@ -597,7 +657,9 @@ bot.on('message', message=>{
             .addField(`**${prefix}ppc :**`, `Pour jouer à Shifumi//pierre-papier-ciseaux \n Aussi disponible : **${prefix}shifumi** .`)
             .addField(`**${prefix}gif :**`, `Affiche un gif de manière aléatoire \n Pour avoir les thèmes **${prefix}gif help**`)
             .addField(`**${prefix}invite**`, "Invite moi sur ton serveur Discord  :wink:")
-            .addField(`**${prefix}serveurtest**`, `Je t'invite sur mon serveur de développement :smiley: \nAussi disponible: **${prefix}serveurtest**`)
+            .addField(`**${prefix}bottest**`, `Je t'invite sur mon serveur de développement :smiley: \nAussi disponible: **${prefix}serveurtest**`)
+            .addField(`**${prefix}artan**`, `Poster un article de manière anonyme. \nAussi disponible: **${prefix}anonyme** ,**${prefix}articleanonyme** ,**${prefix}an**`)
+            .addField(`**${prefix}iman**`, `Poster une image de manière anonyme. \nAussi disponible: **${prefix}imageanonyme**`)
             .addField(`**${VIPprefix}serveurs :**`, '*[Programmeur]* Liste les serveurs où je suis présent.')
             .addField(`**${VIPprefix}reboot :**`, '*[Programmeur]* me redémarre')
             .addField(`**${VIPprefix}stop :**`, '*[Programmeur]* m\'éteint.')
