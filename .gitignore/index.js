@@ -35,8 +35,7 @@ bot.on("ready", () => {
     let heure = new Date();
     setInterval(function () {
         if (compteur === 1) heure= new Date();
-        let activites = [`${prefix}help || Créé par AmByOp`,`${prefix}help || Ping API : ${Math.floor(bot.ping)} ms`,`${prefix}help || Version : ${version}`,`${prefix}help || ${bot.users.size} Utilisateurs`,`${prefix}help || ${bot.guilds.size} serveurs`];
-        // ,`${prefix}help || I see You`,`${heure.getHours()}:${heure.getMinutes()} || ${prefix}help`,
+        let activites = [`${prefix}help || Créé par AmByOp`,`${prefix}help || I see You`,`${prefix}help || ${heure.getHours()}:${heure.getMinutes()}`,`${prefix}help || Ping API : ${Math.floor(bot.ping)} ms`,`${prefix}help || Version : ${version}`,`${prefix}help || ${bot.users.size} Utilisateurs`,`${prefix}help || ${bot.guilds.size} serveurs`];
         bot.user.setActivity(activites[compteur], {type: "Listening"}); //Playing , Streaming, Watching, Listening
         compteur++;
         if (compteur === activites.length)compteur = 0;
@@ -74,7 +73,8 @@ bot.on('message', message=>{
                 setTimeout(function () {
                     message.delete();
                 }, 4000);
-                message.channel.send(`**${message.author.username}** annonce :  \`\`\`  ${argsAffichage[0]}  \`\`\``);
+                let texte = argsAffichage.slice(0).join(" ");
+                message.channel.send(`**${message.author.username}** annonce :  \`\`\`  ${texte}  \`\`\``);
             }
         }
     }
@@ -547,17 +547,18 @@ bot.on('message', message=>{
             },200);
              return message.channel.send(`Vous avez oublié d'introduire l'article .\n \`${prefix}an [Article]\``).then(msg => msg.delete(5000));
         }
+        let id = "A" + Date.now();
         const embed = new Discord.RichEmbed()
-            .setTitle(`Articles Anonymes :`)
+            .setTitle(`Article Anonyme :`)
             .setColor("#0093c1")
             .setDescription(`${article}`)
             .setTimestamp(new Date())
-            .setFooter(`Pour éviter tout abus, des logs sont sauvegardés.`);
+            .setFooter(`Identifiant de l'article: ${id}`);
         setTimeout(function () {
             message.delete();
         }, 500);
-        bot.guilds.get("420530737738153984").channels.get("532100632484511776").send(`création d'un article anonyme par @${auteur.username}#${auteur.discriminator}`);
-        bot.guilds.get("420530737738153984").channels.get("532100632484511776").send(embed);
+        bot.guilds.get("420530737738153984").channels.get("532100632484511776").send(`Article **${id}** envoyé par @${auteur.username}#${auteur.discriminator}`);
+        //bot.guilds.get("420530737738153984").channels.get("532100632484511776").send(embed);
         message.channel.send(embed)
             .then(msg => {
                 msg.react('🕵')
@@ -565,7 +566,7 @@ bot.on('message', message=>{
             .catch(() => console.error('Erreur au chargement des emojis.'));
     }
     //image anonyme
-    if (command === `${prefix}imageanonyme` || command === `${prefix}iman`) {
+    if (command === `${prefix}imageanonyme` || command === `${prefix}iman` || command === `${prefix}ia`) {
         const auteur = message.author;
         console.log(`création d'une anonyme par ${auteur.username}#${auteur.discriminator}`);
         let image = argsAffichage.slice(0).join(" ");
@@ -573,25 +574,26 @@ bot.on('message', message=>{
             setTimeout(function () {
                 message.delete();
             },200);
-            return message.channel.send(`Vous avez oublié d'introduire l'image .\n \`${prefix}an [URL]\``).then(msg => msg.delete(5000));
+            return message.channel.send(`Vous avez oublié d'introduire l'image .\n \`${prefix}ia [URLde l'image]\``).then(msg => msg.delete(5000));
         }
+        let id = "IM" + Date.now();
         const embed = new Discord.RichEmbed()
-            .setTitle(`Articles Anonymes :`)
+            .setTitle(`Image Anonyme :`)
             .setColor("#0093c1")
             .setImage(`${image}`)
             .setTimestamp(new Date())
-            .setFooter(`Pour éviter tout abus, des logs sont sauvegardés.`);
+            .setFooter(`Identifiant de l'image: ${id}`);
         setTimeout(function () {
             message.delete();
         }, 500);
-        bot.guilds.get("420530737738153984").channels.get("532100632484511776").send(`création d'une image anonyme par @${auteur.username}#${auteur.discriminator}`);
-        bot.guilds.get("420530737738153984").channels.get("532100632484511776").send(embed);
+        bot.guilds.get("420530737738153984").channels.get("532100632484511776").send(`Image **${id}** envoyée par @${auteur.username}#${auteur.discriminator}`);
+        //bot.guilds.get("420530737738153984").channels.get("532100632484511776").send(embed);
         message.channel.send(embed)
             .then(msg => {
                 msg.react('🖼')
             })
             .catch(() => {bot.guilds.get("420530737738153984").channels.get("532100632484511776").send(`L'image de @${auteur.username}#${auteur.discriminator} n'est pas valide'`);
-                message.channel.send(`L'URL de l'image n'est pas valide...`).then(msg => msg.delete(5000));
+                message.channel.send(`L'URL de l'image n'est pas valide... \n \`${prefix}ia [URL de l'image]\` `).then(msg => msg.delete(5000));
             });
     }
     //bonjour
@@ -659,7 +661,7 @@ bot.on('message', message=>{
             .addField(`**${prefix}invite**`, "Invite moi sur ton serveur Discord  :wink:")
             .addField(`**${prefix}bottest**`, `Je t'invite sur mon serveur de développement :smiley: \nAussi disponible: **${prefix}serveurtest**`)
             .addField(`**${prefix}artan**`, `Poster un article de manière anonyme. \nAussi disponible: **${prefix}anonyme** ,**${prefix}articleanonyme** ,**${prefix}an**`)
-            .addField(`**${prefix}iman**`, `Poster une image de manière anonyme. \nAussi disponible: **${prefix}imageanonyme**`)
+            .addField(`**${prefix}iman**`, `Poster une image de manière anonyme. \nAussi disponible: **${prefix}imageanonyme** ,**${prefix}ia`)
             .addField(`**${VIPprefix}serveurs :**`, '*[Programmeur]* Liste les serveurs où je suis présent.')
             .addField(`**${VIPprefix}reboot :**`, '*[Programmeur]* me redémarre')
             .addField(`**${VIPprefix}stop :**`, '*[Programmeur]* m\'éteint.')
