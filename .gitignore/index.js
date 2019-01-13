@@ -626,7 +626,7 @@ bot.on('message', message=>{
     }
     //modif date supremacy
     if (command ===`${prefix}supremacydate` || command ===`${prefix}supdate`){
-        //if (!message.member.roles.has(process.env.master)) return message.reply(`**Seul un <@&${process.env.master}> peut faire cette commande.**`);
+        if (!message.member.roles.has(process.env.master)) return message.reply(`**Seul un <@&${process.env.master}> peut faire cette commande.**`);
         let dateSupremacy = JSON.parse(fs.readFileSync("./supremacyDate.json", "utf8"));
         let jour = args[0];
         let mois = args[1];
