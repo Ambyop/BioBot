@@ -757,9 +757,9 @@ bot.on('message', message=>{
     //meme
     let meme = JSON.parse(fs.readFileSync("./memes.json", "utf8"));
     //bananestar meme
-    if (command === `${prefix}bananestar`|| command === `${prefix}bs`){
-        if (message.channel.type === "dm") return  message.channel.send(`**La commande ${command} ne peut pas être utilisée en MP.**`);
-        if (message.guild.id !== '420530737738153984' && message.guild.id !== '224273127549566978') return message.reply('Cette commande n\'est pas disponible sur ce serveur');
+    if (command === `${prefix}bananestar`|| command === `${prefix}bs` || command === `${prefix}meme`){
+        //if (message.channel.type === "dm") return  message.channel.send(`**La commande ${command} ne peut pas être utilisée en MP.**`);
+        //if (message.guild.id !== '420530737738153984' && message.guild.id !== '224273127549566978') return message.reply('Cette commande n\'est pas disponible sur ce serveur');
         setTimeout(function () {
             message.delete();
         }, 4000);
@@ -1148,7 +1148,7 @@ bot.on('message', message=>{
             .addField(`• **${prefix}ppc**`, `Pour jouer à Shifumi//pierre-papier-ciseaux.\nAussi disponible : **${prefix}shifumi**.`)
             .addField(`• **${prefix}demineur**`, `Pour jouer au démineur,\nFormat : **${prefix}demineur [largeur] [hauteur] [nbreMines]**`)
             .addField(`• **${prefix}gif**`, `Affiche un GIF de manière aléatoire.\nPour avoir les thèmes **${prefix}gif help**`)
-            .addField(`• **${prefix}bs**`,`*[Restreint]* Envoie un même de manière aléatoire.\nAussi disponible : **${prefix}bananestar** `)
+            .addField(`• **${prefix}meme**`,`Envoie un même de manière aléatoire.\nAussi disponible : **${prefix}bs** `)
             .addField(`• **${prefix}bsv**`,`*[Restreint]* Envoie une vidéo de manière aléatoire.\nAussi disponible : **${prefix}bananestarvid** `)
             .addField(`• **${prefix}ac :**`,`*[Restreint]* Envoie la tête d'un joueur de manière aléatoire.\nAussi disponible : **${prefix}atomcorp**`)
             .addField(`• **${prefix}invite**`, "Pour m'inviter sur ton serveur.")
