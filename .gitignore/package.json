@@ -1,6 +1,6 @@
 {
   "name": "biobot",
-  "version": "6.2.0",
+  "version": "6.3.0",
   "description": "bot par AmBiO",
   "main": "index.js",
   "scripts": {
