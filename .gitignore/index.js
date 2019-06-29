@@ -23,112 +23,165 @@ function convertMS(ms) {
     };
 }
 function nombreAleatoire(nombre) {
-    return Math.floor(Math.random() * nombre+1);
+    let resultat;
+    //let valeur = Math.floor(Math.random() * nombre+1);
+    let multiplechoix = [Math.floor(Math.random() * nombre+1),Math.floor(Math.random() * nombre+1),Math.floor(Math.random() * nombre+1),Math.floor(Math.random() * nombre+1)];
+    let choix = Math.floor(Math.random() * multiplechoix.length);
+    let valeur =multiplechoix[choix];
+    let randomizer = Math.floor(Math.random() * 2);
+    if (randomizer === 1 || valeur === nombre) resultat = valeur;
+    else resultat = nombre - valeur;
+    return resultat;
 }
-console.log( "Démarrage..." );
+console.log("Démarrage du bot..." );
 bot.on("ready", () => {
-    console.log( "Connexion établie !");
-    bot.guilds.get("420530737738153984").channels.get("530693686665674763").send(`**${bot.user.username}** a démarré avec succès !`);
-    bot.user.setStatus('idle');// online, idle, dnd, invisible
-    bot.user.setActivity(`${prefix}help || Démarré à l'insant`, { type: 'Playing' });
+    console.log("Connexion à Discord établie !");
+    bot.guilds.get("420530737738153984").channels.get("530693686665674763").send(`Connexion à Discord établie !`);
+    bot.user.setStatus('dnd');// online, idle, dnd, invisible
+    bot.user.setActivity(`${prefix}help | vient de se connecter`, { type: 'Playing' });
     let compteur = 0;
-    let heure = new Date();
     setInterval(function () {
-        if (compteur === 1) heure= new Date();
-        let activites = [`${prefix}help || Créé par AmByOp`,`${prefix}help || GRAKATA !`,`${prefix}help || Ping API : ${Math.floor(bot.ping)} ms`,`${prefix}help || Version : ${version}`,`${prefix}help || ${bot.users.size} Utilisateurs`,`${prefix}help || ${bot.guilds.size} serveurs`];
-        bot.user.setActivity(activites[compteur], {type: "Watching"}); //Playing , Streaming, Watching, Listening
+        let u = convertMS(bot.uptime);
+        let uptime = u.d + " j: " + u.h + " h: " + u.m + " mins";
+        let activites = [`${prefix}help | Créé par AmBiO`,`${prefix}help | v${version}`,`${prefix}help | Ping API : ${Math.floor(bot.ping)}ms`,`${prefix}help | fontionne depuis ${uptime}`,`${prefix}help | ${bot.users.size} Utilisateurs`,`${prefix}help | Version : ${version}`,`${prefix}help | ${bot.guilds.size} serveurs`,`Debout depuis ${uptime}`,`${prefix}help`,`${prefix}help | ${bot.channels.size} channels`];
+        bot.user.setActivity(activites[compteur], {type: "listening"}); //Playing , Streaming, Watching, Listening
         compteur++;
         if (compteur === activites.length)compteur = 0;
+        let date = new Date();
+        if (date.getHours() === 0 && date.getMinutes() === 0){// 0h0min
+            let rappel = JSON.parse(fs.readFileSync("./rappel.json", "utf8")); //{"nombre":0}
+            for (let i in rappel){
+                let dateRappel = new Date(rappel[i][3]);
+                if ( date.getDate() === dateRappel.getDate() && date.getMonth() === dateRappel.getMonth() && date.getFullYear() === dateRappel.getFullYear()) {
+                    bot.guilds.get(rappel[i][1]).channels.get(rappel[i][2]).send(`<&${rappel[i][0]}>,${rappel[i][4]}`);
+                    rappel[i] = undefined;
+                    console.log('rappel dit');
+                    fs.writeFile("./rappel.json", JSON.stringify(rappel), (err) => {
+                        if (err) console.log(err)
+                    });
+                    for (let a in rappel) bot.guilds.get("420530737738153984").channels.get("577408421507366925").send(`&&rappelreponse ${a}:[${rappel[a]}]`).then(msg => msg.delete(60000));
+                }
+            }
+        }
     },60000)//60000
 });
 
 bot.on('message', message=>{
-    // vérifier que la commande st écrite au bon endroit
-    if (message.channel.type === "dm") {
-       if (message.content.startsWith(prefix) && message.content !== `${prefix}help` && message.content !== `${prefix}aide` && !message.content.startsWith(`${prefix}roll`) && message.content !== `${prefix}slot`&& message.content !== `${prefix}invite`) return message.channel.send(":no_entry:  Merci d'utiliser cette commande sur un vrai serveur. :no_entry:")
-    }
-    if (message.author.bot && message.content.startsWith(prefix)) return message.channel.send(":x: Je ne réponds pas aux Bots! :x:");
+    if (message.author.bot && message.content.startsWith(prefix) && message.author.id !== "555377779663831061" ) return message.channel.send(":x: Je ne parle pas aux machines! :x:");
     // le code commence ici
     const args = message.content.toLocaleLowerCase().slice().trim().split(/ +/g);
     const argsAffichage = message.content.slice().trim().split(/ +/g);
     argsAffichage.shift();
     const command = args.shift().toLowerCase();
 
-    //blah
-    if (command === `${prefix}blah` || command === `${prefix}bla` || command === `${prefix}blàh` || command === `${prefix}blà`) {
-        let texte = ["Meh.", "Blèh", "Blè !", "Bleh !", "Oui !", "Bla !", "Non !"];
-        let numero = nombreAleatoire(texte.length);
-        setTimeout(function () {
-            message.channel.send(texte[numero - 1])
-        }, 100);
-
-    }
-    //quote
-    if (command === `${prefix}quote`) {
-        if (command === `${prefix}quote`) {
-            if (args.length === 0) {
-                message.reply(`vous n\'avez pas mit d\'arguments ...\n \`${prefix}quote [arguments]\``)
-            } else {
-
-                setTimeout(function () {
-                    message.delete();
-                }, 5000);
-                let texte = argsAffichage.slice(0).join(" ");
-                message.channel.send(`**${message.author.username}** annonce :  \`\`\`  ${texte}  \`\`\``);
-            }
-        }
-    }
-    //purge
-    if (command === `${prefix}purge`) {
+    //clear
+    if (command === `${prefix}clear` || command === `${prefix}purge`) {
+        if (message.channel.type === "dm") return  message.channel.send(`**La commande ${command} ne peut pas être utilisée en MP.**`);
         if (!message.member.hasPermission("MANAGE_MESSAGES")) {
-            message.channel.send(`Désolé, **${message.author.username}**, mais vous n'avez pas la permission **Gérer les messages** sur le serveur !!\n Si vous pensez qu'il s'agit d'une erreur, contactez un administrateur.`)
+            message.channel.send(`Désolé, ${message.author}, vous n'avez pas la permission **Gérer les messages** sur le serveur !!!\nSi vous pensez qu'il s'agit d'une erreur, contactez un administrateur.`)
         } else if (!message.channel.permissionsFor(message.author).hasPermission("MANAGE_MESSAGES")) {
-            message.channel.send(`Désolé, **${message.author.username}**, mais vous n'avez pas la permission **Gérer les messages** sur ce channel !!\n Si vous pensez qu'il s'agit d'une erreur, contactez un administrateur.`)
-        } else if (!message.guild.member(bot.user).hasPermission("MANAGE_MESSAGES")) {
-            message.channel.send(`Désolé, **${message.author.username}**, mais Je n'ai pas la permission **Gérer les messages** sur ce serveur.`);
+            message.channel.send(`Désolé, **${message.author}**, vous n'avez pas la permission **Gérer les messages** sur ce channel !!!\nSi vous pensez qu'il s'agit d'une erreur, contactez un administrateur.`)
         } else if (!message.channel.permissionsFor(bot.user).hasPermission("MANAGE_MESSAGES")) {
-            message.channel.send(`Désolé, **${message.author.username}**, mais Je n'ai pas la permission **Gérer les messages** sur ce channel.`)
+            message.channel.send(`Désolé, **${message.author}**, mais je n'ai pas la permission **Gérer les messages** sur ce channel.`)
+        } else if (!message.guild.member(bot.user).hasPermission("MANAGE_MESSAGES")) {
+            message.channel.send(`Désolé, **${message.author}**, mais je n'ai pas la permission **Gérer les messages** sur ce serveur.`);
         } else if (args[0] === undefined) {
-            message.channel.send(`Vous devez spécifier un nombre de messages à supprimer...\n \`${prefix}purge [argument]\``);
+            message.reply(`Vous devez spécifier un nombre de messages à supprimer...\n \`${prefix}clear [Nombre]\``);
         } else if (args[0] < 1) {
-            message.channel.send('Vous devez mettre un nombre supérieur à 1.');
+            message.reply('Vous devez mettre un nombre supérieur à 0.');
         } else if (args[0] >= 100) {
-            message.channel.send('Vous devez mettre un nombre inférieur à 100.');
+            message.reply('Discord ne me permet pas de supprimer plus de 100 messages à la fois');
         } else if (isNaN(args[0])) {
-            message.channel.send('Vous avez mit un nombre incorrect.');
+            message.reply('Ce n\'est pas un nombre...');
         } else {
             let nombre = Number(args[0]) + 1;
             message.channel.bulkDelete(nombre).then(() => {
-                message.channel.send(`:pencil: ${args[0]} messages ont été supprimés par **${message.author.username}**.`).then(msg => msg.delete(2500));
+                message.channel.send(`:pencil2: **${args[0]} messages** ont été supprimés par **${message.author}**.`).then(msg => msg.delete(3000));
             });
         }
     }
+    //quote
+    if (command === `${prefix}quote`) {
+        if (args.length === 0) {
+            message.reply(`vous n\'avez pas mit d\'arguments ...\n \`${prefix}quote [arguments]\``)
+        } else {
+
+            setTimeout(function () {
+                message.delete();
+            }, 5000);
+            let texte = argsAffichage.slice(0).join(" ");
+            message.channel.send(`**${message.author.username}** annonce :  \`\`\`  ${texte}  \`\`\``);
+        }
+    }
     //sondage
-    if (command === `${prefix}sondage` || command === `${prefix}poll` || command === `${prefix}question`) {
-        console.log("création de sondage");
+    if (command === `${prefix}sondage` || command === `${prefix}poll`) {
+        console.log("création d'un sondage par "+ message.author.username+"#" + message.author.discriminator +"  (ID:"+ message.author.id+").");
         let question = argsAffichage.slice(0).join(" ");
         if (args.length === 0)
             return message.reply(`Vous avez oublié d'introduire la question .\n \`${prefix}poll [Question]\``);
         const embed = new Discord.RichEmbed()
             .setTitle("Sondage :")
-            .setColor("#5000c4")
+            .setColor("#9b8aff")
             .setDescription(`${question}`)
             .setFooter(`Sondage par: ${message.author.username}`, `${message.author.avatarURL}`);
         setTimeout(function () {
             message.delete();
         }, 4000);
         message.channel.send({embed})
-            .then(msg => {
-                setTimeout(function () {
-                    msg.react('👍')
-                }, 100);
-                setTimeout(function () {
-                    //msg.react('✍')
-                    msg.react('🤔')
-                }, 400);
-                setTimeout(function () {
-                    msg.react('👎')
-                }, 200);
+            .then(async function (msg) {
+                await msg.react('👍');
+                await msg.react('🤷');
+                await msg.react('👎');
+            })
+            .catch(() => console.error('Erreur au chargement des emojis.'));
+    }
+    //QCM
+    if (command === `${prefix}multipoll`|| command === `${prefix}mpoll`) {
+        setTimeout(function () {
+            message.delete();
+        }, 4000);
+        console.log("création d'un QCM par "+ message.author.username+"#" + + message.author.discriminator +"  (ID:"+ message.author.id+").");
+        let content = argsAffichage.slice(0).join(" ");
+        content += "/";
+        if (args.length === 0)
+            return message.reply(`Vous avez oublié d'introduire la question .\n \`${prefix}qcm <question> / <choix 1> / <choix 2> /...\``);
+        let question = "";
+        let choix = [];
+        let choixCache ='';
+        let questionFinie = false;
+        let temoinChoix = 0;
+        for (let lettreQuestion of content){
+            if (!questionFinie) {
+                if (lettreQuestion === "/") questionFinie = true ;
+                else question += lettreQuestion;
+            }
+            else{
+                if (lettreQuestion === "/" ) {
+                    choix.push(choixCache);
+                    choixCache ='';
+                    temoinChoix++;
+                }
+                else  choixCache+= lettreQuestion;
+            }
+        }
+        let indicator = ["one","two","three","four","five","six","seven","eight","nine","keycap_ten"];
+        let reactIndicator = ["\u0031\u20E3","\u0032\u20E3","\u0033\u20E3","\u0034\u20E3","\u0035\u20E3", "\u0036\u20E3","\u0037\u20E3","\u0038\u20E3","\u0039\u20E3","🔟"];
+        if (choix.length > 10)return message.reply("Vous ne pouvez pas avoir plus de 10 choix. *(pour l'instant)*");
+        if (choix.length === 0)return message.reply("vous devez mettre différents choix");
+        if (choix.length < 2)return message.reply("Un sondage se fait avoir plusieurs choix.");
+        for (let a in choix){
+            question+= "\n:"+ indicator[a]+":  "+ choix[a];
+        }
+        const embed = new Discord.RichEmbed()
+            .setTitle("Sondage :")
+            .setColor("#9b8aff")
+            .setDescription(`${question}`)
+            .setFooter(`Sondage par: ${message.author.username}`, `${message.author.avatarURL}`);
+        message.channel.send({embed})
+            .then(async function (message) {
+                for (let a in choix) {
+                    await message.react(reactIndicator[a])
+                }
             })
             .catch(() => console.error('Erreur au chargement des emojis.'));
     }
@@ -141,11 +194,25 @@ bot.on('message', message=>{
             user = message.author;
         }
         // défini le membre du serveur
-        const member = message.guild.member(user);
+        let member;
+        let role = "Vous n'êtes actuellement pas sur un serveur.";
+        let surnom = "Vous n'êtes actuellement pas sur un serveur.";
+        if (message.channel.type !== "dm"){
+            member = message.guild.member(user);
+            role = member.roles.map(roles => `${roles}`).join(', ');
+            surnom = `${member.nickname !== null ? `${member.nickname}` : 'Aucun'}`
+        }
+        //liste de mois
+        let mois = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
         // creation utilisateur
         let creationDate = user.createdAt;
         // a rejoint le serveur
-        let arriveeDate = member.joinedAt;
+        let arriveeDate;
+        let arrivee = "Vous n'êtes actuellement pas sur un serveur.";
+        if (message.channel.type !== "dm"){
+            arriveeDate = member.joinedAt;
+            arrivee = arriveeDate.getDate()+' , '+ mois[arriveeDate.getMonth()]+" , "+ arriveeDate.getFullYear();
+        }
         // status utilisateur
         let userStatus = user.presence.status;
         let status;
@@ -153,30 +220,32 @@ bot.on('message', message=>{
         if (userStatus === "idle") status = "Inactif";
         if (userStatus === "online") status = "En ligne";
         if (userStatus === "offline") status = "Déconnecté";
-        //liste de mois
-        let mois = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
         //Discord rich embed
         const embed = new Discord.RichEmbed()
-            .setColor('#000000')
+            .setColor('#67fffa')
             .setThumbnail(user.avatarURL)
             .setAuthor(`${user.tag}`)
-            .addField("ID:", `${user.id}`, true)
-            .addField('Pseudo', user.username, true)
-            .addField('Discriminateur', '#' + user.discriminator, true)
-            .addField("Surnom:", `${member.nickname !== null ? `${member.nickname}` : 'Aucun'}`, true)
-            .addField("a rejoint discord :", creationDate.getDate() + ' , ' + mois[creationDate.getMonth()] + " , " + creationDate.getFullYear(), true)
-            .addField("a rejoint le serveur:", arriveeDate.getDate()+' , '+ mois[arriveeDate.getMonth()]+" , "+ arriveeDate.getFullYear(), true)
-            .addField("Bot:", `${user.bot}`, true)
-            .addField("Status:", status, true)
-            .addField("Jeu:", `${user.presence.game ? user.presence.game.name : 'Aucun'}`, true)
-            .addField("Rôles:", member.roles.map(roles => `${roles.name}`).join(', '), true)
-            .addField('Photo de Profil:', user.avatarURL, true)
+            .addField("• ID:", `${user.id}`, true)
+            .addField('• Pseudo', user.username, true)
+            .addField('• Discriminateur', '#' + user.discriminator, true)
+            .addField("• Surnom", surnom, true)
+            .addField("• a rejoint discord", creationDate.getDate() + ' , ' + mois[creationDate.getMonth()] + " , " + creationDate.getFullYear(), true)
+            .addField("• a rejoint le serveur",arrivee,  true)
+            .addField("• Bot", `${user.bot}`, true)
+            .addField("• Status", status, true)
+            .addField("• Activité", `${user.presence.game ? user.presence.game.name : 'Aucune'}`, true)
+            .addField("• Rôle(s)", role , true)
+            .addField('• Photo de Profil', user.avatarURL, true)
             .setTimestamp(new Date())
             .setFooter(`Réponse à ${message.author.tag}`, `${message.author.avatarURL}`);
         message.channel.send({embed});
     }
 // bot
     if (command === `${prefix}botinfo` || command === `${prefix}bot`|| command === `${prefix}info`) {
+        // creation bot
+        let creationDate = bot.user.createdAt;
+        //liste de mois
+        let mois = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
         let msgping1 = new Date();
         let botping = new Date() - message.createdAt;
         let msgping2 = new Date() - msgping1;
@@ -185,25 +254,23 @@ bot.on('message', message=>{
         let serveurs = bot.guilds.size; // Server Count
         let users = bot.users.size; // User count
         let channels = bot.channels.size; // Channel Count
-        //bot.guilds.map(g => users += g.memberCount);
 
         let pingembed = new Discord.RichEmbed()
-            .setColor("#000000")
+            .setColor("#67fffa")
             .setThumbnail(bot.user.displayAvatarURL)
-            .setAuthor('Stats du Bot:')
-            .addField('Bot créé par AmByOp', ' https://twitter.com/Ambyop')
-            .addField(`Version :`,version, true)
-            .addField(`Fonctionne depuis :`, uptime)
-            .addField('Serveurs', serveurs, true)
-            .addField('Utilisateurs', users, true)
-            .addField('Channels', channels, true)
-            .addField('Message Ping : ', '~' + Math.round(msgping2) + ' ms', true)
-            .addField('API Ping : ', Math.floor(bot.ping) + ' ms', true)
-            .addField('Bot Ping : ', Math.floor(botping) + ' ms', true)
+            .setAuthor('• Stats du Bot')
+            .addField('• Bot créé par AmByOp', ' https://twitter.com/Ambyop')
+            .addField("• Bot créé le", creationDate.getDate() + ' ' + mois[creationDate.getMonth()] + " " + creationDate.getFullYear(), true)
+            .addField(`• Version`,version, true)
+            .addField(`• Fonctionne depuis`, uptime)
+            .addField('• Serveurs', serveurs, true)
+            .addField('• Utilisateurs', users, true)
+            .addField('• Channels', channels, true)
+            .addField('• Message Ping', '~' + Math.round(msgping2) + ' ms', true)
+            .addField('• API Ping', Math.floor(bot.ping) + ' ms', true)
+            .addField('• Bot Ping', Math.floor(botping) + ' ms', true)
             .setTimestamp(new Date())
             .setFooter(`Réponse à ${message.author.tag}`, `${message.author.avatarURL}`);
-
-
         return message.channel.send(pingembed);
     }
     // nbre serveur
@@ -211,18 +278,18 @@ bot.on('message', message=>{
         if (message.author.id !== ownerID) return message.reply(`Seulement un de mes développeurs peut faire cette commande.`);
         let string = '';
         bot.guilds.forEach(guild => {
-            string += '***Nom:*** ' + guild.name + '\n' + '*** ID:***` ' + guild.id + ' ` ' + '\n\n';
-
+            string += '***Nom:***  ' + guild.name + '\n' + '*** ID:***  ` ' + guild.id + ' ` ' + '\n\n';
         });
         let botembed = new Discord.RichEmbed()
-            .setColor("#ff000c")
-            .addField("Connecté à : ", string)
+            .setColor("#ff3ac4")
+            .addField("Listes des serveurs connectés", string)
             .setTimestamp()
             .setFooter("Exécuté par: " + message.author.username, message.author.avatarURL);
         message.channel.send(botembed);
     }
     // serveur info
     if (command === `${prefix}serveurinfo` || command === `${prefix}serveur`) {
+        if (message.channel.type === "dm") return  message.channel.send(`**La commande ${command} ne peut pas être utilisée en MP.**`);
         let creation = message.guild.createdAt;
         let mois = ["Janvier","Février","Mars","Avril","mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
         let sicon = message.guild.iconURL;
@@ -240,21 +307,28 @@ bot.on('message', message=>{
         if(online>1) affichageStatusMembre +=`**${offline}** Déconnectés`;
         let streaming = message.guild.members.filter(s => s.presence.status === 'streaming').size;
         if(streaming>0)affichageStatusMembre += `**${streaming} en stream`;
+        // status Emoji
+        let serverEmojis = message.guild.emojis.map(e => e).join(', ');
+        if(message.channel.guild.emojis.size === 0)serverEmojis = 'Ce serveur n\'a pas d\'émojis personnalisé';
+        // status Rôles
+        let serverRoles = message.guild.roles.array().map(g => g).join(', ');
+        if(message.channel.guild.roles.size === 0) serverRoles = `Ce serveur n'a pas de rôles défini`;
 
         let serverembed = new Discord.RichEmbed()
             .setAuthor(message.guild.name, sicon)
-            .setColor("#92ff21")
+            .setColor("#ffac1f")
             .setThumbnail(sicon)
-            .addField("ID", message.guild.id, true)
-            .addField("Nom", message.guild.name, true)
-            .addField("Propriétaire", message.guild.owner.user, true)
-            .addField(`Créé le`, creation.getDate() + ' , ' + mois[creation.getMonth()] + " , " + creation.getFullYear(),true)
-            .addField("Région", message.guild.region, true)
-            .addField("Salons",`${message.guild.channels.filter(channel => channel.type === 'text').size} Textuels, ${message.guild.channels.filter(channel => channel.type === 'voice').size} Vocaux`,true)
-            .addField("Membres",`${message.guild.memberCount - message.guild.members.filter(m => m.user.bot).size} Humains, ${message.guild.members.filter(m => m.user.bot).size} Bots.`, true)
-            .addField("Status Membres",affichageStatusMembre,false)
-            .addField("Dernier membre",Array.from(message.channel.guild.members.values()).sort((a, b) => b.joinedAt - a.joinedAt).map(m => `<@!${m.id}>`).splice(0, 1),true)
-            .addField("Rôles", message.guild.roles.size, true)
+            .addField("• Nom", message.guild.name, true)
+            .addField("• ID", message.guild.id, true)
+            .addField("• Propriétaire", message.guild.owner.user, true)
+            .addField(`• Créé le`, creation.getDate() + ' , ' + mois[creation.getMonth()] + " , " + creation.getFullYear(),true)
+            .addField("• Région", message.guild.region, true)
+            .addField("• Salons",`${message.guild.channels.filter(channel => channel.type === 'text').size} Textuels, ${message.guild.channels.filter(channel => channel.type === 'voice').size} Vocaux`,true)
+            .addField("• Membres",`${message.guild.memberCount - message.guild.members.filter(m => m.user.bot).size} Humains, ${message.guild.members.filter(m => m.user.bot).size} Bots.`, true)
+            .addField(" •Status Membres",affichageStatusMembre,false)
+            .addField("• Dernier membre",Array.from(message.channel.guild.members.values()).sort((a, b) => b.joinedAt - a.joinedAt).map(m => `<@!${m.id}>`).splice(0, 1),true)
+            .addField(`• Rôles - **${message.channel.guild.roles.size}**:`, serverRoles, true)
+            .addField(`• Emojis - **${message.channel.guild.emojis.size}**:`,serverEmojis, true)
             .setTimestamp(new Date())
             .setFooter(`Réponse à ${message.author.tag}`, `${message.author.avatarURL}`);
         message.channel.send(serverembed);
@@ -272,29 +346,32 @@ bot.on('message', message=>{
         let valeur = nombreAleatoire(2);
         let piece;
         if (valeur === 1) {
-             piece = `Face`
+            piece = `Face`
         } else {
-             piece = `Pile`
+            piece = `Pile`
         }
-        message.reply("Je lance la pièce ...").then(sentMessage => setTimeout(function () {
-            sentMessage.edit(`${message.author}, la pièce indique **${piece}** !`)
-        }, 900));
+        let msg = (`${message.author}, la pièce indique **${piece}** !`);
+        message.channel.startTyping();
+        message.channel.send("Je lance la pièce ...").then(sentMessage => setTimeout(function () {
+            sentMessage.edit(msg);
+            message.channel.stopTyping();
+        }, 1000));
     }
     //roll
-    if (command === `${prefix}roll`) {
-        if (args[0] === undefined) return message.reply(`Vous n'avez pas mit la valeur maximale\n \`${prefix}roll [valeur]\``);
-        if (isNaN(args[0])) return message.reply('La valeur **'+ argsAffichage +'** n\'est pas un nombre...');
-        if (args[0] < 2)return message.reply('La valeur mise ne peut pas être inférieure à 2 ...');
+    if (command === `${prefix}roll` || command === `${prefix}de` || command === `${prefix}dice`) {
+        if (args[0] === undefined) return message.reply(`vous n'avez pas mit la valeur maximale\n \`${prefix}de [valeur]\``);
+        if (isNaN(args[0])) return message.reply('la valeur **'+ argsAffichage +'** n\'est pas un nombre...');
+        if (args[0] < 2)return message.reply('la valeur mise doit être supérieure à 2 ...');
 
         args[0] = Math.round(args[0]);
         let aleatoire = nombreAleatoire(args[0]);
-        setTimeout(function () {
-            message.delete();
-        }, 5000);
-        let msg = (message.author + ', dé de ' + args[0] + " lancé ... \n Résultat: " + aleatoire + " .");
-        message.reply("Je lance le dé de " + args[0] + " ...").then(sentMessage => setTimeout(function () {
-            sentMessage.edit(msg)
-        }, 850));
+        if (aleatoire === Infinity )return message.reply(`Il y a une infinité de somme possible dans la valeur donnée.`);
+        let msg = `${message.author}, tu obtiens **${aleatoire}**. *(dé de ${args[0]}).*`;
+        message.channel.startTyping();
+        message.channel.send("Je lance le dé de **" + args[0] +"** ...").then(sentMessage => setTimeout(function () {
+            sentMessage.edit(msg);
+            message.channel.stopTyping();
+        }, 1500));
     }
     // shifumi
     if (command === `${prefix}ppc` || command === `${prefix}shifumi`) {
@@ -312,7 +389,7 @@ bot.on('message', message=>{
             let joueur = args[0];
             let joueurAffichage = argsAffichage[0];
             if (joueur !== "pierre"&& joueur!=="pierres" && joueur !== "papier" && joueur !== "ciseaux" && joueur !== "ciseau" && joueur !== "feuilles" && joueur !== "feuille" && joueur !== "puit" && joueur !== "puits") {
-                message.reply("Je ne connais pas la valeur **"+ joueurAffichage +"**\n Valeurs disponibles : `pierre , papier , ciseaux`");
+                message.reply("Cette valeur n'existe pas **"+ joueurAffichage +"**\n Valeurs disponibles : `pierre , papier , ciseaux`");
             }
             if (joueur === "pierre" || joueur === "pierres") {
                 valeurJoueur = 1;
@@ -322,7 +399,7 @@ bot.on('message', message=>{
                 valeurJoueur = 3;
             }else if (joueur === "puits" || joueur === "puit"){
                 valeurJoueur = 0;
-                affichage += message.author +", **"+joueur + "** c'est pour les lâches 😛 \n"
+                message.reply("**"+joueur + "** c'est pour les lâches 😛 \n");
             }
             let valeurOrdinateur = Math.floor((3) * Math.random()) + 1;
             if (valeurOrdinateur === 3) {
@@ -333,138 +410,35 @@ bot.on('message', message=>{
                 ordinateur = "Pierre";
             }
             if (valeurJoueur === 1 && valeurOrdinateur === 3) {
-                affichage +=(`__${member} :__ ` + joueurAffichage + `\n__${robot} :__ ` + ordinateur + `\n**${message.author} a gagné !** 😉 `);
+                affichage = new Discord.RichEmbed()
+                    .setColor("GREEN")
+                    .setDescription(`__${member} :__ ` + joueurAffichage + `\n__${robot} :__ ` + ordinateur + `\n**${message.author} a gagné !** 😉 `);
             } else if (valeurOrdinateur === 1 && valeurJoueur === 3) {
-                affichage +=(`__${member} :__ ` + joueurAffichage + `\n__${robot} :__ ` + ordinateur + "\n**J'ai gagné !** 😛");
+                affichage = new Discord.RichEmbed()
+                    .setColor("DARK_RED")
+                    .setDescription(`__${member} :__ ` + joueurAffichage + `\n__${robot} :__ ` + ordinateur + "\n**J'ai gagné !** 😛");
             } else if (valeurJoueur === valeurOrdinateur) {
-                affichage +=(`__${member} :__ ` + joueurAffichage + `\n__${robot} :__ ` + ordinateur + "\n**égalité** 😗")
+                affichage = new Discord.RichEmbed()
+                    .setColor("BLUE")
+                    .setDescription(`__${member} :__ ` + joueurAffichage + `\n__${robot} :__ ` + ordinateur + "\n**Egalité** 😗");
             } else if (valeurJoueur > valeurOrdinateur) {
-                affichage +=(`__${member} :__ ` + joueurAffichage + `\n__${robot} :__ ` + ordinateur + `\n**${message.author} a gagné !** 😉 `);
+                affichage = new Discord.RichEmbed()
+                    .setColor("GREEN")
+                    .setDescription(`__${member} :__ ` + joueurAffichage + `\n__${robot} :__ ` + ordinateur + `\n**${message.author} a gagné !** 😉 `);
             } else if (valeurOrdinateur > valeurJoueur) {
-                affichage +=(`__${member} :__ ` + joueurAffichage + `\n__${robot} :__ ` + ordinateur + "\n**J'ai gagné !** 😛");
+                affichage = new Discord.RichEmbed()
+                    .setColor("DARK_RED")
+                    .setDescription(`__${member} :__ ` + joueurAffichage + `\n__${robot} :__ ` + ordinateur + "\n**J'ai gagné !** 😛");
             }
             message.channel.send(affichage);
         }
     }
     //gifs
-    let gifs = {
-        trump: ["https://media1.tenor.com/images/4c928c7178a59cab98219ea7fc99a2ea/tenor.gif?itemid=7877566","http://wanna-joke.com/wp-content/uploads/2016/06/trump-gif-belgium-city.gif","https://media.giphy.com/media/xTiTnHXbRoaZ1B1Mo8/giphy.gif","https://www.tenor.co/yiQN.gif",
-            "https://media.giphy.com/media/aE5BG6P181T4k/giphy.gif","https://media.giphy.com/media/3o7TKwiaIuMib5WVXO/giphy.gif","https://media1.tenor.com/images/19042a1d74a71a7694c0b9914e3aa29e/tenor.gif?itemid=8557097","https://www.tenor.co/GnfE.gif ",
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLtSA1rCkgEVgNNazRh60NB9SIjweByni-f1K2bp8t1ROm5kxg","https://i.gifer.com/BU7.gif","https://giphy.com/gifs/someone-run-shooter-iBcLqvp8FMwy3AiPGY","https://i.gifer.com/3czE.gif",
-            "https://media.giphy.com/media/f9RFr0dla1EkZAq0rh/giphy.gif", "https://orig00.deviantart.net/715a/f/2015/318/9/7/_gif__donald_trump_blasts_off_by_jaders75-d9gqh7w.gif",'https://i.imgur.com/LAyeUCl.gif?noredirect',
-            "https://media.giphy.com/media/hPPx8yk3Bmqys/giphy.gif", 'https://1.bp.blogspot.com/-JD7_vfnxFjY/WYIZTlr8IoI/AAAAAAAA9nY/7sGP6-OvcCofIwTHPt1gxzCz3qJ1xFZugCLcBGAs/s1600/rkM5X.gif',
-            'https://static1.squarespace.com/static/56a16fd5d82d5ee027b1b53f/t/5931b8a815cf7da7c1cb767b/1496430802427/?format=500w'],
-        nazi: ["https://media1.tenor.com/images/997825e8808cdb4f918d12e2b0e9b97d/tenor.gif?itemid=8666090","https://thumbs.gfycat.com/InsistentImpressiveKawala-size_restricted.gif","https://i.makeagif.com/media/12-05-2015/a0ebXB.gif",
-            'https://media1.tenor.com/images/1704e632d8535559d69f2f544fdecdda/tenor.gif?itemid=7618295','https://media1.tenor.com/images/4f71f503a4b33460874c3922934ee8be/tenor.gif?itemid=4821571','https://risibank.fr/cache/stickers/d548/54802-full.gif',
-            "https://media1.tenor.com/images/811d3eb25249a299b782885d9d7032aa/tenor.gif?itemid=8136511",'https://static.comicvine.com/uploads/original/11133/111330552/6006006-6211688823-giphy.gif',"http://i.imgur.com/09dzfz1.gif",
-            'https://media1.tenor.com/images/f076f50ed5ce7516d4889649c35c58a3/tenor.gif?itemid=3535967', "https://i.makeagif.com/media/6-17-2015/6rK9hc.gif","https://thumbs.gfycat.com/ThankfulEmotionalBinturong-max-1mb.gif",
-            "https://static1.fjcdn.com/thumbnails/comments/Blank+_51e310522736b8cd83529632747e1182.gif", 'https://i.pinimg.com/originals/35/98/fb/3598fb2eb8a799cbcd970788b69f87f6.gif','https://media.giphy.com/media/wSpM9vIYEvGV2/giphy.gif',
-            "http://i.imgur.com/dkLyaoa.gif"],
-        coco: ["https://media1.tenor.com/images/02625df2d0c38e6e9f8c7a693534d866/tenor.gif?itemid=10179717","https://media0.giphy.com/media/dwLw9DlqI2p1K/200w.gif",'https://i.imgur.com/0TWyD8S.gif','https://www.tenor.co/vLxU.gif',
-            'http://4.bp.blogspot.com/-FF3YYFzuWyc/WH5Q4bo6RII/AAAAAAAACMU/zf3NL5VmQXsj2daaSAGan98x9NG9vsp4gCK4B/s1600/8a6813e28358.gif','https://www.tenor.co/vLye.gif','https://www.tenor.co/J5Qb.gif','https://www.tenor.co/RhZE.gif',
-            "https://ci.memecdn.com/9957820.gif",'https://media.giphy.com/media/axMy0g9z9khZC/giphy.gif','https://i.imgur.com/lVi8l2L.gif','https://www.youtube.com/watch?v=U06jlgpMtQs'],
-        putin: ['https://media.giphy.com/media/Keazl4T0rZ5e0/giphy.gif','https://media1.tenor.com/images/fcfbacf6b056ccadf1dd3727ec93bd7e/tenor.gif?itemid=4716826','https://www.tenor.co/ZlwS.gif','https://www.tenor.co/Eoft.gif',"https://i.gifer.com/9bXA.gif",
-            "https://giffiles.alphacoders.com/911/91118.gif",'https://thumbs.gfycat.com/LeanUnawareCirriped-size_restricted.gif',"https://media.giphy.com/media/28w8LiytMv6x2/giphy.gif",'https://www.tenor.co/MLix.gif','https://giphy.com/gifs/isP4TLqhjm3zq',
-            "https://media.tenor.com/images/6f325225aeebe2f01e4fcfeab6d710ff/tenor.gif"],
-        singe: ['https://media.giphy.com/media/lBDtobYPRAQg/giphy.gif','https://giphy.com/gifs/next-pFwRzOLfuGHok','https://media1.tenor.com/images/3e570bbb991f61429661bd689d94221b/tenor.gif?itemid=11409190','https://www.tenor.co/HLUY.gif',
-            'https://media1.tenor.com/images/544d034df4efc3c4503e0eb7600c125b/tenor.gif?itemid=5689102', 'https://www.tenor.co/JM5S.gif','https://giphy.com/gifs/monkey-12uB4fsiMsC8V2','https://thumbs.gfycat.com/ReflectingTangibleBlueandgoldmackaw-small.gif',
-            'https://media1.tenor.com/images/11e9dd6ce6e15830ae7996f09f569aa8/tenor.gif?itemid=5522609', 'http://humourtop.com/gifs-animes-droles-de-singes/Humour_Gorille.gif','http://humourtop.com/gifs-animes-droles-de-singes/Bebe_Chimpanze.gif',
-            'https://media.giphy.com/media/IKv6damwRCkFy/giphy.gif','http://gifdrole.com/singes/gorille_rock.gif', "https://i.pinimg.com/originals/a9/b0/d6/a9b0d6a956db4250383777b8ad9b026c.gif",'https://giphy.com/gifs/funny-cute-lol-26gsspfbt1HfVQ9va',
-            "https://www.downloadfeast.com/wp-content/uploads/2016/05/animals/animals/gori.gif","http://media.zenfs.com/fr_FR/News/Francetvinfo.fr/6292545.gif",'https://media.tenor.com/images/69692a4dfe996d2dd56f9629df02df2d/tenor.gif'],
-        popcorn: ['https://i.pinimg.com/originals/6d/2f/19/6d2f1933311596e0ad7d349b7e7c2b6f.gif','https://media.giphy.com/media/tFK8urY6XHj2w/giphy.gif','https://media.giphy.com/media/128UMaujdjX7Pi/giphy.gif',
-            'https://media.giphy.com/media/12aW6JtfvUdcdO/giphy.gif','https://media.giphy.com/media/TrDxCdtmdluP6/giphy.gif','https://media.giphy.com/media/1pw5Hn77ylYxW/giphy.gif','https://media.giphy.com/media/24VZ1sU6FKayY/giphy.gif',
-            'https://giphy.com/gifs/reactiongifs-tyqcJoNjNv0Fq', 'https://giphy.com/gifs/chill-chihuahua-4XSc0NkhKJQhW','https://giphy.com/gifs/corn-Znj9tJamHmLoQ ','https://thumbs.gfycat.com/NeighboringFreeKissingbug-small.gif',
-            'https://media.giphy.com/media/pUeXcg80cO8I8/giphy.gif','https://media.giphy.com/media/UlqLDtI8Qc0j6/source.gif','https://66.media.tumblr.com/7b97e0dc36fa8423fcb842fe8012d2bc/tumblr_ownl291WX71vtnv5po1_500.gif',
-            'https://media.giphy.com/media/2ALbeBfUZME4aCdyZg/giphy.gif', 'https://www.reactiongifs.us/wp-content/uploads/2017/12/popcorn.gif','https://gifimage.net/wp-content/uploads/2017/01/Eating-Popcorn-GIF-Image-for-Whatsapp-and-Facebook-3.gif',
-            'http://66.media.tumblr.com/9a4a92a2d279152e84e9d85408a1117d/tumblr_o68p1uRLzC1tbh1dho1_500.gif',],
-        vent: ["https://media.giphy.com/media/UUkxgx7vd7rna/giphy.gif", "https://www.tenor.co/v2d4.gif", "https://www.tenor.co/uf0w.gif", "https://giphy.com/gifs/wind-weather-miami-HmTLatwLWpTQk",
-            "https://giphy.com/gifs/silly-storm-edition-G5n8sqIOxBqow", "https://giphy.com/gifs/weatherunderground-storm-weather-d1E1pZ1cdgWmY0hy"],
-        shame: ["https://media.giphy.com/media/eP1fobjusSbu/giphy.gif", "https://media0.giphy.com/media/PJeKg31621Wgw/giphy.gif?cid=3640f6095bcc2638632e496d6b11dc38", "https://media.giphy.com/media/vX9WcCiWwUF7G/source.gif",
-            "https://media.giphy.com/media/EIUtqBs5nJCXS/giphy.gif", "https://media.giphy.com/media/pDsCoECKh1Pa/giphy.gif", "https://media.giphy.com/media/sC4j83D78rdrW/giphy.gif", "https://www.tenor.co/sraa.gif ",
-            "https://media.giphy.com/media/trOcgJrhsUZEY/giphy.gif", "https://media.giphy.com/media/NGV4vAghFiUOA/giphy.gif", "https://media.giphy.com/media/ptXhuH4OrPNok/giphy.gif",
-            "https://media.giphy.com/media/Db3OfoegpwajK/giphy.gif", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTrO5PvNxjwjQujku_vNje9rBDLo3YVEAABNhtgtgusBtH0XqQyug",
-            "https://media.giphy.com/media/InhPEgAQym00g/giphy.gif", "https://data.whicdn.com/images/206500793/original.gif", "https://vignette.wikia.nocookie.net/glee/images/8/81/Shame.gif/revision/latest?cb=20150113225520"],
-        chinois: ["https://i.pinimg.com/originals/dc/da/cd/dcdacd4933a604daf37c2e4ca0dae8ad.gif", "https://thumbs.gfycat.com/BestAmpleBinturong-size_restricted.gif", "https://thumbs.gfycat.com/SlimyPerfumedDugong-small.gif", "https://i.imgur.com/H71pvtV.gif",
-            "https://www.askideas.com/media/20/Eat-The-Rice-Everyday-Funny-Asian-Gif.gif", "https://static.fjcdn.com/gifs/Chinese_b73fb7_2863548.gif", "https://thumbs.gfycat.com/GeneralTepidHairstreak-size_restricted.gif", "https://static.boredpanda.com/blog/wp-content/uploads/2016/08/funny-geeky-china-swimmer-fu-yuanhui-rio-olympics-3.gif",
-            "http://media.topito.com/wp-content/uploads/2014/03/leeb2.gif", "https://giphy.com/gifs/lmao-relatable-bruce-lee-112YQ5P8fp12o0 ", "https://www.tenor.co/wolF.gif "],
-        ninja: ["https://giphy.com/gifs/cheezburger-baby-ninja-flip-ErdfMetILIMko", "https://giphy.com/gifs/snl-l1BgSChjSFz3opBAs", "https://giphy.com/gifs/hero-wut-hmxJUEB1xRYPK",
-            "https://giphy.com/gifs/ninja-laminutecaprice-en-cas-de-caprice-26h0oZIGGOFZdZj4Q", "https://media.giphy.com/media/ISw0yRECghp1C/giphy.gif", "https://i.gifer.com/1QIm.gif",
-            "https://media.giphy.com/media/6Na7w7yHshyvu/giphy.gif", "https://i.gifer.com/2iX9.gif", "https://media.giphy.com/media/epWt2dwVTXrDG/giphy.gif"],
-        chat: ["https://media.giphy.com/media/F0eb5L2xJJJNC/giphy.gif", "http://mississippi.m.i.pic.centerblog.net/d80ef475.gif", "http://www.goldenmoustache.com/wp-content/uploads/2015/12/cce986e6a54d4bd578e5bc4c1e24b382.gif",
-            "https://78.media.tumblr.com/8d436c65d48daf01fa3fdf0d7dc25686/tumblr_mtszvm8a8q1qbfm1po1_r1_250.gif", "http://aws-cf.imdoc.fr/prod/photos/3/3/2/4472332/21694574/img-21694574ff1.gif?v=11",
-            "https://static.mmzstatic.com/wp-content/uploads/2013/08/gifchat18.gif", "https://i.pinimg.com/originals/a1/76/40/a17640a1e2f3971cfab9719d4a1d4a53.gif", "https://i.chzbgr.com/full/8481047040/hDC882EFD/",
-            "https://78.media.tumblr.com/eeb645802420d560d808fdb1a9d1474c/tumblr_n06ucvPGX31rmwzkdo1_400.gif", "http://1.bp.blogspot.com/-D-kjWMKPypo/VUYYiu-IqGI/AAAAAAAAI-0/OzL1qlnDYK4/s1600/why-cats-need-9-lives.gif",
-            "https://media.giphy.com/media/v6aOjy0Qo1fIA/giphy.gif", "https://media.giphy.com/media/a34HjLEsKchWM/giphy.gif", "https://media.giphy.com/media/Mp592a0PuVzbi/giphy.gif", "https://media.giphy.com/media/elbTBI76GNRp6/giphy.gif",
-            "https://data.photofunky.net/output/image/e/b/c/c/ebcc2e/photofunky.gif"],
-        fail: ["https://media.tenor.com/images/1b3aa48cfa63240adfef3a61a179bec0/tenor.gif","https://media.giphy.com/media/qV2SRgIGOOEBq/giphy.gif","https://media.giphy.com/media/IRMsZzQVk7Wnu/giphy.gif","https://i.chzbgr.com/full/4102161664/hBC1CB70A/",
-            "https://media.giphy.com/media/SoO2i4lvuxEFW/giphy.gif","https://66.media.tumblr.com/770b63520681291d92921aec43b8e60c/tumblr_nh5bbtIEo91sowe88o2_500.gif","http://cdn.emgn.com/wp-content/uploads/2014/02/Hilarious-Fail-Gifs-13.gif",
-            "https://list25.com/wp-content/uploads/2015/01/Failgif8.gif","http://www.best-gif.com/wp-content/uploads/2014/05/funny-gifs-The-master-of-Fail.gif","https://heavyeditorial.files.wordpress.com/2014/03/374.gif?w=625",
-            "https://www.pbh2.com/wordpress/wp-content/uploads/2013/10/water-balloon-fail.gif","http://thumbpress.com/wp-content/uploads/2013/05/Funniest-Fail-GIFs-29.gif","https://i.gifer.com/6NO.gif"],
-        bravo: ["http://gif-finder.com/wp-content/uploads/2016/08/AGT-Clapping.gif","https://media.tenor.com/images/a57d30c5f1694e89422a7c132b62d84f/tenor.gif","http://i.imgur.com/z7PQdOt.gif","https://thumbs.gfycat.com/BriefMildArcherfish-small.gif",
-            "https://media1.tenor.com/images/0de120c10a661c15cb60fe77b8eac367/tenor.gif?itemid=5833390","https://media.giphy.com/media/F2WFyAfpfVfFe/giphy.gif","https://media.giphy.com/media/26BGKHrjfTMZX4g9y/giphy.gif","https://i.gifer.com/1WIe.gif",
-            "https://media.giphy.com/media/P6jhIEAMx6srC/giphy.gif","https://media.tenor.com/images/a2bac4d6a1eea3bfb2f371323914360e/tenor.gif","https://media1.tenor.com/images/c62207367c217db34e295d519e2dd59e/tenor.gif?itemid=8138721",
-            "https://media.giphy.com/media/HdwrQX45CI9ZS/giphy.gif","https://thumbs.gfycat.com/FlawlessOddballAsp-max-1mb.gif","https://media.giphy.com/media/a0Lgc1JvbfS4o/giphy.gif","https://thumbs.gfycat.com/InfiniteLastAmethystgemclam-max-1mb.gif",
-            "http://gif-finder.com/wp-content/uploads/2015/04/Tigger-Bravo.gif","https://media.giphy.com/media/3oz8xrlxi4mm1KnE7C/source.gif","https://media.giphy.com/media/d31w24psGYeekCZy/giphy.gif","https://i.gifer.com/5ln.gif",
-            "https://media.giphy.com/media/ecVcN1B2h1cpW/giphy.gif","https://media.giphy.com/media/qIXVd1RoKGqlO/giphy.gif","https://thumbs.gfycat.com/SorrowfulIllBlackbear-size_restricted.gif"],
-        johnny: ["https://media.giphy.com/media/RoajqIorBfSE/200.gif","https://media.giphy.com/media/5p8GSEwUjaWdi/giphy.gif","https://media1.tenor.com/images/eed4a8c3b37f29ab802ab796179c42fe/tenor.gif?itemid=3519295"]
-    };
+    let gifs = JSON.parse(fs.readFileSync("./gifs.json", "utf8"));
     if (command === `${prefix}gif` || command === `${prefix}gifs`) {
-        if (args[0] === undefined) {
-            let genreMax = (Object.keys(gifs).length);
-            let genreChoix = nombreAleatoire(genreMax);
-            let genre = Object.keys(gifs)[genreChoix - 1];
-            let random = nombreAleatoire(gifs[genre].length);
-            let affichargeGifs = gifs[genre][random - 1];
-            console.log("commande gifs " + genre + " " + (random - 1));
-            setTimeout(function () {
-                message.channel.send(affichargeGifs);
-            }, 200);
-        } else {
-            if (args[0] === "communiste") args[0] = "coco";
-            if (args[0] === "corn" || args[0] === "pop") args[0] = "popcorn";
-            if (args[0] === "darklos") args[0] = "singe";
-            if (args[0] === "clap" || args[0] === 'clapclap') args[0] = "bravo";
-            if (args[0] === "john") args[0] = "johnny";
-            if (args[0] === "bananestar") args[0] = "singe";
-            if (args[0] === "help"){
-                let affichageHelp = "";
-                let genreMax = (Object.keys(gifs).length);
-                for (let nom in gifs){
-                    affichageHelp += '`'+nom+'`';
-                    if ((Object.keys(gifs))[genreMax-1] !== nom) affichageHelp += ' , '
-                }
-                return message.reply("Thèmes disponibles : "+ affichageHelp +".")
-            }
-            let genre = args[0];
-            if (gifs[genre] === undefined){
-                let affichageHelp = "";
-                let genreMax = (Object.keys(gifs).length);
-                for (let nom in gifs){
-                    affichageHelp += '`'+nom+'`';
-                    if ((Object.keys(gifs))[genreMax-1] !== nom) affichageHelp += ' , '
-                }
-                return message.reply("Il n'y a pas de gif de thème **" + argsAffichage[0] +"**\nThèmes disponibles : "+ affichageHelp +".")
-            }
-            if (args[1] === undefined || isNaN(args[1])) {
-                let random = nombreAleatoire(gifs[genre].length);
-                let affichargeGifs = gifs[genre][random - 1];
-                console.log("commande gifs genre " + argsAffichage[0] + " " + (random - 1));
-                setTimeout(function () {
-                    message.channel.send(affichargeGifs);
-                }, 200);
-            } else {
-                if (args[1] > gifs[genre].length) return message.reply("Il n'y a que " + gifs[genre].length + " de genre : **" + genre+"**");
-                if (args[1] < 1) return message.reply("Il n'y a pas de gifs avant le permier !");
-                let random = args[1];
-                let affichargeGifs = message.author + " a sélectionné le gif du thème *" + argsAffichage[0] + "* numéro : " + args[1] + " sur " + gifs[genre].length + " gifs.   " + gifs[genre][random - 1];
-                console.log("commande gifs genre num " + genre + " " + (random - 1));
-                setTimeout(function () {
-                    message.channel.send(affichargeGifs);
-                }, 200);
-            }
-        }
-    }
-    if (command === `${prefix}gif2` || command === `${prefix}gifs2`|| command === `${prefix}fig`) {
+        setTimeout(function () {
+            message.delete();
+        }, 2500);
         if (args[0] === undefined) {
             let genreMax = (Object.keys(gifs).length);
             let genreChoix = nombreAleatoire(genreMax);
@@ -474,18 +448,21 @@ bot.on('message', message=>{
             const embed = new Discord.RichEmbed()
                 .setColor("RANDOM")
                 .setImage(`${affichageGifs}`)
-                .setFooter(`gif envoyé par ${message.author.username}`);
+                .setFooter(`GIF envoyé par ${message.author.username}`,`${message.author.avatarURL}`);
             console.log("commande gifs " + genre + " " + (random - 1));
             setTimeout(function () {
                 message.channel.send(embed)
             }, 100);
         } else {
-            if (args[0] === "communiste") args[0] = "coco";
-            if (args[0] === "corn" || args[0] === "pop") args[0] = "popcorn";
+            if (args[0] === "coco") args[0] = "communiste";
+            if (args[0] === "corn" || args[0] === "pop" || args[0] === "pc") args[0] = "popcorn";
             if (args[0] === "darklos") args[0] = "singe";
             if (args[0] === "clap" || args[0] === 'clapclap') args[0] = "bravo";
             if (args[0] === "john") args[0] = "johnny";
-            if (args[0] === "bananestar") args[0] = "singe";
+            if (args[0] === "palerm") args[0] = "poule";
+            if (args[0] === "spy" || args[0] === "ned" || args[0] === "nedert") args[0] = "espion";
+            if (args[0] === "giffle" || args[0] === "giffles" || args[0] === "gifles") args[0] = "gifle";
+            if (args[0] === "limorus" || args[0] === "guerre") args[0]= "war";
             if (args[0] === "help"){
                 let affichageHelp = "";
                 let genreMax = (Object.keys(gifs).length);
@@ -493,7 +470,7 @@ bot.on('message', message=>{
                     affichageHelp += '`'+nom+'`';
                     if ((Object.keys(gifs))[genreMax-1] !== nom) affichageHelp += ' , '
                 }
-                return message.reply("Thèmes disponibles : "+ affichageHelp +".")
+                return message.channel.send("__Commandes Gif :__ `"+command+" ((thème) (numero))`\n__Thèmes disponibles :__ "+ affichageHelp +".")
             }
             let genre = args[0];
             if (gifs[genre] === undefined){
@@ -509,23 +486,25 @@ bot.on('message', message=>{
                 let random = nombreAleatoire(gifs[genre].length);
                 let affichageGifs = gifs[genre][random - 1];
                 const embed = new Discord.RichEmbed()
+                    .setTitle("GIF "+args[0])
                     .setColor("RANDOM")
                     .setImage(`${affichageGifs}`)
-                    .setFooter(`gif envoyé par ${message.author.username}`);
+                    .setFooter(`GIF envoyé par ${message.author.username}`,`${message.author.avatarURL}`);
                 console.log("commande gifs genre " + argsAffichage[0] + " " + (random - 1));
                 setTimeout(function () {
                     message.channel.send(embed)
                 }, 100);
             } else {
                 if (args[1] > gifs[genre].length) return message.reply("Il n'y a que " + gifs[genre].length + " de genre : **" + genre+"**");
-                if (args[1] < 1) return message.reply("Il n'y a pas de gifs avant le premier !");
+                if (args[1] < 1) return message.reply("Il n'y a pas de gifs avant le premier ! :joy:");
                 let choix = args[1];
                 let titre = "*Gif du thème *" + argsAffichage[0] + "* numéro : " + args[1] + " sur " + gifs[genre].length + " gifs.";
                 let affichageGifs = gifs[genre][choix - 1];
                 const embed = new Discord.RichEmbed()
+                    .setTitle("GIF "+args[0]+", "+ args[1]+" / "+ gifs[genre].length)
                     .setColor("RANDOM")
                     .setImage(`${affichageGifs}`)
-                    .setFooter(`gif envoyé par ${message.author.username}`);
+                    .setFooter(`GIF envoyé par ${message.author.username}`,`${message.author.avatarURL}`);
                 console.log("commande gifs genre num " + genre + " " + (titre - 1));
                 setTimeout(function () {
                     message.channel.send(embed)
@@ -539,250 +518,765 @@ bot.on('message', message=>{
             message.reply("https://discordapp.com/api/oauth2/authorize?client_id=506184450405826562&permissions=0&scope=bot");
         }, 100);
     }
-    // invite serveurtest
-    if (command === `${prefix}serveurtest` || command === `${prefix}bottest`) {
-        setTimeout(function () {
-            message.react('🇲')
-        }, 100);
-        setTimeout(function () {
-            message.react('🇵')
-        }, 400);
-        setTimeout(function () {
-            message.react('📫')
-        }, 200);
-        setTimeout(function () {
-            message.author.send("voici le lien du serveur Test : https://discord.gg/E3uhqMg");
-        }, 100);
-    }
     // slots machine a sous
     if (command === `${prefix}slot` || command === `${prefix}slots`) {
-        let slots = ["🍎", "🍌", "🍒", "🍓", "🍈", "🍇","🍀"];
+        if(args[0] === 'help') return message.reply(`Difficultés disponibles : \`${command}\`, \`${command} hard\`, \`${command} hard+\`, \`${command} darklos\``);
+        let slots = ["🍎","🍒","🍌","🍇","🍓","🍀","🍏","🍑","🌹",":seven:"];
+        if (args[0] === 'hard' || args[0] === 'dur'){
+            let slotsAdd = ["🍿","🎲","⚔","🔑","🎁","🍠","🍟","🍔",":flag_be:",":flag_fr: "];
+            for (let icone in slotsAdd){
+                slots.push(slotsAdd[icone]);
+            }
+        }
+        if (args[0] === 'hard+' || args[0] === 'dur+'){
+            let slotsAdd = ["🍿","🎲","⚔","🔑","🎁","🍠","🍟","🍔",":flag_be:",":flag_fr:","✌","🌜","💡","☘","🥕","💛","💜","🚗","🍰","🖖"];
+            for (let icone in slotsAdd){
+                slots.push(slotsAdd[icone]);
+            }
+        }
+        if (args[0] === 'darklos') slots = ["🥜","🐵","🐒","🙊","🙉","🙈","🍌"];
         let result1 = nombreAleatoire(slots.length-1);
         let result2 = nombreAleatoire(slots.length-1);
         let result3 = nombreAleatoire(slots.length-1);
         let name = message.author.username;
-        let aicon = message.author.displayAvatarURL;
 
         if ((slots[result1] === slots[result2])&&( slots[result1] === slots[result3])) {
             let Embed = new Discord.RichEmbed()
-                .setFooter(name + " JACKPOT", aicon)
                 .setAuthor('Machine à sous')
-                .addField(':slot_machine:Result:slot_machine:', slots[result1] + slots[result2] + slots[result3], true)
-                .setColor("#6a93ed");
+                .addField(`:slot_machine:**Résultats**:slot_machine:`,`${slots[result1] + slots[result2] + slots[result3]} \n\n**${name}**, **JACKPOT !**`)
+                //.setDescription(`:slot_machine:**Résultats**:slot_machine:\n ${slots[result1] + slots[result2] + slots[result3]} \n\n**${name}**, JACKPOT !`)
+                .setFooter(`(Jackpot : 1 /${slots.length*slots.length*slots.length})`)
+                .setColor("GREEN");
             message.channel.send(Embed)
         }
         else if (slots[result1] === slots[result2] && slots[result3]) {
             let Embed = new Discord.RichEmbed()
-                .setFooter(name +" Tu a gagné !", aicon)
                 .setAuthor('Machine à sous')
-                .addField(':slot_machine:Result:slot_machine:', slots[result1] + slots[result2] + slots[result3], true)
-                .setColor("#6a93ed");
+                .addField(`:slot_machine:**Résultats**:slot_machine:`,`${slots[result1] + slots[result2] + slots[result3]} \n\n**${name}**, Tu as gagné !`)
+                //.setDescription(`:slot_machine:**Résultats**:slot_machine:\n ${slots[result1] + slots[result2] + slots[result3]} \n\n**${name}**, Tu as gagné !`)
+                .setFooter(`(Jackpot : 1 /${slots.length*slots.length*slots.length})`)
+                .setColor("BLUE");
             message.channel.send(Embed);
         } else {
             let embed = new Discord.RichEmbed()
-                .setFooter(name +' Tu as perdu!', aicon)
                 .setAuthor('Machine à sous')
-                .addField(':slot_machine:Result:slot_machine:', slots[result1] + slots[result2] + slots[result3], true)
-                .setColor("#6a93ed");
+                .addField(`:slot_machine:**Résultats**:slot_machine:`,`${slots[result1] + slots[result2] + slots[result3]} \n\n**${name}**, Tu as perdu !`)
+                //.setDescription(`:slot_machine:**Résultats**:slot_machine:\n ${slots[result1] + slots[result2] + slots[result3]} \n\n**${name}**, Tu as perdu !`)
+                .setFooter(`(Jackpot : 1 /${slots.length*slots.length*slots.length})`)
+                .setColor("DARK_RED");
             message.channel.send(embed);
         }
     }
-    //reboot
-    if(message.content === `${VIPprefix}reboot` || message.content === `${VIPprefix}restart`) {
-        if (message.author.id === ownerID) {
-            message.react("☑");
-            bot.destroy();
-            bot.destroy();
-            bot.login(process.env.TOKEN);
-            setTimeout(function () {
-                message.channel.send(`:gear: **${bot.user.username}** a redémarré avec succès :gear:`)
-            },1500)
-
-        } else {
-            message.channel.send("Seulement un de mes développeurs peut faire cette commande !")
-        }
-    }
     //arrêt du bot
-    if(message.content === `${VIPprefix}crash` || message.content === `${VIPprefix}stop`) {
+    if(message.content === `${VIPprefix}stop`) {
         if (message.author.id === ownerID) {
             message.react("⛔");
             message.reply(`:x: Arrêt du bot jusqu'au prochain redémarrage automatique. :x:`);
             bot.destroy();
             bot.destroy();
-
         } else {
             message.channel.send("Seulement un de mes développeurs peut faire cette commande !")
         }
     }
     //article anonymes
-    if (command === `${prefix}anonyme` || command === `${prefix}artan` || command === `${prefix}an`|| command === `${prefix}articleanonyme`) {
+    if (command === `${prefix}an`|| command === `${prefix}articleanonyme`) {
+        if(message.channel.type !== "dm") {
+            if (message.guild.id !== '448152530065817602' && message.guild.id !== '455748758798336050' && message.guild.id !== '420530737738153984') return message.reply('Cette commande n\'est pas disponible sur ce serveur');
+        }
         const auteur = message.author;
         console.log(`création d'un article anonyme par ${auteur.username}#${auteur.discriminator}`);
         let article = argsAffichage.slice(0).join(" ");
         if (args.length === 0){
-            setTimeout(function () {
-                message.delete();
-            },1);
-            message.channel.send(`Vous avez oublié d'introduire l'article .\n \`${prefix}an [Article]\``).then(msg => msg.delete(600));
-            return message.author.send(`Vous avez oublié d'introduire l'article .\n \`${prefix}an [Article]\``).then(msg => msg.delete(120000));
+            message.delete();
+            message.channel.send(`Vous avez oublié d'introduire l'article .\n \`${prefix}an [Article]\``).then(msg => msg.delete(100));
+            return message.author.send(`Vous avez oublié d'introduire l'article .\n \`${prefix}an [Article]\``).then(msg => msg.delete(70000));
         }
-        let id = "A" + Date.now();
+        let id = "AR" + Date.now();
         const embed = new Discord.RichEmbed()
             .setTitle(`Article Anonyme :`)
-            .setColor("#f5725d")
+            .setColor("RANDOM")
             .setDescription(`${article}`)
             .setTimestamp(new Date())
             .setFooter(`Id de l'article: ${id}`);
-        setTimeout(function () {
-            message.delete();
-        }, 1);
-        bot.guilds.get("420530737738153984").channels.get("532100632484511776").send(`Article **${id}** envoyé par @${auteur.username}#${auteur.discriminator}`);
-        //bot.guilds.get("420530737738153984").channels.get("532100632484511776").send(embed);
+        message.delete();
+        //bot.guilds.get("420530737738153984").channels.get("532100632484511776").send(`Article **${id}** envoyé par @${auteur.username}#${auteur.discriminator}  ID: ${message.author.id}`);//channel serveur test
+        bot.guilds.get("450360893931388938").channels.get("572844442382499840").send(`Article **${id}** envoyé par @${auteur.username}#${auteur.discriminator}  ID: ${message.author.id}`);//channel communauté RP
         message.channel.send(embed)
             .then(msg => {
-                msg.react('🕵')
+                msg.react('📰')
             })
             .catch(() => console.error('Erreur au chargement des emojis.'));
+        setTimeout(function () {
+            message.channel.send(`((__Si vous avez vu qui est l'auteur de ce message, sachez que l'accusation sera non-recevable sans preuve RP.))__\n(ce message sera supprimé dans 2minutes)`).then(msg => msg.delete(120000));
+        },5)
     }
     //image anonyme
-    if (command === `${prefix}imageanonyme` || command === `${prefix}iman` || command === `${prefix}ia`) {
+    if (command === `${prefix}imageanonyme` || command === `${prefix}ia`) {
+        if(message.channel.type !== "dm") {
+            if (message.guild.id !== '448152530065817602' && message.guild.id !== '455748758798336050' && message.guild.id !== '420530737738153984') return message.reply('Cette commande n\'est pas disponible sur ce serveur');
+        }
         const auteur = message.author;
         console.log(`création d'une anonyme par ${auteur.username}#${auteur.discriminator}`);
         let image = argsAffichage.slice(0).join(" ");
         if (args.length === 0){
-            setTimeout(function () {
-                message.delete();
-            },1);
-            message.channel.send(`Vous avez oublié d'introduire l'image .\n \`${prefix}ia [URL de l'image]\``).then(msg => msg.delete(600));
-            return message.author.send(`Vous avez oublié d'introduire l'image .\n \`${prefix}ia [URL de l'image]\``).then(msg => msg.delete(120000));
+            message.delete();
+            message.channel.send(`Vous avez oublié d'introduire l'image .\n \`${prefix}ia [URL de l'image]\``).then(msg => msg.delete(100));
+            return message.author.send(`Vous avez oublié d'introduire l'image .\n \`${prefix}ia [URL de l'image]\``).then(msg => msg.delete(70000));
         }
         let id = "IM" + Date.now();
         const embed = new Discord.RichEmbed()
             .setTitle(`Image Anonyme :`)
-            .setColor("#f5725d")
+            .setColor("RANDOM")
             .setImage(`${image}`)
             .setTimestamp(new Date())
             .setFooter(`Id de l'image: ${id}`);
-        setTimeout(function () {
-            message.delete();
-        }, 1);
-        bot.guilds.get("420530737738153984").channels.get("532100632484511776").send(`Image **${id}** envoyée par @${auteur.username}#${auteur.discriminator}`);
-        //bot.guilds.get("420530737738153984").channels.get("532100632484511776").send(embed);
+        message.delete();
+        //bot.guilds.get("420530737738153984").channels.get("532100632484511776").send(`Image **${id}** envoyée par @${auteur.username}#${auteur.discriminator}  ID: ${message.author.id}`);//channel serveur test
+        bot.guilds.get("450360893931388938").channels.get("572844442382499840").send(`Image **${id}** envoyé par @${auteur.username}#${auteur.discriminator}  ID: ${message.author.id}`);//channel communauté RP
         message.channel.send(embed)
             .then(msg => {
                 msg.react('🖼')
             })
-            .catch(() => {bot.guilds.get("420530737738153984").channels.get("532100632484511776").send(`L'image de @${auteur.username}#${auteur.discriminator} n'est pas valide'`);
-                message.channel.send(`L'URL de l'image n'est pas valide... \n \`${prefix}ia [URL de l'image]\` `).then(msg => msg.delete(600));
-                message.author.send(`L'URL de l'image n'est pas valide... \n \`${prefix}ia [URL de l'image]\``).then(msg => msg.delete(120000));
+            .catch(() => {bot.guilds.get("450360893931388938").channels.get("572844442382499840").send(`L'image de @${auteur.username}#${auteur.discriminator} n'est pas valide'`);
+                message.channel.send(`L'URL de l'image n'est pas valide... \n \`${prefix}ia [URL de l'image]\` `).then(msg => msg.delete(100));
+                message.author.send(`L'URL de l'image n'est pas valide... \n \`${prefix}ia [URL de l'image]\``).then(msg => msg.delete(70000));
             });
+        setTimeout(function () {
+            message.channel.send(`((__Si vous avez vu qui est l'auteur de ce message, sachez que l'accusation sera non-reçevable sans preuve RP.))__\n(ce message sera supprimé dans 2 minutes)`).then(msg => msg.delete(120000));
+        },5)
     }
     //bonjour
     if (!message.content.startsWith(prefix)) {
         if (message.author.bot) return;
-        const command = message.content.toLocaleLowerCase();
-        const auteur = message.author;
-        if (command === `bonjour` || command === `bjr` || command === `salut` || command === `hey` || command === `yop` || command === `bonsoir` || command === `bsr` || command === 'yo' || command === 'wesh' || command === 'coucou' || command === 'cc' || command === 'slt' || command === 'bjour' || command === 'hola' || command === 'holà' || command === "Salutation"|| command === 'plop'|| command === 'hello') {
-            let autorise = nombreAleatoire(10);
-            if (autorise > 0 && autorise < 5) {
-                let bonjour = [`Bien le bonjour ${auteur}`,`Bijour Bijour, ${auteur}`,`Salut à toi mon brave ${auteur.username}`,`Bijour monsieur ${auteur.username}`,`Yolo ! 😁`,`Bonjour 😁`,`Yolo !`,`Salut comment-va ? ${auteur}`,
-                `Salut ${auteur.username}`,`Salut ! Comment vas-tu ?`,`Salut ${auteur} ! Comment vas-tu ?`,`Hello there`,`Hey !..`,`Salut mon pote 😊`,`Wesh Wesh !!`,`Yo !`,`Yop !`,`Arthour Couillère !!!! https://thumbs.gfycat.com/FineOilyGrebe-small.gif`,
-                `Yo ${auteur.username} !`,`Yop ${auteur.username} !`,`Holà ${auteur} !`,`Hola, cómo estás ?`,`Hola quetal ?`,`Buenos dias`,`hallo hoe gaat het met jouw ?`,`Dag !`,`Hallo ${auteur.username}`,`Au revoir...:rolling_eyes: `,
-                `Longue vie et prospérité ${auteur} 🖖`,`Flop :wink:`,`Hi`,`plop ${auteur}`,`Plop !`,`Hello ${auteur}`,`Hello there ! https://tenor.com/NMDa.gif`,`-Hello There !\n- General Kenobi !`,'Salut , ça boum ?  :bomb:'];
+        let auteurListe = [message.author,message.author.username];
+        if(message.channel.type !== "dm") {
+            if (message.guild.member(message.author).nickname != null) auteurListe.push(message.guild.member(message.author).nickname);
+        }
+        const auteur = auteurListe[nombreAleatoire(auteurListe.length)-1];
+        let mention = false;
+        let oui = false;
+        if (message.isMentioned(bot.user)) mention = true;
+        if (args[0] && mention === false)return false;
+        if (oui || command === `bonjour` || command === `bjr` || command === `salut` || command === `hey` || command === `yop` || command === `bonsoir` || command === `bsr` || command === 'yo' || command === 'wesh' || command === 'coucou' || command === 'cc' ||
+            command === 'slt' || command === 'bjour' || command === 'hola' || command === 'holà' || command === "salutation"|| command === 'plop'|| command === 'hello' || command ==="chalut" || command ==="hellow" || command ===`salutation` || command === "Aloha" ||
+            command === `salutations` || command === 'Aloa') {
+            let autorise = nombreAleatoire(100);
+            if (autorise > 0 && autorise < 36 || mention) {
+                message.channel.startTyping();
+                let bonjour = [`Bien le bonjour ${auteur}`,`Bijour Bijour, ${auteur}`,`Salut à toi mon brave ${auteur}`,`Bijour monsieur ${auteur}`,`Yolo ! 😁`,`Bonjour 😁`,`Yolo !`,`Salut comment-va ? ${auteur}`,"Salutations aventurier!",
+                    "Salutations Voyageur !","Bonjour voyageur","Holà aventurier!","Hello, stranger.","Salutation, Etranger.","hey mon ami t'aime ça manger des patates ?\nTest le Willi Waller To Thousand Six alors...","Bienvenue voyageur","PTDR T KI?",
+                    'Salut , ça boum ?  :bomb:','Hello it\'s me...','https://www.unrulystowaway.com/wp-content/uploads/2018/07/Hello-Darkness-Affleck.jpg','hello darkness my old friend','Hello How are you ?',`Hello, ${auteur} how are you ?`,
+                    "Belle journée, pas vrai ?","Pour la horde !",`Et.... Vous êtes ?`,`Salut ${auteur}`,`Salut ! Comment vas-tu ?`,`Salut ${auteur} ! Comment vas-tu ?`,`Hello there`,`Hey !..`,`Salut mon pote 😊`,`Wesh Wesh !!`,`Yo !`,`Yop !`,
+                    `Arthour Couillère !!!!\n https://thumbs.gfycat.com/FineOilyGrebe-small.gif`,`Yo ${auteur} !`,`Yop ${auteur} !`,`Holà ${auteur} !`,`Hola, cómo estás ?`,`Hola quetal ?`,`Buenos dias`,`hallo hoe gaat het met jouw ?`,`Dag !`,
+                    `Hallo ${auteur}`,`Au revoir...:rolling_eyes:`, `Longue vie et prospérité ${auteur} 🖖`,`Flop :wink:`,`Hi`,`plop ${auteur}`,`Plop !`,`Hello ${auteur}`,`Hello there ! https://tenor.com/NMDa.gif`,`-Hello There !\n-General Kenobi !`,
+                    `Hi How are you?`,`Hi, ${auteur}, how are you?`,`Yo ${auteur} !`,"Chalut","Chalut cha va?",`chalut ${auteur}, cha va?`,"Chalut comment allez-vouche ?","Chalut comment vas-tuche ?","Coucou :wave:",":wave:",":wave::wave:",
+                    `:wave: ${auteur}`,`:wave: ${auteur}`,`${auteur} :wave:`,"bonjour bonjour","Bonjour toi :O","Salutations distinguées !",`-Hello There !\n-General ${message.username} !`,"Bonjour les enfants","Aloha",`Aloha ${auteur}`,
+                    `Salutations vénérable ${auteur}`,"Hellooow",`Hellooow ${auteur}`,`Hello, How are you?`,`Hello ${auteur}, how are you?`,`Salut ${auteur}, comment vas-tu?`,`I turned myself into a pickle. I'm Pickle Booooot`,`I turned myself into a Human. I'm HumanBooooot`];
                 let action = nombreAleatoire(bonjour.length)-1;
                 console.log(`Bonjour commande,autorisé ${autorise}, numero ${action}`);
                 setTimeout(function () {
-                    message.channel.send(bonjour[action])
-                }, 300);
+                    message.channel.send(bonjour[action]);
+                    message.channel.stopTyping();
+                }, 500);
             }
         }
     }
-    //modif date supremacy
-    if (command ===`${prefix}supremacydate` || command ===`${prefix}supdate`){
-        if (!message.member.roles.has(process.env.master)) return message.reply(`**Seul les <@&${process.env.master}> peuvent faire cette commande.**`);
+    //salons
+    if (command === `${prefix}channel` || command === `${prefix}salon`){
+        if (message.channel.type === "dm") return  message.channel.send(`**La commande ${command} ne peut pas être utilisée en MP.**`);
+        let chan = JSON.parse(fs.readFileSync("./channel.json", "utf8"));
+        if (message.guild.id !== '448152530065817602' && message.guild.id !== '455748758798336050' && message.guild.id !== '420530737738153984') return message.reply('Cette commande n\'est pas disponible sur ce serveur');
+        if (!message.guild.member(bot.user).hasPermission("MANAGE_CHANNELS"))return message.reply("Je n'ai pas la permission de faire des channels, demande à un modo de mieux configurer mes permissions.");
+        let utilisateur = message.author.username;
+        if(chan[utilisateur]=== undefined) chan[utilisateur] = 1;
+        console.log(chan);
+        setTimeout(function () {
+            message.delete();
+        }, 1);
+        let server = message.guild;
+        let nom = 'salon de '+ utilisateur + " "+ chan[utilisateur];
+        server.createChannel(nom , 'text').then( // Create the actual voice channel.
+            (nouveauChannel) => {
+                nouveauChannel.send(`${message.author}, Ton channel est ici.`);
+                nouveauChannel.overwritePermissions(message.guild.roles.find('name', '@everyone'), {
+                    'READ_MESSAGES' : false,'CREATE_INSTANT_INVITE' : false,
+                    'SEND_TTS_MESSAGES': false,'MANAGE_MESSAGES': false,
+                    'EXTERNAL_EMOJIS': false }); // Give the channel some standard permissions.
+                nouveauChannel.overwritePermissions(message.author.id, {
+                    'CREATE_INSTANT_INVITE' : false,        'ADD_REACTIONS': true,
+                    'READ_MESSAGES': true,                  'SEND_MESSAGES': true,
+                    'SEND_TTS_MESSAGES': false,              'MANAGE_MESSAGES': false,
+                    'EMBED_LINKS': true,                    'ATTACH_FILES': true,
+                    'READ_MESSAGE_HISTORY': true,           'MENTION_EVERYONE': true,
+                    'EXTERNAL_EMOJIS': false,                'MANAGE_CHANNELS': true,
+                    'MANAGE_ROLES': true
+                });
+            }
+        ).catch(console.error);
+        chan[utilisateur]+=1;
+        fs.writeFile("./channel.json", JSON.stringify(chan), (err) => {
+            if (err) console.log(err)
+        });
+    }
+    //vocal
+    if (command === `${prefix}vocal` ){
+        if (message.channel.type === "dm") return  message.channel.send(`**La commande ${command} ne peut pas être utilisée en MP.**`);
+        let chan = JSON.parse(fs.readFileSync("./channel.json", "utf8"));
+        if (message.guild.id !== '448152530065817602' && message.guild.id !== '455748758798336050' && message.guild.id !== '420530737738153984') return message.reply('Cette commande n\'est pas disponible sur ce serveur');
+        if (!message.guild.member(bot.user).hasPermission("MANAGE_CHANNELS"))return message.reply("Je n'ai pas la permission de faire des channels, demande à un modo de mieux configurer mes permissions.");
+        let utilisateur = message.author.username;
+        if(chan[utilisateur]=== undefined) chan[utilisateur] = 1;
+        console.log(chan);
+        setTimeout(function () {
+            message.delete();
+        }, 1);
+        let server = message.guild;
+        let nom = 'Vocal de '+ utilisateur + " - "+ chan[utilisateur];
+        server.createChannel(nom , 'voice').then( // Create the actual voice channel.
+            (nouveauChannel) => {
+                nouveauChannel.overwritePermissions(message.guild.roles.find('name', '@everyone'), {
+                    'CREATE_INSTANT_INVITE' : false, 'CONNECT': false, 'SPEAK': false,'READ_MESSAGES': true,
+                }); // Give the channel some standard permissions.
+                nouveauChannel.overwritePermissions(message.author.id, {
+                    'CREATE_INSTANT_INVITE' : false,        'ADD_REACTIONS': true,
+                    'READ_MESSAGES': true,                  'SEND_MESSAGES': true,
+                    'SEND_TTS_MESSAGES': false,              'MANAGE_MESSAGES': false,
+                    'EMBED_LINKS': true,                    'ATTACH_FILES': true,
+                    'READ_MESSAGE_HISTORY': true,           'MENTION_EVERYONE': true,
+                    'EXTERNAL_EMOJIS': false,                'MANAGE_CHANNELS': true,
+                    'MANAGE_ROLES': true, 'CONNECT': true, 'SPEAK': true
+                });
+            }
+        ).catch(console.error);
+        message.reply('ton channel vocal a été créé');
+        chan[utilisateur]+=1;
+        fs.writeFile("./channel.json", JSON.stringify(chan), (err) => {
+            if (err) console.log(err)
+        });
+    }
+    //meme
+    let meme = JSON.parse(fs.readFileSync("./memes.json", "utf8"));
+    //bananestar meme
+    if (command === `${prefix}bananestar`|| command === `${prefix}bs`){
+        if (message.channel.type === "dm") return  message.channel.send(`**La commande ${command} ne peut pas être utilisée en MP.**`);
+        if (message.guild.id !== '420530737738153984' && message.guild.id !== '224273127549566978') return message.reply('Cette commande n\'est pas disponible sur ce serveur');
+        setTimeout(function () {
+            message.delete();
+        }, 4000);
+        let genre= 'bananestar';
+        if (args[0] === undefined || isNaN(args[0])) {
+            let random = nombreAleatoire(meme[genre].length);
+            let affichageMemes = meme[genre][random - 1];
+            const embed = new Discord.RichEmbed()
+                .setTitle("Même Bananestar")
+                .setColor("RANDOM")
+                .setImage(`${affichageMemes}`)
+                .setFooter(`Même envoyé par ${message.author.username}`,`${message.author.avatarURL}`);
+            console.log("Commande même genre " + " " + (random - 1));
+            setTimeout(function () {
+                message.channel.send(embed)
+            }, 100);
+        } else {
+            if (args[0] > meme[genre].length) return message.reply("Il n'y a que " + meme[genre].length + "même de genre : **" + genre + "**");
+            if (args[0] < 1) return message.reply("Il n'y a pas de même avant le premier ! :joy:");
+            let choix = args[0];
+            let titre = "*Même du thème *"  + "* numéro : " + args[0] + " sur " + meme[genre].length + " même.";
+            let affichageMemes = meme[genre][choix - 1];
+            const embed = new Discord.RichEmbed()
+                .setTitle("Même Bananestar, " + args[0] + " / " + meme[genre].length)
+                .setColor("RANDOM")
+                .setImage(`${affichageMemes}`)
+                .setFooter(`Même envoyé par ${message.author.username}`, `${message.author.avatarURL}`);
+            console.log("commande même genre num " + genre + " " + (titre - 1));
+            setTimeout(function () {
+                message.channel.send(embed)
+            }, 100);
+        }
+    }
+    //bananestarVid
+    if (command === `${prefix}bananestarvid`|| command === `${prefix}bsv`){
+        if (message.channel.type === "dm") return  message.channel.send(`**La commande ${command} ne peut pas être utilisée en MP.**`);
+        if (message.guild.id !== '420530737738153984' && message.guild.id !== '224273127549566978') return message.reply('Cette commande n\'est pas disponible sur ce serveur');
+        setTimeout(function () {
+            message.delete();
+        }, 4000);
+        let genre= 'bananestarVid';
+        if (args[0] === undefined || isNaN(args[0])) {
+            let random = nombreAleatoire(meme[genre].length);
+            let affichageVid = meme[genre][random - 1];
+            console.log("Commande même genre " + " " + (random - 1));
+            setTimeout(function () {
+                message.channel.send(`Vidéo envoyée par ${message.author.username}\n ${affichageVid}`)
+            }, 100);
+        } else {
+            if (args[0] > meme[genre].length) return message.reply("Il n'y a que " + meme[genre].length + "même de genre : **" + genre + "**");
+            if (args[0] < 1) return message.reply("Il n'y a pas de même avant le premier ! :joy:");
+            let choix = args[0];
+            let titre = "*Vidéo du thème *"  + "* numéro : " + args[0] + " sur " + meme[genre].length + " même.";
+            let affichageVid = meme[genre][choix - 1];
+            console.log("commande même genre num " + genre + " " + (titre - 1));
+            setTimeout(function () {
+                message.channel.send(`Vidéo numéro ${args[0]} sur ${meme[genre].length} vidéos. Envoyé par ${message.author.username}\n ${affichageVid}`)
+            }, 100);
+        }
+    }
+    //tête atomcorp
+    let atomCorp = JSON.parse(fs.readFileSync("./atomcorp.json", "utf8"));
+    if (command === `${prefix}ac`|| command === `${prefix}atomcorp`){
+        if (message.channel.type === "dm") return  message.channel.send(`**La commande ${command} ne peut pas être utilisée en MP.**`);
+        if (message.guild.id !== '420530737738153984' && message.guild.id !== '224273127549566978') return message.reply('Cette commande n\'est pas disponible sur ce serveur');
+        setTimeout(function () {
+            message.delete();
+        }, 2500);
+        if (args[0] === undefined) {
+            let genreMax = (Object.keys(atomCorp).length);
+            let genreChoix = nombreAleatoire(genreMax);
+            let genre = Object.keys(atomCorp)[genreChoix - 1];
+            let random = nombreAleatoire(atomCorp[genre].length);
+            let affichageTetes = atomCorp[genre][random - 1];
+            const embed = new Discord.RichEmbed()
+                .setColor("RANDOM")
+                .setImage(`${affichageTetes}`)
+                .setFooter(`tête envoyée par ${message.author.username}`,`${message.author.avatarURL}`);
+            console.log("commande atomcorp " + genre + " " + (random - 1));
+            setTimeout(function () {
+                message.channel.send(embed)
+            }, 100);
+        } else {
+            if (args[0] === "simon") args[0] = "banane";
+            if (args[0] === "william" || args[0] === "wil" || args[0] === "willy") args[0] = "ambio";
+            if (args[0] === "aymeric") args[0] = "hexost";
+            if (args[0] === "kevin" || args[0] === 'nevo067' || args[0]=== 'keke') args[0] = "nevo";
+            if (args[0] === "ryu") args[0] = "ryubii";
+            if (args[0] === "thomas") args[0] = "thomastark";
+            if (args[0] === "arthur") args[0] = "unicorn";
+            if (args[0] === "help"){
+                let affichageHelp = "";
+                let genreMax = (Object.keys(atomCorp).length);
+                for (let nom in atomCorp){
+                    affichageHelp += '`'+nom+'`';
+                    if ((Object.keys(atomCorp))[genreMax-1] !== nom) affichageHelp += ' , '
+                }
+                return message.reply("__Commandes atomcorp :__ `"+command+" ((thème) (numero))`\n__Thèmes disponibles :__ "+ affichageHelp +".")
+            }
+            let genre = args[0];
+            if (atomCorp[genre] === undefined){
+                let affichageHelp = "";
+                let genreMax = (Object.keys(atomCorp).length);
+                for (let nom in atomCorp){
+                    affichageHelp += '`'+nom+'`';
+                    if ((Object.keys(atomCorp))[genreMax-1] !== nom) affichageHelp += ' , '
+                }
+                return message.reply("Je n'ai pas la tête de **" + argsAffichage[0] +"**\nTêtes disponibles : "+ affichageHelp +".")
+            }
+            if (args[1] === undefined || isNaN(args[1])) {
+                let random = nombreAleatoire(atomCorp[genre].length);
+                let affichageTetes = atomCorp[genre][random - 1];
+                const embed = new Discord.RichEmbed()
+                    .setTitle("Tête de "+args[0])
+                    .setColor("RANDOM")
+                    .setImage(`${affichageTetes}`)
+                    .setFooter(`Tête envoyée par ${message.author.username}`,`${message.author.avatarURL}`);
+                console.log("commande bs genre " + argsAffichage[0] + " " + (random - 1));
+                setTimeout(function () {
+                    message.channel.send(embed)
+                }, 100);
+            } else {
+                if (args[1] > atomCorp[genre].length) return message.reply("Il n'y a que " + atomCorp[genre].length + "tête(s) de **" + genre+"**");
+                if (args[1] < 1) return message.reply("Il n'y a pas de tête avant la première ! :joy:");
+                let choix = args[1];
+                let titre = "*Tête de *" + argsAffichage[0] + "* numéro : " + args[1] + " sur " + atomCorp[genre].length + " têtes.";
+                let affichageTetes = atomCorp[genre][choix - 1];
+                const embed = new Discord.RichEmbed()
+                    .setTitle("tête "+args[0]+", "+ args[1]+" / "+ atomCorp[genre].length)
+                    .setColor("RANDOM")
+                    .setImage(`${affichageTetes}`)
+                    .setFooter(`Têtee envoyée par ${message.author.username}`,`${message.author.avatarURL}`);
+                console.log("commande bs genre num " + genre + " " + (titre - 1));
+                setTimeout(function () {
+                    message.channel.send(embed)
+                }, 100);
+            }
+        }
+    }
+    //date supremacy
+    if(command === `${VIPprefix}demsup`){
         let dateSupremacy = JSON.parse(fs.readFileSync("./supremacyDate.json", "utf8"));
-        let jour = args[0];
-        let mois = args[1];
-        let annee = args[2];
-        dateSupremacy[message.guild.id] = {
-            dateSupremacy: annee+"-"+mois+"-"+jour
-        };
+        console.log(dateSupremacy);
+        for(let serveurID in dateSupremacy){
+            message.channel.send(`&&repsup ${serveurID}  ${dateSupremacy[serveurID][0]} ${dateSupremacy[serveurID][1]}`)
+        }
+    }
+    if(command===`${VIPprefix}datesuprep`){
+        let dateSupremacy = JSON.parse(fs.readFileSync("./supremacyDate.json", "utf8"));
+        if (!args[1]) return message.reply(`date non valide`);
+        dateSupremacy[args[0]] = [args[1],args[2]];
         fs.writeFile("./supremacyDate.json", JSON.stringify(dateSupremacy), (err) => {
             if (err) console.log(err)
         });
-        let nomMois = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
-        message.channel.send(`**${message.author.username}**,a modifié la date.\nNous sommes actuellement le : ${jour} ${nomMois[mois-1]} ${annee}`)
+        message.channel.send(`Informations reçues par ${message.author}`);
+        console.log(dateSupremacy);
+    }
+    //demineur
+    const numberEmoji = [":zero:", ":one:", ":two:", ":three:", ":four:", ":five:", ":six:", ":seven:", ":eight:", ":nine:"];
+    function demineur(largeurDemineur, hauteurDemineur, nbrMines, message) {
+
+        // vérif taille de la grille
+        if (isNaN(largeurDemineur)) {
+            largeurDemineur = 8;
+        }
+        else if (largeurDemineur <= 0 || hauteurDemineur <= 0) {
+            return "Oh, Désolé je ne suis pas capable de générer une grille avec des côtés négatifs . Je ne sais utiliser que des nombres positifs... Désolé :cry:;"
+        }
+        if (isNaN(hauteurDemineur)) {
+            hauteurDemineur = 8;
+        }
+        else if (largeurDemineur > 40 || hauteurDemineur > 20) {
+            return "La grille est beaucoup trop grande ! Pense aux personnes sur mobiles qui ne seront pas la lire !";
+        }
+        // vérif nombres de mines
+        if (isNaN(nbrMines)) {
+            nbrMines = Math.round(largeurDemineur * hauteurDemineur / 5);
+        }
+        else {
+            if (nbrMines <= 0) {
+                return "T'as vraiment cru que j'allais te laisser jouer une partie sans aucune mine? :joy:";
+            }
+            else if (nbrMines > largeurDemineur * hauteurDemineur) {
+                return "Je ne peux pas mettre plus de bombes qu'il n'y a de cases disponibles dans le jeu";
+            }
+        }
+        // génère la matrice (2D) , -1 = mine , autres nombre = mines dans les environs.
+        var game = [];
+
+        for (let y = 0; y < hauteurDemineur; y++) {
+            game.push([]);
+            for (let x = 0; x < largeurDemineur; x++) {
+                game[y].push(0);
+            }
+        }
+        // PLacement des mines
+        for (var mine = 0; mine < nbrMines; mine++) {
+            var x = Math.floor(Math.random()*largeurDemineur),
+                y = Math.floor(Math.random()*hauteurDemineur);
+
+            // Recommencer si il y a déjà une mine
+            if (game[y][x] === -1) {
+                mine--;
+                continue;
+            }
+
+            game[y][x] = -1;
+
+            // incremente de 1 les cases voisines
+            if (x > 0                && y > 0             && game[y-1][x-1] !== -1) { game[y-1][x-1]++; }
+            if (                        y > 0             && game[y-1][x  ] !== -1) { game[y-1][x  ]++; }
+            if (x < game[y].length-1 && y > 0             && game[y-1][x+1] !== -1) { game[y-1][x+1]++; }
+            if (x < game[y].length-1                      && game[y  ][x+1] !== -1) { game[y  ][x+1]++; }
+            if (x < game[y].length-1 && y < game.length-1 && game[y+1][x+1] !== -1) { game[y+1][x+1]++; }
+            if (                        y < game.length-1 && game[y+1][x  ] !== -1) { game[y+1][x  ]++; }
+            if (x > 0                && y < game.length-1 && game[y+1][x-1] !== -1) { game[y+1][x-1]++; }
+            if (x > 0                                     && game[y  ][x-1] !== -1) { game[y  ][x-1]++; }
+        }
+
+        // Creation du message
+        let returnTxt;
+        if (nbrMines === 1) { returnTxt = "Voici une grille de " + largeurDemineur + " sur " + hauteurDemineur + " avec une seule mine:"; }
+        else                { returnTxt = "Voici une grille de " + largeurDemineur + " sur " + hauteurDemineur + " avec " + nbrMines + " mines:"; }
+
+        for (let y = 0; y < game.length; y++) {
+            returnTxt += "\n";
+            for (let x = 0; x < game[y].length; x++) {
+                if (game[y][x] === -1) {
+                    returnTxt += "||:bomb:||";
+                }
+                else {
+                    returnTxt += "||" + numberEmoji[game[y][x]] + "||";
+                }
+            }
+        }
+
+        // Envoie le message si pas trop long <2000 caractères
+        if (returnTxt.length <= 2000) {
+            return returnTxt;
+        }
+
+        // Sinon diviser le message
+        let splitReturns = [];
+        do {
+            let splitIndex = returnTxt.substring(0, 1900).lastIndexOf("\n");
+            if (splitIndex === -1) {
+                console.log("Un message trop long a été envoyé après avoir créé le démineur");
+                return "Désolé, mais votre message semble trop long a envoyé, essayer un plus court la prochaine fois.";
+            }
+            splitReturns.push(returnTxt.substring(0, splitIndex));
+            returnTxt = returnTxt.substring(splitIndex+1);
+        } while (returnTxt.length > 1900);
+
+        splitReturns.push(returnTxt);
+
+        // Envoyer les messages un par un
+        let i = 0;
+        function sendNextMessage() {
+            if (i < splitReturns.length) { message.channel.send(splitReturns[i++]).then(sendNextMessage, console.log()); }
+        }
+        sendNextMessage();
+    }
+    if(command === `${prefix}demineur`){
+        if(args[0] === "help")return message.reply(`Fonctionnement du jeu : \`${prefix}demineur [largeur] [hauteur] [nombre de mines]\``);
+        let largeur = args[0];
+        let hauteur = args[1];
+        let mines = args[2];
+        /*const embed = new Discord.RichEmbed()
+            .setDescription(demineur(largeur,hauteur,mines,message))
+            .setTitle("Demineur")
+            .setColor('RANDOM')
+            .setFooter("test");
+        message.channel.send(embed);*/
+        message.channel.send(demineur(largeur,hauteur,mines,message))
+    }
+    if(command === `${prefix}suggestion` || command === `${prefix}idee`|| command === `${prefix}bug`){
+        console.log("création d'une suggestion par "+ message.author.username+"#" + message.author.discriminator +"  (ID:"+ message.author.id+").");
+        let question = argsAffichage.slice(0).join(" ");
+        if (question.length === 0)return message.reply(`Vous devez mettre un argument. \`${command} [argument]\``);
+        const embed = new Discord.RichEmbed()
+            .setTitle(`Suggestions par : ${message.author.username}#${message.author.discriminator}`)
+            .setDescription(question)
+            .setFooter(message.author);
+        bot.guilds.get("420530737738153984").channels.get("565950742763012097").send(embed);
+        const embedReponse = new Discord.RichEmbed()
+            .setTitle(`**Message envoyé**`)
+            .setDescription(question)
+            .setFooter(message.author.username,message.author.avatarURL);
+        setTimeout(function () {
+            message.delete();
+        }, 4000);
+        message.reply(embedReponse)
+    }
+    //webhook
+    if (command===`${prefix}hook`) {
+        if (message.channel.type === "dm") return  message.channel.send(`**La commande ${command} ne peut pas être utilisée en MP.**`);
+        if (!message.member.hasPermission("MANAGE_WEBHOOKS")) return message.channel.send(`Désolé, ${message.author}, vous n'avez pas la permission **Gérer les Webhooks** sur le serveur !!!\nSi vous pensez qu'il s'agit d'une erreur, contactez un administrateur.`);
+        if (!message.guild.member(bot.user).hasPermission("MANAGE_WEBHOOKS")) return message.channel.send(`Désolé, **${message.author}**, mais je n'ai pas la permission **Gérer les Webhooks** sur ce serveur.`);
+        if (argsAffichage[0] === undefined)argsAffichage[0] = bot.user.username;
+        if (argsAffichage[1] === undefined)argsAffichage[1] = bot.user.avatarURL;
+        // This will create the webhook with the name "Example Webhook" and an example avatar.
+        message.channel.createWebhook(argsAffichage[0], argsAffichage[1])
+        // This will actually set the webhooks avatar, as mentioned at the start of the guide.
+        //.then(webhook => webhook.edit("Example Webhook", "https://i.imgur.com/p2qNFag.png")
+        // This will get the bot to DM you the webhook, if you use this in a selfbot,
+        // change it to a console.log as you cannot DM yourself
+            .then(wb => message.author.send(`Here is your webhook https://discordapp.com/api/webhooks/${wb.id}/${wb.token}`)).catch(console.error)//)
+    }
+    //annonce webhook
+    if(command ===`${prefix}annonce` || command === `${prefix}news`){
+        if (message.channel.type === "dm") return  message.channel.send(`**La commande ${command} ne peut pas être utilisée en MP.**`);
+        if (message.guild.id !== '450360893931388938' && message.guild.id !== '420530737738153984') return message.reply('Cette commande n\'est pas disponible sur ce serveur');
+        if (!message.member.roles.find("name","Modérateur")) return message.channel.send(`Désolé, **${message.author.username}**, mais vous devez être modérateur sur le serveur !!\n Si vous pensez qu'il s'agit d'une erreur, contactez un administrateur.`);
+        const hook = new Discord.WebhookClient('575963896725241886', 'bM9dQ9TfQu7Am0bp6nqpGzzAGMAsdjae7D76YD8vX6DBMYjGBsksUq0Z3ogFLwnUAyRB');
+        let texte = argsAffichage.slice(0).join(" ");
+        hook.send(texte);
+    }
+    //rappel
+    if(command ===`${prefix}rappel`){
+        return message.reply('WIP');
+        let rappel = JSON.parse(fs.readFileSync("./rappel.json", "utf8")); //{"nombre":0}
+        let nbrRappel = rappel["nombre"];
+        console.log(nbrRappel);
+        let increment = true;
+        let msg = "\`";
+        let dateActuelle = new Date();
+        if (Number(args[2]) < dateActuelle.getFullYear()) return message.reply("Merci de faire un rappel a une date ultérieure à aujourd'hui.");
+        if (Number(args[2]) >= dateActuelle.getFullYear()+2) return message.reply("Merci de ne pas mettre une date trop avancée dans le temps");
+        if (Number(args[1]) < dateActuelle.getMonth()+1 && Number(args[2]) === dateActuelle.getFullYear()) return message.reply("Merci de faire un rappel a une date ultérieure à aujourd'hui.");
+        if (Number(args[0]) <= dateActuelle.getDate() && Number(args[1]) === dateActuelle.getMonth()+1 && Number(args[2]) === dateActuelle.getFullYear()) return message.reply("Merci de faire un rappel a une date ultérieure à aujourd'hui.");
+        let date = args[2]+"-"+args[1]+"-"+args[0];
+        for (let i=3 ; i<argsAffichage.length;i++){
+            msg+= argsAffichage[i] + " ";
+        }
+        for (let a=0; a<nbrRappel;a++){
+            if(rappel[a] === undefined){
+                console.log("non");
+                nbrRappel = a;
+                increment = false;
+            }
+        }
+        msg += "\`";
+        message.reply(msg);
+        rappel[nbrRappel] = [message.author.id,message.guild.id,message.channel.id,date,msg];
+        if (increment) rappel["nombre"]++;
+        fs.writeFile("./rappel.json", JSON.stringify(rappel), (err) => {
+            if (err) console.log(err)
+        });
+        for (let a in rappel) bot.guilds.get("420530737738153984").channels.get("577408421507366925").send(`&&rappelreponse ${a}:[${rappel[a]}]`).then(msg => msg.delete(60000));
+    }
+    // rappel des données de rappel
+    if (command=== `${VIPprefix}demanderappel`){
+        let rappel = JSON.parse(fs.readFileSync("./rappel.json", "utf8"));
+        for (let a in rappel) bot.guilds.get("420530737738153984").channels.get("577408421507366925").send(`&&rappelreponse ${a}:[${rappel[a]}]`).then(msg => msg.delete(60000));
+    }
+    if (command === `${VIPprefix}reponserappel`){
+        let donnees = JSON.parse(fs.readFileSync("./rappel.json", "utf8"));
+        donnees[args[0]] = argsAffichage;
+        fs.writeFile("./rappel.json", JSON.stringify(donnees), (err) => {
+            if (err) console.log(err)
+        });
+        message.channel.send(`Informations reçues par ${message.author}`);
+        console.log(donnees);
     }
     //help
-    if (command === `${prefix}help` || command === `${prefix}aide`) {
-        setTimeout(function () {
-            message.react('🇲')
-        }, 100);
-        setTimeout(function () {
-            message.react('🇵')
-        }, 400);
-        setTimeout(function () {
-            message.react('🤖')
-        }, 200);
-        const embed = new Discord.RichEmbed()
-            .setColor('#00833b')
-            .setAuthor(`Commande disponible :`)
-            .addField(`**${prefix}blah :**`, ` Répond quelque chose aléatoirement`)
-            .addField(`**${prefix}quote :**`, `Met les arguments en quote .`)
-            .addField(`**${prefix}purge :**`, `Supprime le nombre de messages mis en paramètre.`)
-            .addField(`**${prefix}poll :**`, `Pour organiser un vote \n Aussi disponibles: **${prefix}sondage**`)
-            .addField(`**${prefix}user :**`, `Donne les informations sur le joueur mentionner en  paramètre.\n Aussi disponible : **${prefix}userinfo**`)
-            .addField(`**${prefix}info :**`, `Donne les informations sur le bot\n Aussi disponible : **${prefix}bot** ,**${prefix}botinfo**`)
-            .addField(`**${prefix}serveur :**`, `Donne les informations sur le bot\n Aussi disponible : **${prefix}serveurinfo**`)
-            .addField(`**${prefix}uptime :**`, "Indique le temps écoulé depuis le démarrage du bot.")
-            .addField(`**${prefix}pf :**`, `Pile ou face ? la pièce sera lancée...\n Aussi disponible : **${prefix}pileface**`)
-            .addField(`**${prefix}roll :**`, `Lance un dé avec la valeur indiquée .`)
-            .addField(`**${prefix}slot :**`, `Lance la machine à sous.`)
-            .addField(`**${prefix}ppc :**`, `Pour jouer à Shifumi//pierre-papier-ciseaux \n Aussi disponible : **${prefix}shifumi** .`)
-            .addField(`**${prefix}gif :**`, `Affiche un gif de manière aléatoire \n Pour avoir les thèmes **${prefix}gif help**`)
-            .addField(`__[BÊTA]__ **${prefix}gif2 :**`, `Update de gif (bugs possibles) \n Pour avoir les thèmes **${prefix}gif2 help**`)
-            .addField(`**${prefix}invite**`, "Pour m'inviter sur ton serveur.")
-            .addField(`**${prefix}bottest**`, `Je t'invite sur mon serveur de développement :smiley: \nAussi disponible: **${prefix}serveurtest**`)
-            .addField(`**${prefix}artan**`, `Poster un article de manière anonyme. \nAussi disponible: **${prefix}anonyme** ,**${prefix}articleanonyme** ,**${prefix}an**`)
-            .addField(`**${prefix}iman**`, `Poster une image de manière anonyme. \nAussi disponible: **${prefix}imageanonyme** ,**${prefix}ia`)
-            .addField(`**${VIPprefix}serveurs :**`, '*[Programmeur]* Liste les serveurs où je suis présent.')
-            .addField(`**${VIPprefix}reboot :**`, '*[Programmeur]* me redémarre')
-            .addField(`**${VIPprefix}stop :**`, '*[Programmeur]* m\'éteint.')
+    if (command === `${prefix}help`) {
+        const embed1 = new Discord.RichEmbed()
+            .setColor('#3de285')
+            .setAuthor(`Commandes disponibles :`)
+            .addField(`• **${prefix}quote**`, `Met les arguments en quote .`)
+            .addField(`• **${prefix}clear**`, `Supprime le nombre de messages mis en paramètre.`)
+            .addField(`• **${prefix}poll**`, `Pour organiser un vote.\nAussi disponibles: **${prefix}sondage**`)
+            .addField(`• **${prefix}mpoll**`, `Pour organiser un vote à choix multiples.\nAussi disponibles: **${prefix}multipoll**`)
+            .addField(`• **${prefix}user**`, `Donne les informations sur le joueur mentionner en  paramètre.\n Aussi disponible : **${prefix}userinfo**`)
+            .addField(`• **${prefix}info**`, `Donne les informations sur le bot.\nAussi disponible : **${prefix}bot** ,**${prefix}botinfo**`)
+            .addField(`• **${prefix}serveur**`, `Donne les informations sur le bot.\nAussi disponible : **${prefix}serveurinfo**`)
+            .addField(`• **${prefix}uptime**`, "Indique le temps écoulé depuis le démarrage du bot.")
+            .addField(`• **${prefix}pf**`, `Pile ou face ? la pièce sera lancée...\nAussi disponible : **${prefix}pileface**`)
+            .addField(`• **${prefix}roll**`, `Lance un dé avec la valeur indiquée.\nAussi disponible : **${prefix}de**, **${prefix}dice**`)
+            .addField(`• **${prefix}slot**`, `Lance la machine à sous. (1 chance sur 1000 d'avoir le Jackpot)\nPour avoir les difficultés **${prefix}slot help**`)
+            .addField(`• **${command} mp**`,`Envoie ce message en MP`)
             .setTimestamp(new Date());
-        setTimeout(function () {
-            message.author.send(embed);
-        },100)
+        const embed2 = new Discord.RichEmbed()
+            .setColor('#3de285')
+            .setAuthor(`Commandes disponibles :`)
+            .addField(`• **${prefix}ppc**`, `Pour jouer à Shifumi//pierre-papier-ciseaux.\nAussi disponible : **${prefix}shifumi**.`)
+            .addField(`• **${prefix}demineur**`, `Pour jouer au démineur,\nFormat : **${prefix}demineur [largeur] [hauteur] [nbreMines]**`)
+            .addField(`• **${prefix}gif**`, `Affiche un GIF de manière aléatoire.\nPour avoir les thèmes **${prefix}gif help**`)
+            .addField(`• **${prefix}bs**`,`*[Restreint]* Envoie un même de manière aléatoire.\nAussi disponible : **${prefix}bananestar** `)
+            .addField(`• **${prefix}bsv**`,`*[Restreint]* Envoie une vidéo de manière aléatoire.\nAussi disponible : **${prefix}bananestarvid** `)
+            .addField(`• **${prefix}ac :**`,`*[Restreint]* Envoie la tête d'un joueur de manière aléatoire.\nAussi disponible : **${prefix}atomcorp**`)
+            .addField(`• **${prefix}invite**`, "Pour m'inviter sur ton serveur.")
+            .addField(`• **${prefix}an**`, `*[Restreint]* Poster un article de manière anonyme.\nAussi disponible: **${prefix}articleanonyme**`)
+            .addField(`• **${prefix}ia**`, `*[Restreint]* Poster une image de manière anonyme.\nAussi disponible: **${prefix}imageanonyme**`)
+            .addField(`• **${prefix}channel**`,`*[Restreint]* Creer un channel privé pour soi.\nAussi dispnible: **${prefix}salon**`)
+            .addField(`• **${prefix}vocal**`,`*[Restreint]* Creer un channel vocal privé pour soi.`)
+            .addField(`• **${command} mp**`,`Envoie ce message en MP`)
+            .setTimestamp(new Date());
+        const embed3 = new Discord.RichEmbed()
+            .setColor('#3de285')
+            .setAuthor(`Commandes disponibles :`)
+            .addField(`• **${prefix}rappel**`,`[WIP] Fait un rappel a une date précisée. ***[Ne vous en server pas comme agenda ce système n'est pas sôr]***`)
+            .addField(`• **${prefix}news**`,`*[Restreint]* Annonce pour la Communauté.\nAussi disponible: **${prefix}annonce**`)
+            .addField(`• **${prefix}hook**`,`Permet de créer un webhook sur le serveur facilement.`)
+            .addField(`• **${prefix}idee**`,`Proposer une idée de fonctionnalité/jeux/report de bug pour le bot.\nAussi disponible: **${prefix}suggestion**, **${prefix}bug**`)
+            .addField(`• **${command} mp**`,`Envoie ce message en MP`)
+            .setTimestamp(new Date());
+        let pages = [embed1,embed2,embed3];
+        let page = 1;
+        pages[0].setFooter(`Page ${page} sur ${pages.length}`);
+
+        if(args[0] === "mp"){
+            setTimeout(function () {
+                message.react('🇲')
+            }, 100);
+            setTimeout(function () {
+                message.react('🇵')
+            }, 400);
+            setTimeout(function () {
+                message.react('📧')
+            }, 200);
+            message.author.send(pages[0]).then(msg => {
+
+                msg.react('⬅').then( r => {
+                    msg.react('➡')
+
+                    // Filters
+                    const backwardsFilter = (reaction, user) => reaction.emoji.name === '⬅' && user.id !== bot.user.id;
+                    const forwardsFilter = (reaction, user) => reaction.emoji.name === '➡' && user.id !== bot.user.id;
+
+                    const backwards = msg.createReactionCollector(backwardsFilter, {timer: 1000});
+                    const forwards = msg.createReactionCollector(forwardsFilter, {timer: 1000});
+
+                    backwards.on('collect', r => {
+                        if (page === 1) return;
+                        page--;
+                        pages[page-1].setFooter(`Page ${page} sur ${pages.length}`);
+                        msg.edit(pages[page-1]);
+                        //r.remove(r.users.filter(u => !u.bot).first());
+                    });
+
+                    forwards.on('collect', r => {
+                        if (page === pages.length) return;
+                        page++;
+                        pages[page-1].setFooter(`Page ${page} sur ${pages.length}`);
+                        msg.edit(pages[page-1])
+                        //r.remove(r.users.filter(u => !u.bot).first());
+                    })
+                })
+            })
+        }
+        else
+        {
+            message.channel.send(pages[0]).then(msg => {
+
+                msg.react('⬅').then(r => {
+                    msg.react('➡')
+
+                    // Filters
+                    const backwardsFilter = (reaction, user) => reaction.emoji.name === '⬅' && user.id !== bot.user.id;
+                    const forwardsFilter = (reaction, user) => reaction.emoji.name === '➡' && user.id !== bot.user.id;
+
+                    const backwards = msg.createReactionCollector(backwardsFilter, {timer: 1000});
+                    const forwards = msg.createReactionCollector(forwardsFilter, {timer: 1000});
+
+                    backwards.on('collect', r => {
+                        if (page === 1) return;
+                        page--;
+                        pages[page - 1].setFooter(`Page ${page} of ${pages.length}`);
+                        msg.edit(pages[page - 1]);
+                        r.remove(r.users.filter(u => !u.bot).first());
+                    });
+
+                    forwards.on('collect', r => {
+                        if (page === pages.length) return;
+                        page++;
+                        pages[page - 1].setFooter(`Page ${page} of ${pages.length}`);
+                        msg.edit(pages[page - 1])
+                        r.remove(r.users.filter(u => !u.bot).first());
+                    })
+                })
+            })
+        }
     }
 });
-//boucle supremacy
+//rappel date supremacy
 bot.on("ready", () => {
-    console.log("Démarrage de la boucle supremacy1914...");
-    setInterval(function () {
-        let dateSupremacy = JSON.parse(fs.readFileSync("./supremacyDate.json", "utf8"));
-        let date = new Date;
-        let dateJeu = new  Date(dateSupremacy[process.env.serveurID].dateSupremacy);
-        dateJeu.setDate(dateJeu.getDate() + 1);
-        let heure = date.getHours()+1;
-        let minutes = date.getMinutes();
-        let jourJeu = dateJeu.getDate();
-        let jourNomJeu = ["Dimanche","Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi"];
-        let moisJeu = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
-        let anneeJeu = dateJeu.getFullYear();
-        if((heure === 0 || heure === 4 || heure === 8 || heure === 12 || heure === 16 || heure === 20 || heure === 24)&& minutes === 0) {
-            if (isNaN(jourJeu)) return bot.guilds.get(process.env.serveurID).channels.get(process.env.channelID).send(`La date n'est pas définie...\n <@&${process.env.master}> utilisez la commande \`${prefix}supdate jj mm aaaa\` (date actuelle) \n En tout cas on avance d'un jour :sweat_smile:`);
-            bot.guilds.get(process.env.serveurID).channels.get(process.env.channelID).send("Nous passons au : "+ jourNomJeu[dateJeu.getDay()] +", " + jourJeu +" " + moisJeu[dateJeu.getMonth()]+" "+ anneeJeu);
-            console.log("Exécution de la boucle supremacy : " + dateJeu);
-            let jour2 = dateJeu.getDate();
-            let mois2 = dateJeu.getMonth()+1;
-            let annee2 = dateJeu.getFullYear();
-            dateSupremacy[process.env.serveurID] = {
-                dateSupremacy: annee2+"-"+mois2+"-"+jour2
-            };
-            fs.writeFile("./supremacyDate.json", JSON.stringify(dateSupremacy), (err) => {
-                if (err) console.log(err)
-            });
-        }
-    },60000)//60000
+    console.log("Demande dates sup14");
+    bot.guilds.get("420530737738153984").channels.get("557928672846151681").send("&&datesupdem");
+    console.log("demande rappel");
+    bot.guilds.get("420530737738153984").channels.get("577408421507366925").send("&&rappeldemande");
+});
+// nouveau membre commu supremacy1914
+bot.on('guildMemberAdd', member => { //annonce tout le monde
+    if ( member.guild.id !== "450360893931388938") return false;//test serveur
+    var nouveauMembreEmbed = new Discord.RichEmbed()
+        .setColor('00FF00')
+        .setAuthor(member.user.tag + ' a rejoint le serveur', member.user.displayAvatarURL)
+        .addField(`:inbox_tray: Bienvenue sur le serveur ${member.user.tag}`,'')
+        .setFooter(`Nouveau Membre`)
+        .setTimestamp();
+    //return bot.guilds.get("ID").channels.get("ID").send(nouveauMembreEmbed);
+    // Create a new webhook
+    const hook = new Discord.WebhookClient('575261302021160960', 'ySf2tPv9uvOCNPa_08_jLX9XKsGSyi6j_xZ8UILgQ63qHJNmIg1hBScofqme9bGFIlAo');
+    // Send a message using the webhook
+    hook.send(nouveauMembreEmbed);
+
+    var bienvenue = new Discord.RichEmbed()
+        .setColor("BLUE")
+        .setAuthor("Bienvenue sur le serveur de la communauté RP supremacy1914")
+        .setDescription(`${member.user}, Bienvenue dans notre communauté, avant toute chose nous te demandons de lire <#545880645264605185> et d'ensuite répondre au questionnaire suivant : <#519871774444355584>\nMerci d'inclure les questions du questionnaire dans ta candidature et de la reposter dans <#512301323777998896>`)
+        .setFooter(`Nouveau Membre`)
+        .setTimestamp();
+    // Create a new webhook
+    const hook2 = new Discord.WebhookClient('575264364542820373', 'CZfyoeRFbgh0fJgeWSr82x4pX33uSahZgu4hdJ6ADy6H7RMPEXlpv6Mx1ECLMXpXTceD');
+    // Send a message using the webhook
+    hook2.send(bienvenue);
 });
 bot.login(process.env.TOKEN);
 bot.on("error", console.error);
