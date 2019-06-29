@@ -446,7 +446,7 @@ bot.on('message', message=>{
             let random = nombreAleatoire(gifs[genre].length);
             let affichageGifs = gifs[genre][random - 1];
             const embed = new Discord.RichEmbed()
-                .setColor("RANDOM")
+                //.setColor("RANDOM")
                 .setImage(`${affichageGifs}`)
                 .setFooter(`GIF envoyé par ${message.author.username}`,`${message.author.avatarURL}`);
             console.log("commande gifs " + genre + " " + (random - 1));
@@ -487,7 +487,7 @@ bot.on('message', message=>{
                 let affichageGifs = gifs[genre][random - 1];
                 const embed = new Discord.RichEmbed()
                     .setTitle("GIF "+args[0])
-                    .setColor("RANDOM")
+                    //.setColor("RANDOM")
                     .setImage(`${affichageGifs}`)
                     .setFooter(`GIF envoyé par ${message.author.username}`,`${message.author.avatarURL}`);
                 console.log("commande gifs genre " + argsAffichage[0] + " " + (random - 1));
@@ -502,7 +502,7 @@ bot.on('message', message=>{
                 let affichageGifs = gifs[genre][choix - 1];
                 const embed = new Discord.RichEmbed()
                     .setTitle("GIF "+args[0]+", "+ args[1]+" / "+ gifs[genre].length)
-                    .setColor("RANDOM")
+                    //.setColor("RANDOM")
                     .setImage(`${affichageGifs}`)
                     .setFooter(`GIF envoyé par ${message.author.username}`,`${message.author.avatarURL}`);
                 console.log("commande gifs genre num " + genre + " " + (titre - 1));
@@ -659,7 +659,7 @@ bot.on('message', message=>{
         if (args[0] && mention === false)return false;
         if (oui || command === `bonjour` || command === `bjr` || command === `salut` || command === `hey` || command === `yop` || command === `bonsoir` || command === `bsr` || command === 'yo' || command === 'wesh' || command === 'coucou' || command === 'cc' ||
             command === 'slt' || command === 'bjour' || command === 'hola' || command === 'holà' || command === "salutation"|| command === 'plop'|| command === 'hello' || command ==="chalut" || command ==="hellow" || command ===`salutation` || command === "Aloha" ||
-            command === `salutations` || command === 'Aloa') {
+            command === `salutations` || command === 'aloa'|| command === 'bijour'|| command === 'weshwesh' || command === 'wesh wesh' || command === 'kikou' || command === 'kikoo') {
             let autorise = nombreAleatoire(100);
             if (autorise > 0 && autorise < 36 || mention) {
                 message.channel.startTyping();
@@ -671,7 +671,8 @@ bot.on('message', message=>{
                     `Hallo ${auteur}`,`Au revoir...:rolling_eyes:`, `Longue vie et prospérité ${auteur} 🖖`,`Flop :wink:`,`Hi`,`plop ${auteur}`,`Plop !`,`Hello ${auteur}`,`Hello there ! https://tenor.com/NMDa.gif`,`-Hello There !\n-General Kenobi !`,
                     `Hi How are you?`,`Hi, ${auteur}, how are you?`,`Yo ${auteur} !`,"Chalut","Chalut cha va?",`chalut ${auteur}, cha va?`,"Chalut comment allez-vouche ?","Chalut comment vas-tuche ?","Coucou :wave:",":wave:",":wave::wave:",
                     `:wave: ${auteur}`,`:wave: ${auteur}`,`${auteur} :wave:`,"bonjour bonjour","Bonjour toi :O","Salutations distinguées !",`-Hello There !\n-General ${message.username} !`,"Bonjour les enfants","Aloha",`Aloha ${auteur}`,
-                    `Salutations vénérable ${auteur}`,"Hellooow",`Hellooow ${auteur}`,`Hello, How are you?`,`Hello ${auteur}, how are you?`,`Salut ${auteur}, comment vas-tu?`,`I turned myself into a pickle. I'm Pickle Booooot`,`I turned myself into a Human. I'm HumanBooooot`];
+                    `Salutations vénérable ${auteur}`,"Hellooow",`Hellooow ${auteur}`,`Hello, How are you?`,`Hello ${auteur}, how are you?`,`Salut ${auteur}, comment vas-tu?`,`I turned myself into a pickle. I'm Pickle Booooot`,`I turned myself into a Human. I'm HumanBooooot`,
+                    `Kikou !`,`Kikou 😁`,`Kikoo`,`Kikou ${auteur} 😄`,`Ami du jour, Bonjour !`,`Ami du soir, Bonsoir !`,`Ami du jour, Bonjour 🌞`,`Ami du soir, Bonsoir 🌜`];
                 let action = nombreAleatoire(bonjour.length)-1;
                 console.log(`Bonjour commande,autorisé ${autorise}, numero ${action}`);
                 setTimeout(function () {
@@ -769,7 +770,7 @@ bot.on('message', message=>{
             let affichageMemes = meme[genre][random - 1];
             const embed = new Discord.RichEmbed()
                 .setTitle("Même Bananestar")
-                .setColor("RANDOM")
+                //.setColor("RANDOM")
                 .setImage(`${affichageMemes}`)
                 .setFooter(`Même envoyé par ${message.author.username}`,`${message.author.avatarURL}`);
             console.log("Commande même genre " + " " + (random - 1));
@@ -784,7 +785,7 @@ bot.on('message', message=>{
             let affichageMemes = meme[genre][choix - 1];
             const embed = new Discord.RichEmbed()
                 .setTitle("Même Bananestar, " + args[0] + " / " + meme[genre].length)
-                .setColor("RANDOM")
+                //.setColor("RANDOM")
                 .setImage(`${affichageMemes}`)
                 .setFooter(`Même envoyé par ${message.author.username}`, `${message.author.avatarURL}`);
             console.log("commande même genre num " + genre + " " + (titre - 1));
@@ -1124,6 +1125,17 @@ bot.on('message', message=>{
         message.channel.send(`Informations reçues par ${message.author}`);
         console.log(donnees);
     }
+    //annonce webhook
+    if(command ===`${prefix}live`){
+        return message.reply('WIP');
+        if (message.channel.type === "dm") return  message.channel.send(`**La commande ${command} ne peut pas être utilisée en MP.**`);
+        if (message.guild.id !== '337194376281194498' && message.guild.id !== '420530737738153984') return message.reply('Cette commande n\'est pas disponible sur ce serveur');
+        if (!message.author.id !== `279335122761678858`) return message.channel.send(`Désolé, **${message.author.username}**, mais vous n'êtes pas autorisé à executer cette commande`);
+        const hook = new Discord.WebhookClient('---', '---');
+        let texte = argsAffichage.slice(0).join(" ");
+        if (texte === undefined) texte = `Hey @everyone, Nedert passe en live sur https://www.twitch.tv/nedertval ! Allez vite voir ça!`.
+        hook.send(texte);
+    }
     //help
     if (command === `${prefix}help`) {
         const embed1 = new Discord.RichEmbed()
@@ -1164,6 +1176,7 @@ bot.on('message', message=>{
             .addField(`• **${prefix}rappel**`,`[WIP] Fait un rappel a une date précisée. ***[Ne vous en server pas comme agenda ce système n'est pas sôr]***`)
             .addField(`• **${prefix}news**`,`*[Restreint]* Annonce pour la Communauté.\nAussi disponible: **${prefix}annonce**`)
             .addField(`• **${prefix}hook**`,`Permet de créer un webhook sur le serveur facilement.`)
+            .addField(`• **${prefix}live**`, `*[Réservé]* Permet d'annoncer son live `)
             .addField(`• **${prefix}idee**`,`Proposer une idée de fonctionnalité/jeux/report de bug pour le bot.\nAussi disponible: **${prefix}suggestion**, **${prefix}bug**`)
             .addField(`• **${command} mp**`,`Envoie ce message en MP`)
             .setTimestamp(new Date());
