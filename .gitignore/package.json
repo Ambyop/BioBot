@@ -1,6 +1,6 @@
 {
   "name": "biobot",
-  "version": "2.6.9",
+  "version": "6.2.0",
   "description": "bot par AmBiO",
   "main": "index.js",
   "scripts": {
@@ -9,6 +9,8 @@
   "author": "AmBiO",
   "license": "ISC",
   "dependencies": {
-    "discord.js": "^11.4.2"
+    "discord.js": "^11.5.1",
+    "superagent": "^5.0.5"
   }
+  
 }
