@@ -664,7 +664,7 @@ bot.on('message', message=>{
             if (autorise > 0 && autorise < 36 || mention) {
                 message.channel.startTyping();
                 let bonjour = [`Bien le bonjour ${auteur}`,`Bijour Bijour, ${auteur}`,`Salut à toi mon brave ${auteur}`,`Bijour monsieur ${auteur}`,`Yolo ! 😁`,`Bonjour 😁`,`Yolo !`,`Salut comment-va ? ${auteur}`,"Salutations aventurier!",
-                    "Salutations Voyageur !","Bonjour voyageur","Holà aventurier!","Hello, stranger.","Salutation, Etranger.","hey mon ami t'aime ça manger des patates ?\nTest le Willi Waller To Thousand Six alors...","Bienvenue voyageur","PTDR T KI?",
+                    "Salutations Voyageur !","Bonjour voyageur","Holà aventurier!","Hello, stranger.","Salutation, Etranger.","Bienvenue voyageur","PTDR T KI?",
                     'Salut , ça boum ?  :bomb:','Hello it\'s me...','https://www.unrulystowaway.com/wp-content/uploads/2018/07/Hello-Darkness-Affleck.jpg','hello darkness my old friend','Hello How are you ?',`Hello, ${auteur} how are you ?`,
                     "Belle journée, pas vrai ?","Pour la horde !",`Et.... Vous êtes ?`,`Salut ${auteur}`,`Salut ! Comment vas-tu ?`,`Salut ${auteur} ! Comment vas-tu ?`,`Hello there`,`Hey !..`,`Salut mon pote 😊`,`Wesh Wesh !!`,`Yo !`,`Yop !`,
                     `Arthour Couillère !!!!\n https://thumbs.gfycat.com/FineOilyGrebe-small.gif`,`Yo ${auteur} !`,`Yop ${auteur} !`,`Holà ${auteur} !`,`Hola, cómo estás ?`,`Hola quetal ?`,`Buenos dias`,`hallo hoe gaat het met jouw ?`,`Dag !`,
@@ -769,7 +769,7 @@ bot.on('message', message=>{
             let random = nombreAleatoire(meme[genre].length);
             let affichageMemes = meme[genre][random - 1];
             const embed = new Discord.RichEmbed()
-                .setTitle("Même Bananestar")
+                .setTitle("Même")
                 //.setColor("RANDOM")
                 .setImage(`${affichageMemes}`)
                 .setFooter(`Même envoyé par ${message.author.username}`,`${message.author.avatarURL}`);
@@ -784,7 +784,7 @@ bot.on('message', message=>{
             let titre = "*Même du thème *"  + "* numéro : " + args[0] + " sur " + meme[genre].length + " même.";
             let affichageMemes = meme[genre][choix - 1];
             const embed = new Discord.RichEmbed()
-                .setTitle("Même Bananestar, " + args[0] + " / " + meme[genre].length)
+                .setTitle("Même, " + args[0] + " / " + meme[genre].length)
                 //.setColor("RANDOM")
                 .setImage(`${affichageMemes}`)
                 .setFooter(`Même envoyé par ${message.author.username}`, `${message.author.avatarURL}`);
@@ -892,7 +892,7 @@ bot.on('message', message=>{
                     .setTitle("tête "+args[0]+", "+ args[1]+" / "+ atomCorp[genre].length)
                     .setColor("RANDOM")
                     .setImage(`${affichageTetes}`)
-                    .setFooter(`Têtee envoyée par ${message.author.username}`,`${message.author.avatarURL}`);
+                    .setFooter(`Têtes envoyée par ${message.author.username}`,`${message.author.avatarURL}`);
                 console.log("commande bs genre num " + genre + " " + (titre - 1));
                 setTimeout(function () {
                     message.channel.send(embed)
@@ -1125,16 +1125,24 @@ bot.on('message', message=>{
         message.channel.send(`Informations reçues par ${message.author}`);
         console.log(donnees);
     }
-    //annonce webhook
+    //live nedert
     if(command ===`${prefix}live`){
-        return message.reply('WIP');
-        if (message.channel.type === "dm") return  message.channel.send(`**La commande ${command} ne peut pas être utilisée en MP.**`);
-        if (message.guild.id !== '337194376281194498' && message.guild.id !== '420530737738153984') return message.reply('Cette commande n\'est pas disponible sur ce serveur');
-        if (!message.author.id !== `279335122761678858`) return message.channel.send(`Désolé, **${message.author.username}**, mais vous n'êtes pas autorisé à executer cette commande`);
-        const hook = new Discord.WebhookClient('---', '---');
-        let texte = argsAffichage.slice(0).join(" ");
-        if (texte === undefined) texte = `Hey @everyone, Nedert passe en live sur https://www.twitch.tv/nedertval ! Allez vite voir ça!`.
-        hook.send(texte);
+        //return message.reply('WIP');
+        if (message.channel.type !== "dm") {
+            if (message.guild.id !== '337194376281194498' && message.guild.id !== '420530737738153984') return message.reply('Cette commande n\'est pas disponible sur ce serveur');
+        }
+        if (message.author.id !== `279335122761678858` && message.author.id !== '181820882514214913') return message.channel.send(`Désolé, **${message.author.username}**, mais vous n'êtes pas autorisé à executer cette commande`);
+        console.log('hey');
+        const hook = new Discord.WebhookClient('594977670194790421', 'RC5rreiGGbkVtEp49FavBXGGZaw070STWvwbVw2rZ5_GbNsaidTcImvvgVGE-Jd1wZc1');
+        let texte = argsAffichage.slice(0).join(" ") + "\n https://www.twitch.tv/nedertval";
+        if (argsAffichage[0] === undefined) texte = `Hey @everyone, Nedert passe en live sur https://www.twitch.tv/nedertval ! Allez vite voir ça!`;
+        const embed = new Discord.RichEmbed()
+            .setColor('PURPLE')
+            .setTitle('Annonce de Live')
+            .setDescription(texte);
+        //hook.send(texte);
+        hook.send(embed);
+        message.reply('Message envoyé')
     }
     //help
     if (command === `${prefix}help`) {
