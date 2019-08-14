@@ -457,7 +457,7 @@ bot.on('message', message=>{
             if (args[0] === "spy" || args[0] === "ned" || args[0] === "nedert") args[0] = "espion";
             if (args[0] === "giffle" || args[0] === "giffles" || args[0] === "gifles") args[0] = "gifle";
             if (args[0] === "limorus" || args[0] === "guerre") args[0]= "war";
-            if (args[0] === "sel" || arg[0] === "salty") args[0]="rage";
+            if (args[0] === "sel" || args[0] === "salty") args[0]="rage";
             if (args[0] === "dieu" || args[0] === "jesus") args[0] = "god";
             if (args[0] === "help"){
                 let affichageHelp = "";
