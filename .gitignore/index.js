@@ -24,7 +24,6 @@ function convertMS(ms) {
 }
 function nombreAleatoire(nombre) {
     let resultat;
-    //let valeur = Math.floor(Math.random() * nombre+1);
     let multiplechoix = [Math.floor(Math.random() * nombre+1),Math.floor(Math.random() * nombre+1),Math.floor(Math.random() * nombre+1),Math.floor(Math.random() * nombre+1)];
     let choix = Math.floor(Math.random() * multiplechoix.length);
     let valeur =multiplechoix[choix];
@@ -37,14 +36,14 @@ console.log("Démarrage du bot..." );
 bot.on("ready", () => {
     console.log("Connexion à Discord établie !");
     bot.guilds.get("420530737738153984").channels.get("530693686665674763").send(`Connexion à Discord établie !`);
-    bot.user.setStatus('dnd');// online, idle, dnd, invisible
+    bot.user.setStatus('online');// online, idle, dnd, invisible
     bot.user.setActivity(`${prefix}help | vient de se connecter`, { type: 'Playing' });
     let compteur = 0;
     setInterval(function () {
         let u = convertMS(bot.uptime);
         let uptime = u.d + " j: " + u.h + " h: " + u.m + " mins";
         let activites = [`${prefix}help | Créé par AmBiO`,`${prefix}help | v${version}`,`${prefix}help | Ping API : ${Math.floor(bot.ping)}ms`,`${prefix}help | fontionne depuis ${uptime}`,`${prefix}help | ${bot.users.size} Utilisateurs`,`${prefix}help | Version : ${version}`,`${prefix}help | ${bot.guilds.size} serveurs`,`Debout depuis ${uptime}`,`${prefix}help`,`${prefix}help | ${bot.channels.size} channels`];
-        bot.user.setActivity(activites[compteur], {type: "listening"}); //Playing , Streaming, Watching, Listening
+        bot.user.setActivity(activites[compteur], {type: "watching"}); //Playing , Streaming, Watching, Listening
         compteur++;
         if (compteur === activites.length)compteur = 0;
         let date = new Date();
@@ -351,11 +350,9 @@ bot.on('message', message=>{
             piece = `Pile`
         }
         let msg = (`${message.author}, la pièce indique **${piece}** !`);
-        message.channel.startTyping();
         message.channel.send("Je lance la pièce ...").then(sentMessage => setTimeout(function () {
             sentMessage.edit(msg);
-            message.channel.stopTyping();
-        }, 1000));
+        }, 1500));
     }
     //roll
     if (command === `${prefix}roll` || command === `${prefix}de` || command === `${prefix}dice`) {
@@ -367,10 +364,8 @@ bot.on('message', message=>{
         let aleatoire = nombreAleatoire(args[0]);
         if (aleatoire === Infinity )return message.reply(`Il y a une infinité de somme possible dans la valeur donnée.`);
         let msg = `${message.author}, tu obtiens **${aleatoire}**. *(dé de ${args[0]}).*`;
-        message.channel.startTyping();
         message.channel.send("Je lance le dé de **" + args[0] +"** ...").then(sentMessage => setTimeout(function () {
             sentMessage.edit(msg);
-            message.channel.stopTyping();
         }, 1500));
     }
     // shifumi
@@ -446,7 +441,6 @@ bot.on('message', message=>{
             let random = nombreAleatoire(gifs[genre].length);
             let affichageGifs = gifs[genre][random - 1];
             const embed = new Discord.RichEmbed()
-                //.setColor("RANDOM")
                 .setImage(`${affichageGifs}`)
                 .setFooter(`GIF envoyé par ${message.author.username}`,`${message.author.avatarURL}`);
             console.log("commande gifs " + genre + " " + (random - 1));
@@ -463,6 +457,8 @@ bot.on('message', message=>{
             if (args[0] === "spy" || args[0] === "ned" || args[0] === "nedert") args[0] = "espion";
             if (args[0] === "giffle" || args[0] === "giffles" || args[0] === "gifles") args[0] = "gifle";
             if (args[0] === "limorus" || args[0] === "guerre") args[0]= "war";
+            if (args[0] === "sel" || arg[0] === "salty") args[0]="rage";
+            if (args[0] === "dieu" || args[0] === "jesus") args[0] = "god";
             if (args[0] === "help"){
                 let affichageHelp = "";
                 let genreMax = (Object.keys(gifs).length);
@@ -487,7 +483,6 @@ bot.on('message', message=>{
                 let affichageGifs = gifs[genre][random - 1];
                 const embed = new Discord.RichEmbed()
                     .setTitle("GIF "+args[0])
-                    //.setColor("RANDOM")
                     .setImage(`${affichageGifs}`)
                     .setFooter(`GIF envoyé par ${message.author.username}`,`${message.author.avatarURL}`);
                 console.log("commande gifs genre " + argsAffichage[0] + " " + (random - 1));
@@ -502,7 +497,6 @@ bot.on('message', message=>{
                 let affichageGifs = gifs[genre][choix - 1];
                 const embed = new Discord.RichEmbed()
                     .setTitle("GIF "+args[0]+", "+ args[1]+" / "+ gifs[genre].length)
-                    //.setColor("RANDOM")
                     .setImage(`${affichageGifs}`)
                     .setFooter(`GIF envoyé par ${message.author.username}`,`${message.author.avatarURL}`);
                 console.log("commande gifs genre num " + genre + " " + (titre - 1));
@@ -544,7 +538,6 @@ bot.on('message', message=>{
             let Embed = new Discord.RichEmbed()
                 .setAuthor('Machine à sous')
                 .addField(`:slot_machine:**Résultats**:slot_machine:`,`${slots[result1] + slots[result2] + slots[result3]} \n\n**${name}**, **JACKPOT !**`)
-                //.setDescription(`:slot_machine:**Résultats**:slot_machine:\n ${slots[result1] + slots[result2] + slots[result3]} \n\n**${name}**, JACKPOT !`)
                 .setFooter(`(Jackpot : 1 /${slots.length*slots.length*slots.length})`)
                 .setColor("GREEN");
             message.channel.send(Embed)
@@ -553,7 +546,6 @@ bot.on('message', message=>{
             let Embed = new Discord.RichEmbed()
                 .setAuthor('Machine à sous')
                 .addField(`:slot_machine:**Résultats**:slot_machine:`,`${slots[result1] + slots[result2] + slots[result3]} \n\n**${name}**, Tu as gagné !`)
-                //.setDescription(`:slot_machine:**Résultats**:slot_machine:\n ${slots[result1] + slots[result2] + slots[result3]} \n\n**${name}**, Tu as gagné !`)
                 .setFooter(`(Jackpot : 1 /${slots.length*slots.length*slots.length})`)
                 .setColor("BLUE");
             message.channel.send(Embed);
@@ -561,7 +553,6 @@ bot.on('message', message=>{
             let embed = new Discord.RichEmbed()
                 .setAuthor('Machine à sous')
                 .addField(`:slot_machine:**Résultats**:slot_machine:`,`${slots[result1] + slots[result2] + slots[result3]} \n\n**${name}**, Tu as perdu !`)
-                //.setDescription(`:slot_machine:**Résultats**:slot_machine:\n ${slots[result1] + slots[result2] + slots[result3]} \n\n**${name}**, Tu as perdu !`)
                 .setFooter(`(Jackpot : 1 /${slots.length*slots.length*slots.length})`)
                 .setColor("DARK_RED");
             message.channel.send(embed);
@@ -570,7 +561,7 @@ bot.on('message', message=>{
     //arrêt du bot
     if(message.content === `${VIPprefix}stop`) {
         if (message.author.id === ownerID) {
-            message.react("⛔");
+            message.react("🛑");
             message.reply(`:x: Arrêt du bot jusqu'au prochain redémarrage automatique. :x:`);
             bot.destroy();
             bot.destroy();
@@ -755,12 +746,10 @@ bot.on('message', message=>{
             if (err) console.log(err)
         });
     }
-    //meme
+    //même
     let meme = JSON.parse(fs.readFileSync("./memes.json", "utf8"));
-    //bananestar meme
+    //mêmes
     if (command === `${prefix}bananestar`|| command === `${prefix}bs` || command === `${prefix}meme`){
-        //if (message.channel.type === "dm") return  message.channel.send(`**La commande ${command} ne peut pas être utilisée en MP.**`);
-        //if (message.guild.id !== '420530737738153984' && message.guild.id !== '224273127549566978') return message.reply('Cette commande n\'est pas disponible sur ce serveur');
         setTimeout(function () {
             message.delete();
         }, 4000);
@@ -770,7 +759,6 @@ bot.on('message', message=>{
             let affichageMemes = meme[genre][random - 1];
             const embed = new Discord.RichEmbed()
                 .setTitle("Même")
-                //.setColor("RANDOM")
                 .setImage(`${affichageMemes}`)
                 .setFooter(`Même envoyé par ${message.author.username}`,`${message.author.avatarURL}`);
             console.log("Commande même genre " + " " + (random - 1));
@@ -778,14 +766,13 @@ bot.on('message', message=>{
                 message.channel.send(embed)
             }, 100);
         } else {
-            if (args[0] > meme[genre].length) return message.reply("Il n'y a que " + meme[genre].length + "même de genre : **" + genre + "**");
+            if (args[0] > meme[genre].length) return message.reply("Il n'y a que " + meme[genre].length + "mêmes. ");
             if (args[0] < 1) return message.reply("Il n'y a pas de même avant le premier ! :joy:");
             let choix = args[0];
-            let titre = "*Même du thème *"  + "* numéro : " + args[0] + " sur " + meme[genre].length + " même.";
+            let titre = "*Même numéro : " + args[0] + " sur " + meme[genre].length + " mêmes.";
             let affichageMemes = meme[genre][choix - 1];
             const embed = new Discord.RichEmbed()
                 .setTitle("Même, " + args[0] + " / " + meme[genre].length)
-                //.setColor("RANDOM")
                 .setImage(`${affichageMemes}`)
                 .setFooter(`Même envoyé par ${message.author.username}`, `${message.author.avatarURL}`);
             console.log("commande même genre num " + genre + " " + (titre - 1));
@@ -821,7 +808,7 @@ bot.on('message', message=>{
             }, 100);
         }
     }
-    //tête atomcorp
+    //têtes atomcorp
     let atomCorp = JSON.parse(fs.readFileSync("./atomcorp.json", "utf8"));
     if (command === `${prefix}ac`|| command === `${prefix}atomcorp`){
         if (message.channel.type === "dm") return  message.channel.send(`**La commande ${command} ne peut pas être utilisée en MP.**`);
@@ -1067,7 +1054,7 @@ bot.on('message', message=>{
         //.then(webhook => webhook.edit("Example Webhook", "https://i.imgur.com/p2qNFag.png")
         // This will get the bot to DM you the webhook, if you use this in a selfbot,
         // change it to a console.log as you cannot DM yourself
-            .then(wb => message.author.send(`Here is your webhook https://discordapp.com/api/webhooks/${wb.id}/${wb.token}`)).catch(console.error)//)
+            .then(wb => message.author.send(`Here is your webhook https://discordapp.com/api/webhooks/${wb.id}/${wb.token}`)).catch(console.error)
     }
     //annonce webhook
     if(command ===`${prefix}annonce` || command === `${prefix}news`){
@@ -1127,7 +1114,6 @@ bot.on('message', message=>{
     }
     //live nedert
     if(command ===`${prefix}live`){
-        //return message.reply('WIP');
         if (message.channel.type !== "dm") {
             if (message.guild.id !== '337194376281194498' && message.guild.id !== '420530737738153984') return message.reply('Cette commande n\'est pas disponible sur ce serveur');
         }
@@ -1140,14 +1126,13 @@ bot.on('message', message=>{
             .setColor('PURPLE')
             .setTitle('Annonce de Live')
             .setDescription(texte);
-        //hook.send(texte);
         hook.send(embed);
         message.reply('Message envoyé')
     }
     //help
     if (command === `${prefix}help`) {
         const embed1 = new Discord.RichEmbed()
-            .setColor('#3de285')
+            .setColor('#f3c445')
             .setAuthor(`Commandes disponibles :`)
             .addField(`• **${prefix}quote**`, `Met les arguments en quote .`)
             .addField(`• **${prefix}clear**`, `Supprime le nombre de messages mis en paramètre.`)
@@ -1163,9 +1148,9 @@ bot.on('message', message=>{
             .addField(`• **${command} mp**`,`Envoie ce message en MP`)
             .setTimestamp(new Date());
         const embed2 = new Discord.RichEmbed()
-            .setColor('#3de285')
+            .setColor('#f3c445')
             .setAuthor(`Commandes disponibles :`)
-            .addField(`• **${prefix}ppc**`, `Pour jouer à Shifumi//pierre-papier-ciseaux.\nAussi disponible : **${prefix}shifumi**.`)
+            .addField(`• **${prefix}ppc**`, `Pour jouer à Shifumi||Pierre-Papier-Ciseaux.\nAussi disponible : **${prefix}shifumi**.`)
             .addField(`• **${prefix}demineur**`, `Pour jouer au démineur,\nFormat : **${prefix}demineur [largeur] [hauteur] [nbreMines]**`)
             .addField(`• **${prefix}gif**`, `Affiche un GIF de manière aléatoire.\nPour avoir les thèmes **${prefix}gif help**`)
             .addField(`• **${prefix}meme**`,`Envoie un même de manière aléatoire.\nAussi disponible : **${prefix}bs** `)
@@ -1179,7 +1164,7 @@ bot.on('message', message=>{
             .addField(`• **${command} mp**`,`Envoie ce message en MP`)
             .setTimestamp(new Date());
         const embed3 = new Discord.RichEmbed()
-            .setColor('#3de285')
+            .setColor('#f3c445')
             .setAuthor(`Commandes disponibles :`)
             .addField(`• **${prefix}rappel**`,`[WIP] Fait un rappel a une date précisée. ***[Ne vous en server pas comme agenda ce système n'est pas sôr]***`)
             .addField(`• **${prefix}news**`,`*[Restreint]* Annonce pour la Communauté.\nAussi disponible: **${prefix}annonce**`)
@@ -1279,10 +1264,9 @@ bot.on('guildMemberAdd', member => { //annonce tout le monde
     var nouveauMembreEmbed = new Discord.RichEmbed()
         .setColor('00FF00')
         .setAuthor(member.user.tag + ' a rejoint le serveur', member.user.displayAvatarURL)
-        .addField(`:inbox_tray: Bienvenue sur le serveur ${member.user.tag}`,'')
+        .addField(`:inbox_tray: Bienvenue sur le serveur ${member.user.tag}`,'.')
         .setFooter(`Nouveau Membre`)
         .setTimestamp();
-    //return bot.guilds.get("ID").channels.get("ID").send(nouveauMembreEmbed);
     // Create a new webhook
     const hook = new Discord.WebhookClient('575261302021160960', 'ySf2tPv9uvOCNPa_08_jLX9XKsGSyi6j_xZ8UILgQ63qHJNmIg1hBScofqme9bGFIlAo');
     // Send a message using the webhook
