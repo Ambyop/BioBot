@@ -41,8 +41,8 @@ bot.on("ready", () => {
     let compteur = 0;
     setInterval(function () {
         let u = convertMS(bot.uptime);
-        let uptime = u.d + " j: " + u.h + " h: " + u.m + " mins";
-        let activites = [`${prefix}help | Créé par AmBiO`,`${prefix}help | v${version}`,`${prefix}help | Ping API : ${Math.floor(bot.ping)}ms`,`${prefix}help | fontionne depuis ${uptime}`,`${prefix}help | ${bot.users.size} Utilisateurs`,`${prefix}help | Version : ${version}`,`${prefix}help | ${bot.guilds.size} serveurs`,`Debout depuis ${uptime}`,`${prefix}help`,`${prefix}help | ${bot.channels.size} channels`];
+        let uptime = u.d + " j " + u.h + " h " + u.m + " mins";
+        let activites = [`${prefix}help | Créé par AmBiO`,`${prefix}help | v${version}`,`${prefix}invite ,Ajoute moi sur ton serveur 😉`,`${prefix}help | Ping API : ${Math.floor(bot.ping)}ms`,`${prefix}help | fontionne depuis ${uptime}`,`${prefix}help | ${bot.users.size} Utilisateurs`,`${prefix}help | Version : ${version}`,`${prefix}help | ${bot.guilds.size} serveurs`,`Debout depuis ${uptime}`,`${prefix}help`,`${prefix}help | ${bot.channels.size} channels`];
         bot.user.setActivity(activites[compteur], {type: "watching"}); //Playing , Streaming, Watching, Listening
         compteur++;
         if (compteur === activites.length)compteur = 0;
@@ -509,7 +509,7 @@ bot.on('message', message=>{
     // invite
     if (command === `${prefix}invite`) {
         setTimeout(function () {
-            message.reply("https://discordapp.com/api/oauth2/authorize?client_id=506184450405826562&permissions=0&scope=bot");
+            message.reply("https://discordapp.com/api/oauth2/authorize?client_id=506184450405826562&permissions=257088&scope=bot");
         }, 100);
     }
     // slots machine a sous
@@ -656,7 +656,7 @@ bot.on('message', message=>{
                 message.channel.startTyping();
                 let bonjour = [`Bien le bonjour ${auteur}`,`Bijour Bijour, ${auteur}`,`Salut à toi mon brave ${auteur}`,`Bijour monsieur ${auteur}`,`Yolo ! 😁`,`Bonjour 😁`,`Yolo !`,`Salut comment-va ? ${auteur}`,"Salutations aventurier!",
                     "Salutations Voyageur !","Bonjour voyageur","Holà aventurier!","Hello, stranger.","Salutation, Etranger.","Bienvenue voyageur","PTDR T KI?",
-                    'Salut , ça boum ?  :bomb:','Hello it\'s me...','https://www.unrulystowaway.com/wp-content/uploads/2018/07/Hello-Darkness-Affleck.jpg','hello darkness my old friend','Hello How are you ?',`Hello, ${auteur} how are you ?`,
+                    'Hello it\'s me...','https://www.unrulystowaway.com/wp-content/uploads/2018/07/Hello-Darkness-Affleck.jpg','hello darkness my old friend','Hello How are you ?',`Hello, ${auteur} how are you ?`,'Salut , ça boum ?  :bomb:',
                     "Belle journée, pas vrai ?","Pour la horde !",`Et.... Vous êtes ?`,`Salut ${auteur}`,`Salut ! Comment vas-tu ?`,`Salut ${auteur} ! Comment vas-tu ?`,`Hello there`,`Hey !..`,`Salut mon pote 😊`,`Wesh Wesh !!`,`Yo !`,`Yop !`,
                     `Arthour Couillère !!!!\n https://thumbs.gfycat.com/FineOilyGrebe-small.gif`,`Yo ${auteur} !`,`Yop ${auteur} !`,`Holà ${auteur} !`,`Hola, cómo estás ?`,`Hola quetal ?`,`Buenos dias`,`hallo hoe gaat het met jouw ?`,`Dag !`,
                     `Hallo ${auteur}`,`Au revoir...:rolling_eyes:`, `Longue vie et prospérité ${auteur} 🖖`,`Flop :wink:`,`Hi`,`plop ${auteur}`,`Plop !`,`Hello ${auteur}`,`Hello there ! https://tenor.com/NMDa.gif`,`-Hello There !\n-General Kenobi !`,
