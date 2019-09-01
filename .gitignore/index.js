@@ -120,7 +120,7 @@ bot.on('message', message=>{
             return message.reply(`Vous avez oublié d'introduire la question .\n \`${prefix}poll [Question]\``);
         const embed = new Discord.RichEmbed()
             .setTitle("Sondage :")
-            .setColor("#9b8aff")
+            .setColor("#6dffcf")
             .setDescription(`${question}`)
             .setFooter(`Sondage par: ${message.author.username}`, `${message.author.avatarURL}`);
         setTimeout(function () {
@@ -173,7 +173,7 @@ bot.on('message', message=>{
         }
         const embed = new Discord.RichEmbed()
             .setTitle("Sondage :")
-            .setColor("#9b8aff")
+            .setColor("#6dffcf")
             .setDescription(`${question}`)
             .setFooter(`Sondage par: ${message.author.username}`, `${message.author.avatarURL}`);
         message.channel.send({embed})
@@ -221,7 +221,7 @@ bot.on('message', message=>{
         if (userStatus === "offline") status = "Déconnecté";
         //Discord rich embed
         const embed = new Discord.RichEmbed()
-            .setColor('#67fffa')
+            .setColor('#daff92')
             .setThumbnail(user.avatarURL)
             .setAuthor(`${user.tag}`)
             .addField("• ID:", `${user.id}`, true)
@@ -255,7 +255,7 @@ bot.on('message', message=>{
         let channels = bot.channels.size; // Channel Count
 
         let pingembed = new Discord.RichEmbed()
-            .setColor("#67fffa")
+            .setColor("#daff92")
             .setThumbnail(bot.user.displayAvatarURL)
             .setAuthor('• Stats du Bot')
             .addField('• Bot créé par AmByOp', ' https://twitter.com/Ambyop')
@@ -280,7 +280,7 @@ bot.on('message', message=>{
             string += '***Nom:***  ' + guild.name + '\n' + '*** ID:***  ` ' + guild.id + ' ` ' + '\n\n';
         });
         let botembed = new Discord.RichEmbed()
-            .setColor("#ff3ac4")
+            .setColor("#cdffda")
             .addField("Listes des serveurs connectés", string)
             .setTimestamp()
             .setFooter("Exécuté par: " + message.author.username, message.author.avatarURL);
@@ -315,7 +315,7 @@ bot.on('message', message=>{
 
         let serverembed = new Discord.RichEmbed()
             .setAuthor(message.guild.name, sicon)
-            .setColor("#ffac1f")
+            .setColor("#ff4871")
             .setThumbnail(sicon)
             .addField("• Nom", message.guild.name, true)
             .addField("• ID", message.guild.id, true)
@@ -459,6 +459,7 @@ bot.on('message', message=>{
             if (args[0] === "limorus" || args[0] === "guerre") args[0]= "war";
             if (args[0] === "sel" || args[0] === "salty") args[0]="rage";
             if (args[0] === "dieu" || args[0] === "jesus") args[0] = "god";
+            if (args[0] === "ambio") args[0] = "Donald";
             if (args[0] === "help"){
                 let affichageHelp = "";
                 let genreMax = (Object.keys(gifs).length);
@@ -1061,7 +1062,7 @@ bot.on('message', message=>{
         if (message.channel.type === "dm") return  message.channel.send(`**La commande ${command} ne peut pas être utilisée en MP.**`);
         if (message.guild.id !== '450360893931388938' && message.guild.id !== '420530737738153984') return message.reply('Cette commande n\'est pas disponible sur ce serveur');
         if (!message.member.roles.find("name","Modérateur")) return message.channel.send(`Désolé, **${message.author.username}**, mais vous devez être modérateur sur le serveur !!\n Si vous pensez qu'il s'agit d'une erreur, contactez un administrateur.`);
-        const hook = new Discord.WebhookClient('575963896725241886', 'bM9dQ9TfQu7Am0bp6nqpGzzAGMAsdjae7D76YD8vX6DBMYjGBsksUq0Z3ogFLwnUAyRB');
+        const hook = new Discord.WebhookClient('617683908091314178', 'ev66Fih7jv_iK1nP-eTJFnR9QIOKKzx1GTi3rISf9hnPl3ROMjFFETOB8eHpiqBoVy96');
         let texte = argsAffichage.slice(0).join(" ");
         hook.send(texte);
     }
@@ -1129,10 +1130,34 @@ bot.on('message', message=>{
         hook.send(embed);
         message.reply('Message envoyé')
     }
+    // 8ball
+    if(command===`${prefix}8ball` || command===`${prefix}ball8` || command===`${prefix}b8` || command===`${prefix}bm8`){
+        if (!args[0]) return message.reply(`Fonctionnement : ${prefix}8ball questions`);
+        let question = args.slice().join(" ");
+        let color = "";
+        let replies = ['Oui', 'Non', 'Redemande plus tard','Tu veux vraiment savoir ça ?','Même pas en rêve.','Il y a 90 % de chance pour que ce soit possible.','Oui','Non','Tu préférerais ne pas connaître la réponse…','Oui ou non, ça dépend.'];
+        let result = Math.floor((Math.random() * replies.length));
+
+        if (replies[result] === 'Oui') color = "#00FF00";
+        else if (replies[result] === 'Non') color = "#FF0000";
+        else if (replies[result] === 'Redemande plus tard') color = "#0000FF";
+        else color = 'RANDOM';
+
+        let newembed = new Discord.RichEmbed()
+            .setAuthor(question)
+            .setColor(color)
+            .setDescription(`Resultat: ${replies[result]}`)
+            .setFooter(`Demandé par: ${message.author.username}`);
+
+        message.delete().catch(O_o => {});
+        message.channel.send({
+            embed: newembed
+        })
+    }
     //help
     if (command === `${prefix}help`) {
         const embed1 = new Discord.RichEmbed()
-            .setColor('#f3c445')
+            .setColor('#ffc2a8')
             .setAuthor(`Commandes disponibles :`)
             .addField(`• **${prefix}quote**`, `Met les arguments en quote .`)
             .addField(`• **${prefix}clear**`, `Supprime le nombre de messages mis en paramètre.`)
@@ -1148,14 +1173,14 @@ bot.on('message', message=>{
             .addField(`• **${command} mp**`,`Envoie ce message en MP`)
             .setTimestamp(new Date());
         const embed2 = new Discord.RichEmbed()
-            .setColor('#f3c445')
+            .setColor('#ffc2a8')
             .setAuthor(`Commandes disponibles :`)
             .addField(`• **${prefix}ppc**`, `Pour jouer à Shifumi||Pierre-Papier-Ciseaux.\nAussi disponible : **${prefix}shifumi**.`)
             .addField(`• **${prefix}demineur**`, `Pour jouer au démineur,\nFormat : **${prefix}demineur [largeur] [hauteur] [nbreMines]**`)
             .addField(`• **${prefix}gif**`, `Affiche un GIF de manière aléatoire.\nPour avoir les thèmes **${prefix}gif help**`)
             .addField(`• **${prefix}meme**`,`Envoie un même de manière aléatoire.\nAussi disponible : **${prefix}bs** `)
+            .addField(`• **${prefix}8ball**`,`La boule magique 8 Posez vos questions.\nAussi disponible : **${prefix}bm8** , **${prefix}b8** , **${prefix}ball8**`)
             .addField(`• **${prefix}bsv**`,`*[Restreint]* Envoie une vidéo de manière aléatoire.\nAussi disponible : **${prefix}bananestarvid** `)
-            .addField(`• **${prefix}ac :**`,`*[Restreint]* Envoie la tête d'un joueur de manière aléatoire.\nAussi disponible : **${prefix}atomcorp**`)
             .addField(`• **${prefix}invite**`, "Pour m'inviter sur ton serveur.")
             .addField(`• **${prefix}an**`, `*[Restreint]* Poster un article de manière anonyme.\nAussi disponible: **${prefix}articleanonyme**`)
             .addField(`• **${prefix}ia**`, `*[Restreint]* Poster une image de manière anonyme.\nAussi disponible: **${prefix}imageanonyme**`)
@@ -1164,8 +1189,9 @@ bot.on('message', message=>{
             .addField(`• **${command} mp**`,`Envoie ce message en MP`)
             .setTimestamp(new Date());
         const embed3 = new Discord.RichEmbed()
-            .setColor('#f3c445')
+            .setColor('#ffc2a8')
             .setAuthor(`Commandes disponibles :`)
+            .addField(`• **${prefix}ac :**`,`*[Restreint]* Envoie la tête d'un joueur de manière aléatoire.\nAussi disponible : **${prefix}atomcorp**`)
             .addField(`• **${prefix}rappel**`,`[WIP] Fait un rappel a une date précisée. ***[Ne vous en server pas comme agenda ce système n'est pas sôr]***`)
             .addField(`• **${prefix}news**`,`*[Restreint]* Annonce pour la Communauté.\nAussi disponible: **${prefix}annonce**`)
             .addField(`• **${prefix}hook**`,`Permet de créer un webhook sur le serveur facilement.`)
