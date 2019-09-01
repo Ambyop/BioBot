@@ -459,7 +459,7 @@ bot.on('message', message=>{
             if (args[0] === "limorus" || args[0] === "guerre") args[0]= "war";
             if (args[0] === "sel" || args[0] === "salty") args[0]="rage";
             if (args[0] === "dieu" || args[0] === "jesus") args[0] = "god";
-            if (args[0] === "ambio") args[0] = "Donald";
+            if (args[0] === "ambio") args[0] = "donald";
             if (args[0] === "help"){
                 let affichageHelp = "";
                 let genreMax = (Object.keys(gifs).length);
