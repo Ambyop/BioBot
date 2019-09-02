@@ -1133,23 +1133,24 @@ bot.on('message', message=>{
     // 8ball
     if(command===`${prefix}8ball` || command===`${prefix}ball8` || command===`${prefix}b8` || command===`${prefix}bm8`){
         if (!args[0]) return message.reply(`Fonctionnement : ${prefix}8ball questions`);
-        let question = args.slice().join(" ");
+        let question = argsAffichage.slice(0).join(" ");
         let color = "";
-        let replies = ['Oui', 'Non', 'Redemande plus tard','Tu veux vraiment savoir ça ?','Même pas en rêve.','Il y a 90 % de chance pour que ce soit possible.','Oui','Non','Tu préférerais ne pas connaître la réponse…','Oui ou non, ça dépend.'];
+        let replies = ['Oui', 'Non', 'Redemande le moi plus tard','Tu veux vraiment le savoir ?','Même pas en rêve.','Il y a 90 % de chance pour que ce soit possible.','Oui','Non','Tu préférerais ne pas connaître la réponse…','Oui ou non, ça dépend.'];
         let result = Math.floor((Math.random() * replies.length));
 
         if (replies[result] === 'Oui') color = "#00FF00";
         else if (replies[result] === 'Non') color = "#FF0000";
-        else if (replies[result] === 'Redemande plus tard') color = "#0000FF";
+        else if (replies[result] === 'Redemande le moi plus tard') color = "#0000FF";
         else color = 'RANDOM';
 
         let newembed = new Discord.RichEmbed()
-            .setAuthor(question)
+            .setDescription(`**${question}**\n\n Resultat: ${replies[result]}`)
             .setColor(color)
-            .setDescription(`Resultat: ${replies[result]}`)
             .setFooter(`Demandé par: ${message.author.username}`);
 
-        message.delete().catch(O_o => {});
+        setInterval(function () {
+            message.delete().catch(O_o => {});
+        },4000);
         message.channel.send({
             embed: newembed
         })
