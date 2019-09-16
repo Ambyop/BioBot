@@ -35,7 +35,7 @@ function nombreAleatoire(nombre) {
 console.log("Démarrage du bot..." );
 bot.on("ready", () => {
     console.log("Connexion à Discord établie !");
-    bot.guilds.get("420530737738153984").channels.get("530693686665674763").send(`Connexion à Discord établie !`);
+    bot.guilds.get("420530737738153984").channels.get("530693686665674763").send(`Bot démarré avec ${bot.users.size} utilisateurs, dans ${bot.guilds.size} serveurs pour ${bot.channels.size} channels.`);
     bot.user.setStatus('online');// online, idle, dnd, invisible
     bot.user.setActivity(`${prefix}help | vient de se connecter`, { type: 'Playing' });
     let compteur = 0;
@@ -728,7 +728,7 @@ bot.on('message', message=>{
         server.createChannel(nom , 'voice').then( // Create the actual voice channel.
             (nouveauChannel) => {
                 nouveauChannel.overwritePermissions(message.guild.roles.find('name', '@everyone'), {
-                    'CREATE_INSTANT_INVITE' : false, 'CONNECT': false, 'SPEAK': false,'READ_MESSAGES': true,
+                    'CREATE_INSTANT_INVITE' : false, 'CONNECT': false, 'SPEAK': false,'READ_MESSAGES': true,'MANAGE_CHANNELS': false,
                 }); // Give the channel some standard permissions.
                 nouveauChannel.overwritePermissions(message.author.id, {
                     'CREATE_INSTANT_INVITE' : false,        'ADD_REACTIONS': true,
@@ -1065,6 +1065,9 @@ bot.on('message', message=>{
         const hook = new Discord.WebhookClient('617683908091314178', 'ev66Fih7jv_iK1nP-eTJFnR9QIOKKzx1GTi3rISf9hnPl3ROMjFFETOB8eHpiqBoVy96');
         let texte = argsAffichage.slice(0).join(" ");
         hook.send(texte);
+        setInterval(function () {
+            message.reply(`ton message a bien été envoyé :wink:`)
+        },120000)
     }
     //rappel
     if(command ===`${prefix}rappel`){
@@ -1149,7 +1152,7 @@ bot.on('message', message=>{
             .setFooter(`Demandé par: ${message.author.username}`);
 
         setInterval(function () {
-            message.delete().catch(O_o => {});
+            message.delete()
         },4000);
         message.channel.send({
             embed: newembed
