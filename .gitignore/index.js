@@ -1065,9 +1065,10 @@ bot.on('message', message=>{
         const hook = new Discord.WebhookClient('617683908091314178', 'ev66Fih7jv_iK1nP-eTJFnR9QIOKKzx1GTi3rISf9hnPl3ROMjFFETOB8eHpiqBoVy96');
         let texte = argsAffichage.slice(0).join(" ");
         hook.send(texte);
-        setInterval(function () {
-            message.reply(`ton message a bien été envoyé :wink:`)
-        },120000)
+        message.reply(`ton message a bien été envoyé :wink:`);
+        setTimeout(function () {
+            message.delete();
+        },60000)
     }
     //rappel
     if(command ===`${prefix}rappel`){
