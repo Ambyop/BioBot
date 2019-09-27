@@ -1062,7 +1062,7 @@ bot.on('message', message=>{
         if (message.channel.type === "dm") return  message.channel.send(`**La commande ${command} ne peut pas être utilisée en MP.**`);
         if (message.guild.id !== '450360893931388938' && message.guild.id !== '420530737738153984') return message.reply('Cette commande n\'est pas disponible sur ce serveur');
         if (!message.member.roles.find("name","Modérateur")) return message.channel.send(`Désolé, **${message.author.username}**, mais vous devez être modérateur sur le serveur !!\n Si vous pensez qu'il s'agit d'une erreur, contactez un administrateur.`);
-        const hook = new Discord.WebhookClient('617683908091314178', 'ev66Fih7jv_iK1nP-eTJFnR9QIOKKzx1GTi3rISf9hnPl3ROMjFFETOB8eHpiqBoVy96');
+        const hook = new Discord.WebhookClient('627041874443632651', 'bHqaRoRGs20rwCwriaeWFn9dT4CAyuuQP--SHKUmD18EmuJaEewschFFJMNWz6hs04MQ');
         let texte = argsAffichage.slice(0).join(" ");
         hook.send(texte);
         message.reply(`ton message a bien été envoyé :wink:`);
